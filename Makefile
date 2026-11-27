@@ -286,6 +286,7 @@ $(DECOMP_POKESTADIUMGS_FILTERED): CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $
 # UTF-8 -> EUC-JP conversion so their .rodata matches retail.
 build/src/fragments/56/fragment56_code.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --
 build/src/fragments/34/fragment34_1C5AA0.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --
+build/src/fragments/55/fragment55_code.o: CC := $(ASM_PROC) $(ASM_PROC_FLAGS) $(CC) -- $(AS) $(ASFLAGS) --
 
 # The JPEG entropy decoder's original lowering is reproduced by stock IDO 5.3.
 # Keep this source-specific; the rest of the game continues to use IDO 7.1.

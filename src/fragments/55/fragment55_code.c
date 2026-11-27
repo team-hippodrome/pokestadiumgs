@@ -6,13 +6,15 @@ typedef struct {
     s32 time;
     u8 unk14[8];
     f32 unk1C;
-    u8 unk20[4];
+    f32 unk20;
     f32 unk24;
-    u8 unk28[8];
+    f32 unk28;
+    u8 unk2C[4];
     s32 transition_mode;
     u8 unk34[8];
     s32 animation_frame;
-    u8 unk40[8];
+    s32 unk40;
+    u8 unk44[4];
     s32 exit_result;
     s32 unk4C;
     u8 unk50[0x14];
@@ -4029,7 +4031,172 @@ void Stage55_UpdateResourcePools(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86709AD0.s")
+extern s32 D_8670C870;
+extern s32 D_8670BBAC;
+extern s16 D_8670C87C;
+extern f32 D_8670C85C;
+extern f32 D_8670C878;
+extern f32 D_8670C880;
+extern f32 D_8670C884;
+extern f32 D_8670C100;
+extern f32 D_8670C104;
+extern s32 D_8670BB88;
+extern s16 D_8670BE80;
+extern s16 D_8670BE84;
+extern s32 D_8670FEDC;
+extern s32 D_8670FEE0;
+extern s32 D_8670FEE4;
+extern s32 D_8670FEE8;
+extern s32 D_8670FEEC;
+extern s32 D_8670FEF0;
+extern s32 D_8670FEF4;
+extern State86703DF4 D_86728408[];
+extern Row86706A30 D_86710C20[];
+extern Row86706A30 D_86711760[4][60];
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern void func_8003F1DC(void *);
+extern s32 func_8003F210(void *, s32);
+extern s32 ModelAnim_IsFinished(void *);
+
+void func_86709AD0(void) {
+    s32 i;
+    s32 cnt;
+    s32 j;
+    s32 cnt2;
+    s32 a;
+    s32 b;
+    State86703DF4 *e;
+    s32 *divisor;
+    Row86706A30 *obj;
+    f32 d;
+    f32 v;
+    f32 r;
+
+    cnt2 = 0;
+    divisor = &D_8670C0F8;
+    switch (gStage55MainState.unk40) {
+        case 0:
+            D_8670C870 = 1;
+            cnt = 0;
+            D_8670C87C = (6400 - D_8670C0FC[0]) / *divisor;
+            d = (f32)D_8670C0F8;
+            b = -1; a = -1; // FAKE: one line for as1 scheduling (home and store order)
+            D_8670C880 = (40.0f - D_8670C100) / d;
+            D_8670C884 = (7570.0f - D_8670C104) / d;
+            gStage55MainState.unk1C = 7570.0f;
+            func_8003F114((u8 *)&D_86726A48, 0, -1, (void *)D_8670FEDC);
+            func_8003F114((u8 *)&D_86726BB0, 0, -1, (void *)D_8670FEE4);
+            func_8003F114((u8 *)&D_86726D18, 0, -1, (void *)D_8670FEE0);
+            func_8003F114((u8 *)&D_86726E80, 0, -1, (void *)D_8670FEE8);
+            func_8003F114((u8 *)&D_86726FE8, 0, -1, (void *)D_8670FEEC);
+            func_8003F114((u8 *)&D_86727150, 0, -1, (void *)D_8670FEF0);
+            func_8003F114((u8 *)&D_867272B8, 0, -1, (void *)D_8670FEF4);
+            for (i = 0; i < 4; i++) {
+                for (j = 0; j < 60; j++) {
+                    func_8003F1DC(&D_86711760[i][j]);
+                }
+
+                e = &D_86728408[i];
+                obj = &D_86710C20[i];
+                if (*(s32 *)((u8 *)e + 0x44) == 1) {
+                    if (a == -1) {
+                        a = i;
+                    } else {
+                        b = i;
+                    }
+                    e->unk2C = 9;
+                    func_8003F210(obj, 6);
+                    v = obj->x;
+                    D_8670C0E8[i] = obj->x;
+                    D_8670C870 = i;
+                    D_8670C85C = v;
+                    r = v / (f32)D_8670C0F8;
+                    cnt++;
+                    D_8670C878 = r;
+                } else {
+                    e->unk2C = 7;
+                    func_8003F210(obj, 4);
+                }
+            }
+
+            if (cnt >= 2) {
+                v = (D_8670C0E8[a] + D_8670C0E8[b]) / 2;
+                if (v == 0.0f) {
+                    v = 3.0f;
+                }
+                D_8670C85C = v;
+                r = v / (f32)D_8670C0F8;
+                D_8670C878 = r;
+            }
+            if (D_8670BBAC == 1) {
+                // FAKE: `3` and `3.0f` are separate u-code constants, so the stored 3 gets
+                // its own range. The dead compare on `r` gives that range a second use so uopt
+                // colours it, and the dead `(f32)D_8670C0F8` read keeps f0 busy so it lands in
+                // f2. The divide converts through `*divisor` so it does not share that read.
+                r = 3.0f / (f32)*divisor;
+                if (r == 3) {} // FAKE
+                D_8670C85C = 3;
+                D_8670C878 = r;
+                if ((f32)D_8670C0F8) {} // FAKE
+            }
+            D_8670BB88 = 1;
+            break;
+
+        case 1:
+            for (i = 0; i < 4; i++) {
+                e = &D_86728408[i];
+                if (e->unk2C == 7) {
+                    obj = &D_86710C20[i];
+                    if (ModelAnim_IsFinished(obj) == 1) {
+                        e->unk2C = 8;
+                        func_8003F210(obj, 5);
+                    }
+                }
+            }
+
+            d = gStage55MainState.unk28 - 5.0f;
+            if (D_86710C20[D_8670C870].z <= d) {
+                gStage55MainState.unk28 = d;
+                cnt2++;
+            }
+            if ((D_8670BE84 - D_8670C87C) >= 3437) {
+                D_8670BE84 = D_8670BE84 - D_8670C87C;
+                cnt2++;
+            }
+            d = gStage55MainState.unk1C - D_8670C884;
+            if (3380.0f <= d) {
+                gStage55MainState.unk1C = d;
+                cnt2++;
+            }
+            d = gStage55MainState.unk24 - D_8670C880;
+            if (d <= 200.0f) {
+                gStage55MainState.unk24 = d;
+                cnt2++;
+            }
+            r = D_8670C878;
+            if (0.0f < r) {
+                d = gStage55MainState.unk20 + r;
+                if (d <= (v = D_8670C85C)) { // FAKE: v keeps the C85C read in a coloured register
+                    gStage55MainState.unk20 = d;
+                    cnt2++;
+                }
+            } else {
+                d = gStage55MainState.unk20 + r;
+                if ((v = D_8670C85C) <= d) { // FAKE
+                    gStage55MainState.unk20 = d;
+                    cnt2++;
+                }
+            }
+            if (cnt2 == 0) {
+                gStage55MainState.unk40 = 2;
+            }
+            break;
+
+        case 2:
+            D_8670BE80 -= 128;
+            break;
+    }
+}
 #endif
 
 #ifdef VERSION_US
