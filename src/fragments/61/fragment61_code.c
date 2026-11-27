@@ -3998,7 +3998,109 @@ void func_86B0BA28(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B0BB24.s")
+extern u8 D_86B17A78[];
+extern u8 *D_86B181C0;
+extern s32 D_86B17CFC;
+extern s32 D_86B0E0A0;
+extern u8 D_800CE060[];
+
+void func_86B0BB24(s32 arg0) {
+    s32 i;
+
+    if (*(s32 *)D_86B181C0 == 9 || *(s32 *)D_86B181C0 == 10 || *(s32 *)D_86B181C0 == 11) {
+        return;
+    }
+    switch (arg0) {
+        case 0:
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 && (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 1)) {
+                return;
+            }
+            break;
+        case 1:
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 && (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 2)) {
+                return;
+            }
+            break;
+        case 2:
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 && (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 4)) {
+                return;
+            }
+            break;
+        case 3:
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) != 4 && (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2182) & 8)) {
+                return;
+            }
+            break;
+    }
+    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0xC000;
+    for (i = 0; i < 4; i += 2) {
+        if (D_86B17CFC == ((s32 (*)[10])(D_86B17A78 + 0x28C))[arg0][i]) {
+            *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x8000;
+        }
+        if (D_86B17CFC == ((s32 (*)[10])(D_86B17A78 + 0x28C))[arg0][i + 4]) {
+            *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x4000;
+        }
+        if (D_86B17CFC == ((s32 (*)[10])(D_86B17A78 + 0x28C))[arg0][i + 1]) {
+            *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x8000;
+        }
+        if (D_86B17CFC == ((s32 (*)[10])(D_86B17A78 + 0x28C))[arg0][i + 5]) {
+            *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x4000;
+        }
+    }
+    if (D_86B17CFC == *(s32 *)(D_86B17A78 + arg0 * 40 + 0x2AC)) {
+        *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x8000;
+    }
+    if (*(s32 *)(D_86B17A78 + arg0 * 40 + 0x2B0) > 0 && D_86B17CFC >= *(s32 *)(D_86B17A78 + arg0 * 40 + 0x2B0)) {
+        *(u16 *)(D_800CE060 + arg0 * 40 + 8) |= 0x8000;
+    }
+    switch (*(s32 *)(D_86B17A78 + 0x68)) {
+        case 0:
+            if (D_86B0E0A0 != 0) {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 23) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            } else {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 18) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            }
+            break;
+        case 1:
+            if (D_86B0E0A0 != 0) {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 17) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            } else {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 13) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            }
+            break;
+        case 2:
+            if (D_86B0E0A0 != 0) {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 14) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            } else {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 11) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            }
+            break;
+        case 3:
+            if (D_86B0E0A0 != 0) {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 13) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            } else {
+                if (D_86B17CFC >= *(s32 *)(D_86B17A78 + 0x288) && D_86B17CFC < *(s32 *)(D_86B17A78 + 0x288) + 10) {
+                    *(u16 *)(D_800CE060 + arg0 * 40 + 8) &= ~0x8000;
+                }
+            }
+            break;
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
