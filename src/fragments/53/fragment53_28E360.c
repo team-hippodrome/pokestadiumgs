@@ -277,7 +277,164 @@ s32 func_86505934(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_28E360/func_86505EA8.s")
+typedef struct F53Obj {
+    /* 0x000 */ u8 unk_000[0x24];
+    /* 0x024 */ f32 x;
+    /* 0x028 */ f32 y;
+    /* 0x02C */ f32 z;
+    /* 0x030 */ f32 sx;
+    /* 0x034 */ f32 sy;
+    /* 0x038 */ f32 sz;
+    /* 0x03C */ u8 unk_03C[0x168 - 0x3C];
+} F53Obj;
+#define OBJ(sym) (*(F53Obj (*)[])(sym))
+#define OBJ2(sym) (*(F53Obj (*)[][2])(sym))
+extern u8 D_8650DB80[];
+extern u8 D_8650F7A0[];
+extern u8 D_86510010[];
+extern struct Fragment53Model D_8650E6C0[];
+extern u8 D_8650F200[];
+extern u8 D_865110F0[];
+extern u8 D_8650EC60[];
+extern u8 D_8650E6E4[];
+extern F53Obj D_8650FD40;
+extern u8 D_865105B0[];
+extern s32 D_8650DB28[];
+extern s32 D_8650DB40[];
+extern s32 D_8650C4E0[];
+extern s32 D_8650C474;
+extern f32 D_8650C4D0;
+extern f32 D_8650C4F4;
+extern u8 D_8650D9A0[];
+extern u8 D_8650D9B8[];
+extern u8 D_8650D9F8[];
+extern u8 D_8650DA18[];
+extern u8 D_8650DA38[];
+extern u8 D_87F15B70[];
+extern void *D_8650DB10;
+extern void func_865059A0(void);
+extern void func_80037E9C(s32, void *);
+extern void func_87F0D48C(void *, void *, s32);
+extern void func_87F02CE0(void *, void *, s32);
+extern void func_87F03BB0(void *, s32);
+extern void func_8003F018(void *);
+extern void func_8003F03C(void *, void *);
+extern void func_87F06430(void *, s32);
+extern void func_8003F114(void *, s32, s32, s32);
+extern void func_8003F210(void *, s32);
+extern s32 ModelAnim_SetSpeed(u8 *, s32);
+extern void ModelAnim_SetFrame(u8 *, s16);
+extern void ModelAnim_SetEventFrame(u8 *, s16);
+extern void func_8003F3BC(void *, s32);
+extern void func_80037E3C(void *, void *, s32);
+extern void func_86502958(void);
+extern void func_86503B98(s32, void *);
+extern void func_8650455C(s32, void *);
+extern void func_86504740(s32, void *);
+
+void func_86505EA8(void) {
+    s32 count;
+    s32 i;
+    s32 j;
+    f32 pad; // FAKE: unused local keeps the frame layout
+    f32 x;
+
+    func_865059A0();
+    count = 4;
+    func_80037E9C(0, D_8650D9A0);
+    func_80037E9C(0, D_8650D9B8);
+    func_87F0D48C(D_8650DA38, D_8650DB10, 0);
+    func_87F02CE0(D_8650D9A0, D_8650D9F8, 150);
+    func_87F03BB0(D_8650DA18, 50);
+
+    for (i = 0; i < 4; i++) {
+        for (j = 0; j < 2; j++) {
+            func_8003F018(&OBJ2(D_865105B0)[i][j]);
+        }
+    }
+
+    for (i = 0; i < count; i++) {
+        func_8003F018(&OBJ(D_8650E120)[i]);
+        func_8003F018(&OBJ(D_8650DB80)[i]);
+        func_8003F018(&OBJ(D_8650F7A0)[i]);
+        func_8003F03C(&OBJ(D_86510010)[i], D_8650D9A0);
+        func_8003F03C(&OBJ(D_8650E6C0)[i], D_87F15B70);
+        func_87F06430(&OBJ(D_8650E6E4)[i], i);
+        OBJ(D_8650E6C0)[i].sz = 0.095f;
+        OBJ(D_8650E6C0)[i].sy = 0.095f;
+        OBJ(D_8650E6C0)[i].sx = 0.095f;
+        OBJ(D_8650E6C0)[i].y = 55.0f;
+        func_8003F114(&OBJ(D_8650E6C0)[i], 0, -1, D_8650DB28[i]);
+        func_8003F210(&OBJ(D_8650E6C0)[i], 0);
+        ModelAnim_SetSpeed((u8 *)&OBJ(D_8650E6C0)[i], 0x10000);
+        ModelAnim_SetFrame((u8 *)&OBJ(D_8650E6C0)[i], guRandom() % 15 + 15);
+        ModelAnim_SetEventFrame((u8 *)&OBJ(D_8650E6C0)[i], 0);
+        func_8003F3BC(&OBJ(D_8650E6C0)[i], 0);
+        D_86511698[i].animation = 0;
+        func_8003F03C(&OBJ(D_8650F200)[i], D_8650D9A0);
+        func_8003F018(&OBJ(D_865110F0)[i]);
+
+        OBJ(D_8650E120)[i].z = -35.0f;
+        OBJ(D_8650E120)[i].x = (i * 120.0f + -180.0f) * D_8650C4D0;
+        OBJ(D_8650E120)[i].y = D_8650C474;
+        OBJ(D_8650E120)[i].sx = 0.25f;
+        OBJ(D_8650E120)[i].sz = 0.25f;
+        OBJ(D_8650E120)[i].sy = 0.25f;
+        func_8003F018(&OBJ(D_8650EC60)[i]);
+
+        OBJ(D_8650DB80)[i].z = 48.0f;
+        x = D_8650C4E0[i] + (i * 120.0f + -180.0f) * D_8650C4D0;
+        OBJ(D_8650DB80)[i].y = -400.0f;
+        OBJ(D_8650F7A0)[i].y = -400.0f;
+        OBJ(D_8650DB80)[i].sx = 2.4f;
+        OBJ(D_8650DB80)[i].sz = 2.4f;
+        OBJ(D_8650DB80)[i].sy = 2.4f;
+        OBJ(D_8650F7A0)[i].sy = 1.0f;
+        OBJ(D_8650F7A0)[i].sz = 1.0f;
+        OBJ(D_8650F7A0)[i].z = 45.0f;
+        OBJ(D_8650F7A0)[i].x = OBJ(D_8650DB80)[i].x = x;
+        OBJ(D_8650F7A0)[i].sx = 0.1f;
+        OBJ(D_86510010)[i].x = OBJ(D_8650E120)[i].x;
+        OBJ(D_86510010)[i].z = 50.0f;
+        OBJ(D_86510010)[i].y = 92.0f;
+        OBJ(D_86510010)[i].sz = D_8650C4F4;
+        OBJ(D_86510010)[i].sy = D_8650C4F4;
+        OBJ(D_8650F200)[i].y = -400.0f;
+        OBJ(D_86510010)[i].sx = D_8650C4F4;
+        OBJ(D_8650F200)[i].sx = 0.3f;
+        OBJ(D_8650F200)[i].sz = 0.3f;
+        OBJ(D_8650F200)[i].x = (i * 120.0f + -180.0f) * D_8650C4D0;
+        OBJ(D_8650F200)[i].z = 40.0f;
+        OBJ(D_8650F200)[i].sy = 0.17f;
+        for (j = 0; j < 2; j++) {
+            OBJ2(D_865105B0)[i][j].x = OBJ(D_8650F200)[i].x;
+            OBJ2(D_865105B0)[i][j].z = OBJ(D_8650F200)[i].z;
+            OBJ2(D_865105B0)[i][j].sx = 0.3f;
+            OBJ2(D_865105B0)[i][j].sz = 0.3f;
+            OBJ2(D_865105B0)[i][j].sy = 0.17f;
+        }
+        OBJ(D_865110F0)[i].x = OBJ(D_8650E120)[i].x;
+        OBJ(D_865110F0)[i].sx = 0.6f;
+        OBJ(D_865110F0)[i].sy = 0.6f;
+        OBJ(D_865110F0)[i].sz = 0.6f;
+        OBJ(D_865110F0)[i].y = 0.0f;
+        OBJ(D_865110F0)[i].z = 100.0f;
+        func_80037E3C(&OBJ(D_8650E120)[i], func_86503B98, i);
+        func_80037E3C(&OBJ(D_8650DB80)[i], func_8650455C, i);
+        func_80037E3C(&OBJ(D_8650F200)[i], func_86504740, i);
+        func_80037E3C(OBJ2(D_865105B0)[i], func_86504EB0, i);
+        func_8003F114(&OBJ(D_8650DB80)[i], 0, -1, D_8650DB40[i]);
+    }
+    func_80037E3C(OBJ(D_865110F0), func_8650515C, 0);
+    func_8003F018(&D_8650FD40);
+    D_8650FD40.z = 40.0f;
+    D_8650FD40.x = 0.0f;
+    D_8650FD40.y = 335.0f;
+    D_8650FD40.sz = 1.0f;
+    D_8650FD40.sx = 0.1f;
+    D_8650FD40.sy = 0.5f;
+    func_86502958();
+}
 #endif
 
 #ifdef VERSION_US
