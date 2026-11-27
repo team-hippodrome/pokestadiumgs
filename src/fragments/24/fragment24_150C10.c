@@ -2410,7 +2410,164 @@ void func_82B06360(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B0671C.s")
+
+
+typedef struct F24Menu {
+    /* 0x000 */ s16 state;
+    /* 0x002 */ s16 prevState;
+    /* 0x004 */ u16 flags;
+    /* 0x006 */ s16 counter;
+    /* 0x008 */ s16 sel;
+    /* 0x00A */ s16 unk_0A;
+    /* 0x00C */ u8 unk_00C[0x250 - 0xC];
+    /* 0x250 */ s16 listCount;
+    /* 0x252 */ s16 itemCount;
+    /* 0x254 */ u8 unk_254[0xB18 - 0x254];
+    /* 0xB18 */ void *list[20];
+    /* 0xB68 */ void *items[20];
+} F24Menu;
+
+extern void *D_80087200;
+extern u8 D_82B08550[];
+extern void func_82B070B8(s32, s32);
+extern void func_82B01054(s32);
+extern void func_82B055A0(void);
+extern s32 func_82B01130(void);
+extern void func_82B05F60(void);
+extern void func_82B06360(s32);
+extern s32 func_82B0173C(s32, s32);
+extern s32 func_81700B8C(s32, s32);
+extern void func_81700CDC(s32 arg0);
+extern void *func_82B02800(s32, s32);
+extern void func_82B02924(void *, s32);
+extern void func_82B02A34(void *, s32);
+
+void func_82B0671C(void) {
+    F24State12450 *state = &sState12450;
+    u8 *base;
+    s32 old;
+    s32 col;
+    s32 row;
+    s32 btn;
+    s32 btn2;
+    s32 i;
+    void *item;
+    s16 *entry;
+    F24Menu *m = (F24Menu *)D_82B12450;
+
+    base = D_82B12450;
+    old = *(s16 *)(base + 8);
+    col = *(s16 *)(base + 8) % 3;
+    row = *(s16 *)(base + 8) / 3;
+    btn = *(u16 *)((u8 *)*(void **)(u8 *)&D_80087200 + 0xC);
+    if (btn & 0x200) {
+        col--;
+        if (col < 0) {
+            col = 0;
+        }
+    }
+    if (btn & 0x100) {
+        col++;
+        if (col >= 3) {
+            col = 2;
+        }
+    }
+    if (btn & 0x800) {
+        row--;
+        if (row < 0) {
+            row = 0;
+        }
+    }
+    if (btn & 0x400) {
+        row++;
+        if (row >= 2) {
+            row = 1;
+        }
+    }
+    state->unk_08 = row * 3 + col;
+    if (old != state->unk_08) {
+        func_800226C0(1);
+    }
+    entry = (s16 *)(D_82B08550 + state->unk_08 * 4);
+    if (*entry != 0) {
+        state->flags |= 8;
+    } else {
+        state->flags &= ~8;
+    }
+    btn2 = *(u16 *)((u8 *)*(void **)(u8 *)&D_80087200 + 8);
+    if (btn2 & 0x8000) {
+        item = *(void **)(D_82B12450 + state->unk_08 * 4 + 0xB68);
+        if (item != NULL && (*(u16 *)((u8 *)item + 4) & 1)) {
+            switch (state->unk_08) {
+                case 5:
+                    state->state = 3;
+                    if (func_81700B8C(1, func_82B0173C(state->state, state->unk_08)) != 0) {
+                        func_81700CDC(1);
+                    }
+                    func_82B01054(-1);
+                    func_82B055A0();
+                    for (i = 0; i < 5; i++) {
+                        func_82B02A34(func_82B02800(1, i), 0);
+                    }
+                    func_82B02A34(func_82B02800(2, 0), 0);
+                    func_82B02A34(func_82B02800(3, 0), 0);
+                    for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+                        func_82B02A34(*(void **)(D_82B12450 + i * 4 + 0xB18), 0);
+                    }
+                    m->listCount = 0;
+                    m->list[m->listCount++] = func_82B02800(4, 0);
+                    m->list[m->listCount++] = func_82B02800(5, 0);
+                    for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+                        func_82B02924(*(void **)(D_82B12450 + i * 4 + 0xB18), 0);
+                    }
+                    break;
+                case 3:
+                case 4:
+                    func_82B070B8(state->unk_08, 1);
+                    break;
+                default:
+                    if (func_82B01130() != 0) {
+                        func_82B05F60();
+                    } else {
+                        func_82B06360(1);
+                    }
+                    break;
+            }
+            if (state->unk_08 == 5) {
+                func_800226C0(0x10);
+            } else {
+                func_800226C0(0x8C);
+            }
+        } else {
+            func_800226C0(5);
+        }
+    } else if (btn2 & 0x4000) {
+        state->counter = 0;
+        state->unk_0a = -1;
+        state->state = 9;
+        func_800226C0(3);
+    } else if (btn2 & 0x10) {
+        if (*entry != 0) {
+            state->unk_02 = state->state;
+            state->flags |= 0x10;
+            state->counter = 0;
+            state->unk_0a = state->unk_08; state->unk_0a |= 0x100;
+            state->state = 8;
+            func_800226C0(0xD2);
+            m->listCount = 0;
+            for (i = 0; i < m->itemCount; i++) {
+                m->list[m->listCount++] = *(void **)(D_82B12450 + i * 4 + 0xB68);
+            }
+            m->list[m->listCount++] = func_82B02800(3, 0);
+            for (i = 0; i < *(s16 *)(base + 0x250); i++) {
+                func_82B02A34(*(void **)(D_82B12450 + i * 4 + 0xB18), 0);
+            }
+        }
+    }
+    if (state->state != 2) {
+        func_82B01054(-1);
+    }
+}
 #endif
 
 #ifdef VERSION_US
