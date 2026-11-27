@@ -11,11 +11,11 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Original instructions | C upstream | Open | Total | Complete |
 | --- | ---: | ---: | ---: | ---: |
 | 0–99 | 8,400 | 0 | 8,400 | 100.0% |
-| 100–199 | 1,299 | 10 | 1,309 | 99.2% |
-| 200–299 | 415 | 5 | 420 | 98.8% |
-| 300–399 | 177 | 1 | 178 | 99.4% |
-| 400–499 | 78 | 1 | 79 | 98.7% |
-| 500–699 | 82 | 1 | 83 | 98.7% |
+| 100–199 | 1,301 | 8 | 1,309 | 99.3% |
+| 200–299 | 417 | 3 | 420 | 99.2% |
+| 300–399 | 178 | 0 | 178 | 100.0% |
+| 400–499 | 79 | 0 | 79 | 100.0% |
+| 500–699 | 83 | 0 | 83 | 100.0% |
 | 700–999 | 32 | 1 | 33 | 96.9% |
 | 1000–1499 | 16 | 0 | 16 | 100.0% |
 | 1500–1999 | 6 | 0 | 6 | 100.0% |
@@ -23,8 +23,8 @@ US bucket totals are retained from this table; open function sizes are counted f
 | Unknown | 0 | 0 | 0 | — |
 
 <!-- AUTO_COVERAGE:START -->
-- US functions with C implementations: **10,511 / 10,532 (99.8%)**
-- Remaining `GLOBAL_ASM` owners: **21**
+- US functions with C implementations: **10,518 / 10,532 (99.8%)**
+- Remaining `GLOBAL_ASM` owners: **14**
 - Baseline: **10,532** US `GLOBAL_ASM` owners in the original pragma snapshot
 <!-- AUTO_COVERAGE:END -->
 
@@ -33,19 +33,15 @@ US bucket totals are retained from this table; open function sizes are counted f
 | File | Remaining | Baseline total | Percent complete |
 | --- | ---: | ---: | ---: |
 | `src/290C0.c` | 1 | 6 | 83.3% |
-| `src/fragments/17/fragment17_10FFC0.c` | 2 | 56 | 96.4% |
+| `src/fragments/17/fragment17_10FFC0.c` | 1 | 56 | 98.2% |
 | `src/fragments/20/fragment20_12C460.c` | 1 | 146 | 99.3% |
-| `src/fragments/21/fragment21_140B40.c` | 2 | 2 | 0.0% |
+| `src/fragments/21/fragment21_140B40.c` | 1 | 2 | 50.0% |
 | `src/fragments/31/fragment31_189760.c` | 1 | 5 | 80.0% |
 | `src/fragments/32/fragment32_1B1330.c` | 1 | 22 | 95.4% |
 | `src/fragments/49/fragment49_code.c` | 1 | 116 | 99.1% |
 | `src/fragments/50/fragment50_266A60.c` | 1 | 52 | 98.0% |
-| `src/fragments/54/fragment54_code.c` | 2 | 43 | 95.3% |
-| `src/fragments/55/fragment55_code.c` | 1 | 53 | 98.1% |
 | `src/fragments/57/fragment57_code.c` | 1 | 32 | 96.8% |
-| `src/fragments/58/fragment58_code.c` | 1 | 25 | 96.0% |
 | `src/fragments/59/fragment59_code.c` | 1 | 44 | 97.7% |
-| `src/fragments/64/fragment64_32AEF0.c` | 1 | 11 | 90.9% |
 | `src/fragments/69/fragment69_code.c` | 1 | 46 | 97.8% |
 | `src/fragments/7/fragment7_BA250.c` | 1 | 100 | 99.0% |
 | `src/fragments/77/fragment77_code.c` | 1 | 30 | 96.6% |
