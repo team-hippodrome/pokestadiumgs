@@ -362,8 +362,9 @@ SECTIONS
     {
         build/src/fragments/17/fragment17_1154C0.o(.bss)
     }
-    /* func_8230010C's sDuration (a function static) over the loaded word at
-     * 0x82305B84 in fragment 19's data. */
+    /* func_8230010C's sDuration and func_82300AF8's slide/fade frame counts
+     * (function statics) over the loaded words at 0x82305B84..0x82305B93 in
+     * fragment 19's data. */
     .fragment19_wipe_duration_5B84_data 0x82305B84 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.data)
