@@ -966,7 +966,75 @@ void func_86502B88(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86502D80.s")
+extern s32 D_8650C494;
+extern f32 D_8650D0AC;
+extern f32 D_8650D0B0;
+extern s32 D_8650D0B4[];
+extern f32 D_8650D0C4;
+extern f32 D_8650D0D0;
+extern u32 func_8003570C(void);
+extern void *func_87F0328C(void *, s32, f32, f32, f32, f32, s32);
+
+#define RAND01() ((f32)func_8003570C() / 4294967296.0f)
+#define ABSF(x) ((x) < 0 ? -(x) : (x))
+
+void func_86502D80(s32 arg0) {
+    s32 r;
+    s32 i;
+    s32 n;
+    f32 a;
+    f32 b;
+    u8 *obj;
+    u8 *sub;
+    u8 *col;
+    f32 one;
+
+    if (D_8650C494 == 1) {
+        return;
+    }
+    D_8650D0C4 = ((178.0f + D_8650D0B0) - (f32)*(s32 *)((u8 *)&D_86511698[arg0] + 0x44)) *
+                 ((f32)D_8650C4CC - D_8650D0AC) / 146.0f;
+    n = 5;
+    one = 1.0f;
+    for (i = 0; i < 2; i++) {
+        r = guRandom() % 4;
+        if (r <= 0) {
+            b = 2.8f;
+            a = 2.8f;
+        } else if (r < 2) {
+            if (n) {} // FAKE
+            a = -2.8f;
+            b = 2.8f;
+        } else {
+            b = -2.80f;
+            if (r < 3) {
+                a = -2.800f;
+            } else {
+                a = 2.8f;
+            }
+        }
+        obj = func_87F0328C(D_8650D9F8, 0 * (i / n), // FAKE: 0 * (i / n)
+                            *(f32 *)((u8 *)&D_8650E120[arg0] + 0x24) + (f32)D_8650D0B4[arg0] + RAND01() * b * 10.0f,
+                            *(f32 *)&D_8650D0B4[4] + RAND01() * ABSF(a) * 15.0f, 150.0f, RAND01() * 1.2f * one,
+                            func_8003570C() % 1 + 10);
+        if (obj != NULL) {
+            sub = *(u8 **)(obj + 0x20);
+            *(f32 *)(obj + 0x10) = RAND01() * b * D_8650D0D0;
+            *(f32 *)(obj + 0x14) = RAND01() * ABSF(a) * 1.6;
+            *(f32 *)(obj + 0x18) = 0.0f;
+            *(f32 *)(sub + 0x18) = 1.0f;
+            col = *(u8 **)(obj + 0x20);
+            col[0x10] = 0xFF;
+            col[0x11] = 0xFF;
+            col[0x12] = 0xFF;
+            col[0x13] = 0xFF;
+            col[0x14] = 0xFF;
+            col[0x15] = 0xFF;
+            col[0x16] = 0;
+            col[0x17] = 0xFF;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
