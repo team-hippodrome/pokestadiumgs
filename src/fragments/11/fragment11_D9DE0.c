@@ -1839,5 +1839,67 @@ extern void func_800226C0(s32);
 extern void _bzero(void *, s32);
 void func_81609CB8(void) { if ((D_8160BDF4 >> 31) != 0) func_800226C0(0xA5); if (((D_8160BDF4 << 1) >> 31) != 0) func_800226C0(0xA6); if (((D_8160BDF4 << 2) >> 31) != 0) func_800226C0(0xA9); if (((D_8160BDF4 << 3) >> 31) != 0) func_800226C0(0xA7); if (((D_8160BDF4 << 4) >> 31) != 0) func_800226C0(0xA8); if (((D_8160BDF4 << 5) >> 31) != 0) func_800226C0(0xAA); if (((D_8160BDF4 << 6) >> 31) != 0) func_800226C0(0xAC); if (*(u8 *)&D_8160BDF4 & 1) func_800226C0(0xAB); _bzero(&D_8160BDF4, 4); }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/11/fragment11_D9DE0/func_81609DC0.s")
+// Builds a 5x4 grid of textured tiles per column: first fills the vertex buffer through the
+// arg0 position callback, then emits one G_VTX load per column and a texture tile + draw per cell.
+#define F11_GFX(a, b) { Gfx *g_ = (*(Gfx **)&D_800D0510)++; g_->words.w0 = (a); g_->words.w1 = (b); }
+extern u8 D_8160BEA0[];
+void func_81609DC0(void (*arg0)(s32, s32, s32 *, s32 *, s32), u8 *arg1, s32 arg2) {
+    s32 i;
+    s32 pad0;
+    Vtx *buf;
+    s32 j;
+    s32 n;
+    s32 x;
+    s32 y;
+    Vtx *vtx;
+    s32 k;
+    s32 pad1;
+    s32 pad2;
+    s32 out1;
+    s32 out0;
+    s32 j2;
+    s32 k2;
+
+    buf = Gfx_AllocDisplayList(0x640);
+    func_816083A4();
+    F11_GFX(0xE7000000, 0);
+    F11_GFX(0xE3000A01, 0x100000);
+    F11_GFX(0xD9000000, 0);
+    F11_GFX(0xFCFFFFFF, 0xFFFF7C38);
+    F11_GFX(0xE200001C, 0x0F0A4000);
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 1; j++) {
+            for (k = 0; k < 5; k++) {
+                for (n = 0; n < 4; n++) {
+                    vtx = &buf[(i + j * 5) * 20 + n * 5 + k];
+                    x = i * 0x80 + k * 0x20;
+                    y = j * 0x60 + n * 0x20;
+                    arg0(x, y, &out1, &out0, arg2);
+                    Gfx_SetVertexAttributes(vtx, x + out1, y + out1, x << 5, y << 5, 0, 0xFF, 0xFF, 0xFF, 0xFF);
+                }
+            }
+        }
+    }
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 1; j++) {
+            F11_GFX(0x01014028, (u32)&buf[(i + j * 1) * 20] & 0x1FFFFFFF);
+            for (k2 = 0; k2 < 5; k2++) {
+                for (j2 = 0; j2 < 4; j2++) {
+                    x = i * 0x80 + k2 * 0x20;
+                    y = j * 0x60 + j2 * 0x20;
+                    F11_GFX(0xFD10027F, (u32)(arg1 + (y * 640 + x) * 2));
+                    F11_GFX(0xF5104200, 0x07080200);
+                    F11_GFX(0xE6000000, 0);
+                    F11_GFX(0xF4000000, 0x07200200);
+                    F11_GFX(0xE7000000, 0);
+                    F11_GFX(0xF5104200, 0x00080200);
+                    F11_GFX(0xF2000000, 0x00200200);
+                    F11_GFX(0xF2000000 | ((x & 0xFFF) << 12) | (y & 0xFFF), (((x + 0x7C) & 0xFFF) << 12) | ((u16)(y + 0x7C) & 0xFFF));
+                    F11_GFX(0xDE000000, (u32)D_8160BEA0);
+                }
+            }
+        }
+    }
+}
+
 #endif
