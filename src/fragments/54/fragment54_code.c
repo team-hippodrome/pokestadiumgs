@@ -4,7 +4,7 @@
 // This file's .data, [0x866066F0, 0x86606EE0): D_866066F0, the D_866066F4 table
 // (read by func_86600678 and func_86602828) and D_8660670C here, the tables
 // from D_86606710 on just before func_866049D4, then func_866049D4's statics
-// and D_86606ED0.
+// and func_86605ABC's static D_86606ED0.
 s32 D_866066F0 = 0;
 s32 D_866066F4[6] = { 1, 2, 3, 4, 1, 8 };
 s32 D_8660670C = 0;
@@ -2306,8 +2306,6 @@ void func_866049D4(void) {
     S54(0)++;
 }
 
-// .data right after func_866049D4's statics (read by func_86605ABC).
-s32 D_86606ED0[4] = { 1, 0, 0, 0 };
 #endif
 
 #ifdef VERSION_US
@@ -2563,7 +2561,79 @@ s32 func_866056B8(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86605ABC.s")
+extern f32 D_8660AB18[6];
+extern f32 D_8660AB30[6];
+
+// D_86606788 record fields: 0x04 state, 0x1C f32[6] current values, 0x54 target row, 0x58 base step.
+#define ABC_S32(off) (*(s32 *)(&D_86606788 + (off)))
+#define ABC_F32(off) (*(f32 *)(&D_86606788 + (off)))
+// D_86606830 viewed as rows of seven f32: six targets, then a step factor.
+#define ABC_ROW ((f32 (*)[7])D_86606830)
+
+void func_86605ABC(void) {
+    static s32 D_86606ED0[4] = { 1 }; // only [0] is used; the rest pads the .data block
+    s32 count = 0;
+    s32 i;
+    f32 scale;
+    f32 cur;
+
+    if (D_86606714 == 1) {
+        return;
+    }
+    if (D_8660672C == 0) {
+        i = 0;
+        // FAKE: dead reads that order uopt's register colouring of the first loop.
+        if (ABC_S32(0x54)) {} if (D_8660AB18[i]) {} if (*(f32 *)((u8 *)ABC_ROW[ABC_S32(0x54)] + i * 4)) {}
+        if (ABC_S32(0x4) == 12) {
+            ABC_S32(0x4) = 1;
+            if (count) {} } return; } if (&D_86606788) {} if (D_86606830) {} // FAKE (one line for as1 order)
+    if (D_8660AB18) {} // FAKE
+    if ((D_86606ED0[0] | 0) == 1) { // FAKE: `| 0` puts the constant first in the bne
+        for (i = 0; i < 6; i++) {
+            scale = ABC_F32(0x58) + ABC_ROW[ABC_S32(0x54)][6] * (f32)D_8660672C;
+            D_8660AB30[i] = (*(f32 *)((u8 *)ABC_ROW[ABC_S32(0x54)] + i * 4) - ABC_F32(0x1C + i * 4)) / 100.0f;
+            // FAKE: `+ x * 0.0f` (folded away) makes scale the first mul.s operand.
+            D_8660AB18[i] = D_8660AB30[i] * (scale + D_8660AB30[i] * 0.0f);
+        }
+        D_86606ED0[0] = 0;
+    }
+    for (i = 0; i < 6; i++) {
+        if (D_8660AB18[i] == 0.0f) {
+            count++;
+        } else if (D_8660AB18[i] >= 0.0f) {
+            cur = D_8660AB18[i] + ABC_F32(0x1C + i * 4);
+            if (ABC_ROW[ABC_S32(0x54)][i] <= cur) {
+                ABC_F32(0x1C + i * 4) = ABC_ROW[ABC_S32(0x54)][i];
+                count++;
+            } else {
+                ABC_F32(0x1C + i * 4) = cur;
+            }
+        } else {
+            cur = D_8660AB18[i] + ABC_F32(0x1C + i * 4);
+            if (cur <= ABC_ROW[ABC_S32(0x54)][i]) {
+                ABC_F32(0x1C + i * 4) = ABC_ROW[ABC_S32(0x54)][i];
+                count++;
+            } else {
+                ABC_F32(0x1C + i * 4) = cur;
+            }
+        }
+    }
+    if (count >= 6) {
+        D_86606ED0[0] = 1;
+        if (ABC_S32(0x54) >= 3) {
+            ABC_S32(0x84) = 1;
+            if (ABC_S32(0x4) == 12) {
+                ABC_S32(0x4) = 1;
+            }
+        } else {
+            ABC_S32(0x54)++;
+        }
+    }
+}
+
+#undef ABC_S32
+#undef ABC_F32
+#undef ABC_ROW
 #endif
 
 #ifdef VERSION_US
