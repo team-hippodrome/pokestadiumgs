@@ -1,7 +1,5 @@
 #include "global.h"
 
-#pragma GLOBAL_ASM("hand_asm/fragments/1/fragment1_de0.s")
-
 #ifdef VERSION_US
 extern Gfx *D_800D0510;
 extern s32 func_8004C990(s32, s32);
@@ -27,10 +25,9 @@ void func_83500020(s32 arg0, s32 arg1) {
 extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, s32);
 extern u16 D_83503C20;
 extern f32 D_80088E50[];
-extern f32 D_83503DBC;
 
 s32 func_83500124(s32 arg0, s32 arg1) {
-    func_80038E14(arg1, 0, 0.0f, D_80088E50[D_83503C20 >> 4] * D_83503DBC, 0.0f, 0.0f, 0.0f, 0);
+    func_80038E14(arg1, 0, 0.0f, D_80088E50[D_83503C20 >> 4] * 1700.0f, 0.0f, 0.0f, 0.0f, 0);
     return 0;
 }
 extern void func_80037120(s32, s32, s32 *, s16 *, s16 *);
@@ -91,7 +88,69 @@ void func_8350026C(void) {
     func_8003F018((s32) &D_83503F70);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/1/fragment1_code/func_83500300.s")
+extern u8 *func_87F0328C(u8 *arg0, s32 arg1, f32 x, f32 y, f32 z, f32 scale, s32 arg6);
+extern u32 func_8003570C(void);
+#define RAND01() (func_8003570C() / 4294967296.0f)
+void func_83500300(void) {
+    static f32 D_83503CDC = -40.0f;
+    static f32 D_83503CE0 = 0.0f;
+    static f32 D_83503CE4 = 0.0f;
+    static f32 D_83503CE8 = 0.0f;
+    static s32 D_83503CEC = 0;
+    static s32 D_83503CF0 = 1;
+    static s32 D_83503CF4 = 36;
+    static s32 D_83503CF8 = 0; // unreferenced .data word
+    s32 i;
+    s32 count;
+    s32 r;
+    f32 vx;
+    f32 vz;
+    u8 *obj;
+    u8 *state;
+    u8 *col;
+
+    D_83503CE8 = 3.5f;
+    D_83503CE0 = 5.0f;
+    D_83503CE4 = 0;
+    count = 4;
+    for (i = 0; i < count; i++) {
+        r = (s32)guRandom() % 4;
+        if (r < 1) {
+            vz = 2.8f;
+            vx = 2.8f;
+        } else if (r < 2) {
+            vx = -2.8f;
+            vz = 2.8f;
+        } else if (r < 3) {
+            vz = -2.8f;
+            vx = -2.8f;
+        } else {
+            vz = -2.8f;
+            vx = 2.8f;
+        }
+        obj = func_87F0328C(&D_83503F30, 0, RAND01() * vz * (40.0f * D_83503CE8),
+                            RAND01() * (vx < 0 ? -vx : vx) * (D_83503CF4 * D_83503CE8) + D_83503CDC, 0,
+                            (f64)(RAND01() * 0.8f) * D_83503CE8, (func_8003570C() % 9) + D_83503CE0);
+        if (obj != NULL) {
+            D_83503CEC++;
+            if (D_83503CEC >= 126) {
+                D_83503CEC = 0;
+            }
+            state = *(u8 **)(obj + 0x20);
+            *(f32 *)(obj + 0x10) = RAND01() * vz * 0;
+            *(f32 *)(obj + 0x14) = RAND01() * (vx < 0 ? -vx : vx) * (-1.5 * D_83503CE4);
+            *(f32 *)(obj + 0x18) = 0.0f;
+            *(f32 *)(state + 0x18) = 1.0f;
+            col = *(u8 **)(obj + 0x20);
+            col[0x10] = 255;
+            col[0x11] = 255;
+            col[0x12] = 255;
+            col[0x13] = 255;
+            // FAKE: one line, so as1 schedules the 0x15..0x17 stores like retail
+            col[0x14] = (func_8003570C() % 176) * D_83503CF0 + 80; col[0x15] = 255; col[0x16] = 0; col[0x17] = 255;
+        }
+    }
+}
 
 /* mkdraft:func_83500708 begin */
 extern u8 D_80094E38[];
@@ -278,8 +337,6 @@ void func_835012C8(void) {
 }
 
 extern s32 D_83503BA8;
-extern f64 D_83503DD8;
-extern f64 D_83503DE0;
 extern f32 D_835040E0;
 extern s32 D_83503AC0[];
 extern void func_800226C0(s32);
@@ -295,9 +352,9 @@ void func_8350182C(void) {
     static f32 D_83503D00 = 0.0f;
 
     if (BE0 > 0.0f) {
-        D_835040E0 = BE0 + D_83503DD8;
+        D_835040E0 = BE0 + 0.1;
         BE0 -= D_83503CFC * D_83503CFC;
-        D_83503CFC = D_83503CFC + D_83503DE0;
+        D_83503CFC = D_83503CFC + 0.2;
     } else if (D_83503AC0[3] == 0) {
         D_83503AC0[3] = 1;
         func_800226C0(0x77);
@@ -614,9 +671,6 @@ extern s32 D_83503D44;
 extern s32 D_83503D48;
 extern s32 D_83503D4C;
 extern s32 D_83503BA8;
-extern char D_83503DB0[];
-extern char D_83503DB4[];
-extern char D_83503DB8[];
 typedef struct Table4 { s32 a; s32 b; s32 c; s32 d; } Table4;
 
 
@@ -648,15 +702,15 @@ void func_83502BFC(void)
   switch (*((s32 *) (((u8 *) (&D_83503BA8)) + 4)))
   {
     case 0:
-      func_800495F8(0x140, 0x145, 1, D_83503DB0, func_8004C874(0x49, 0));
+      func_800495F8(0x140, 0x145, 1, "%s", func_8004C874(0x49, 0));
       break;
 
     case 1:
-      func_800495F8(0x140, 0x145, 1, D_83503DB4, func_8004C874(0x49, 1));
+      func_800495F8(0x140, 0x145, 1, "%s", func_8004C874(0x49, 1));
       break;
 
     case 2:
-      func_800495F8(0x140, 0x145, 1, D_83503DB8, func_8004C874(0x49, 2));
+      func_800495F8(0x140, 0x145, 1, "%s", func_8004C874(0x49, 2));
       break;
 
   }
