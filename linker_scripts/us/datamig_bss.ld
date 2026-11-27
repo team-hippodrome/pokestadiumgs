@@ -557,10 +557,11 @@ SECTIONS
     {
         build/src/fragments/72/fragment72_code.o(.bss)
     }
-    /* Fragment 57's loader-cleared runtime memory: the 48-byte dialog record
-     * sDialog, the camera/menu objects after it, then func_83300CB0's
-     * function-scope statics (0x8330AC08-0x8330ACF8). */
-    .fragment57_dialog_context_bss 0x8330AC08 (NOLOAD) : SUBALIGN(4)
+    /* Fragment 57's loader-cleared runtime memory: four words before the
+     * 48-byte dialog record sDialog (0x8330AC08; the second is func_83303640's
+     * function-scope static), the camera/menu objects after it, then
+     * func_83300CB0's function-scope statics (0x8330ABF8-0x8330ACF8). */
+    .fragment57_dialog_context_bss 0x8330ABF8 (NOLOAD) : SUBALIGN(4)
     {
         build/src/fragments/57/fragment57_code.o(.bss)
     }
@@ -669,7 +670,7 @@ ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
 ASSERT(SIZEOF(.fragment54_code_bss) == 0x2A30,
        "fragment54_code's .bss must end at 0x86609E40");
 
-ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 0xF0,
+ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 0x100,
        "fragment57 runtime bss must end after func_83300CB0's statics");
 
 ASSERT(SIZEOF(.fragment66_output_bounds_bss) == 0x3150,
