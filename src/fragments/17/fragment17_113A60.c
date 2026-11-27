@@ -236,7 +236,7 @@ extern u8 D_8220DBB4[];
 extern s32 func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
 extern void func_80007328(Gfx **, s32, s32, u8 *);
-extern void func_80045DB4(u8 *, s32, s32, u8, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_80045DB4(u8 *, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 
 // The retail words pack the colour bytes as g, b, r with alpha in the low byte;
@@ -380,7 +380,61 @@ void func_8220510C(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_113A60/func_822056C0.s")
+void func_822056C0(u8 *arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
+    s32 pad1;
+    u16 *tex2;
+    s16 x;
+    s32 rows;
+    u8 *img2;
+    s32 w;
+    u8 *base;
+    s32 rem;
+    s32 n;
+    u8 *img;
+    u8 *c;
+    s32 i;
+    s32 cut;
+    s32 y;
+    u16 tw;
+    s32 pad2;
+    u16 *tex;
+
+    base = D_8220D8D0 + arg1 * 52;
+    tex = (u16 *)func_8004C990(8, *(u16 *)(base + 0xA));
+    w = func_82204780(tex[0], 0x1000);
+    cut = *(s16 *)((u8 *)&D_8220EB98 + arg1 * 24) * tex[1] / 10;
+    rem = tex[1] - cut;
+    n = func_822047BC(cut, w);
+    img = func_8004CA60((u8 *)tex);
+    tex2 = NULL;
+    if (arg4 && *(s16 *)(base + 6) != -1) {
+        tex2 = (u16 *)func_8004C990(9, *(s16 *)(base + 6));
+    }
+    if (tex2 == NULL) {
+        tex2 = (u16 *)func_8004C990(*(u16 *)(arg0 + 0x24), *(u16 *)(arg0 + 0x26));
+    }
+    c = arg0 + 0x2C;
+    img2 = func_8004CA60((u8 *)tex2);
+    gSPDisplayList(D_800D0510++, D_80094EC0);
+    gDPSetEnvColor2(D_800D0510++, c[0], c[1], c[2], 0xFF);
+    if (n > 0) {
+        x = arg2;
+        arg2 = 0; // FAKE
+        i = 0;
+        y = arg3;
+        do {
+            rows = (w > cut) ? cut : w;
+            tw = tex2[0];
+            func_80045DB4((u8 *)(tw * rem / 2 + (s32)img2 + tw * w * i / 2), 0, 0, ((u8 *)tex2)[4], ((u8 *)tex2)[5],
+                          tw, w, 1, 0, 2, 2, 0, 0, 0, 0);
+            func_80045DB4((u8 *)((s32)img + tex[0] * w * i / 2), 0x100, 1, ((u8 *)tex)[4], ((u8 *)tex)[5], tex[0], w, 1, 0, 2, 2,
+                          0, 0, 0, 0);
+            GfxRect_DrawTextured(x, y, *(s16 *)tex, rows, 0, 0, 0x400, 0x400, 0x100000);
+            y += w;
+            cut -= rows;
+        } while (++i < n);
+    }
+}
 
 extern void *D_8220EB88;
 s32 func_82205A14(s32 arg0, void *arg1) {
