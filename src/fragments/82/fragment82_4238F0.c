@@ -263,7 +263,235 @@ void func_82D03BEC(s16 arg0, s16 arg1, u16 arg2) {
     func_80044270(arg0, (s16)(arg1 + arg2 + sp34), 0x20, 0xA, 0, 0x120, 0x400, -0x400, 0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/82/fragment82_4238F0/func_82D03CC0.s")
+extern u8 D_82D071D8[];
+extern Gfx D_80094DE0[];
+extern void Ui_DrawAnimatedTextureMarker(s32, s32);
+extern void func_80049064(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_800498C4(void);
+extern s32 func_8004C874(s32, s32);
+extern void func_800499EC(void);
+extern void func_8004972C(s32, s32, s32, s32);
+extern u8 D_82D06FA0[];
+extern u16 D_82D23D90, D_82D23D92, D_82D23D94;
+extern u8 D_82D07310[], D_82D07318[], D_82D07320[], D_82D07324[];
+extern void func_800495BC(s32, s32, s32, s32);
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_8004B2CC(s32, s32, s32, s32, s32, s32, s32, s32);
+extern void func_88701240(void);
+extern void func_8004AF18(s32, s32);
+extern s32 func_8004C594(s32, s32);
+extern void func_8004C8A0(u8 *, s32, s32, s32);
+extern void func_82D03BEC(s16, s16, u16);
+typedef struct {
+    u32 a : 2;
+    u32 bit29 : 1;
+    u32 b : 2;
+    u32 bit26 : 1;
+    u32 rest : 26;
+} Fragment82Flags;
+// Scissored fill rect with each corner clamped at 0, comparing the base value (v > -off) like retail.
+#define SCIS_CLAMP(v, off) ((v) > -(off) ? (v) + (off) : 0)
+#define SCIS_RECT(x0, ox0, y0, oy0, x1, ox1, y1, oy1)                                          \
+    {                                                                                          \
+        g = D_800D0510++;                                                       \
+        g->words.w0 = (_SHIFTL(G_FILLRECT, 24, 8) | _SHIFTL(SCIS_CLAMP(x1, ox1), 14, 10) |   \
+                        _SHIFTL(SCIS_CLAMP(y1, oy1), 2, 10));                                  \
+        g->words.w1 = (_SHIFTL(SCIS_CLAMP(x0, ox0), 14, 10) | _SHIFTL(SCIS_CLAMP(y0, oy0), 2, 10)); \
+    }
+
+void func_82D03CC0(Fragment82MenuRow *row) {
+    Gfx *g;
+    u8 alpha;
+    s16 x;
+    u8 z;
+    s16 y;
+    s16 w;
+    s16 h;
+    s32 i;
+    u8 buf[0x4C]; // retail frame layout; the callee below is passed 0x50
+    u8 *data;
+    s32 v;
+
+    alpha = 0xFF;
+    x = row->x;
+    y = row->y;
+    w = *(s16 *)&row->width;
+    h = *(s16 *)&row->height;
+    data = row->data;
+    gSPDisplayList(D_800D0510++, D_82D071D8);
+    ParticleGfx_SetPrimColor_fragment82(row->primary.r, row->primary.g, row->primary.b, row->primary.a);
+    func_82D02F78(x, y, w, h);
+    if (row->phase != 0) return;
+    if (data[0]) {} // FAKE
+    if (D_82D06FA0[0]) {} // FAKE
+    if (data[0] == 0 || data[0] == 1 || data[0] == 2 || data[0] == 3) goto body;
+    if (D_800D0510) {} // FAKE
+    goto skip;
+body:
+        gSPDisplayList(D_800D0510++, D_80094DE0);
+        func_82D02AC8(D_82D06FA0[0], D_82D06FA0[1], D_82D06FA0[2], 1);
+        v = 0;
+        SCIS_RECT(x, 0xF, y + v, 0x23, x, 0xBB, y + v, 0x23);
+        v = 0x1A;
+        do {
+            SCIS_RECT(x, 0xF, y + v, 0x23, x, 0xBB, y + v, 0x23);
+            SCIS_RECT(x, 0xF, y + v, 0x3D, x, 0xBB, y + v, 0x3D);
+            v += 0x34;
+        } while (v != 0xB6);
+skip:
+    func_800498C4();
+    switch (data[0]) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        func_800496A4(8, 1);
+        for (i = 0; i < data[7]; i++) {
+            func_80049064(x + 0xF, y + 0xD + i * 0x1A, 0, (s32)data + 8 + i * 0x14);
+        }
+        break;
+    case 7:
+    case 8:
+        alpha = 0x80;
+    case 4:
+    case 6:
+        func_800496A4(8, 1);
+        for (i = 0; i < 4; i++) {
+            if (i == (s8)data[1]) {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+            }
+            func_80049064(x + 0x3A, y + 0x20 + i * 0x1E, 0, func_8004C874(0x43, i + 6));
+        }
+        for (; i < 6; i++) {
+            if (i == (s8)data[1]) {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            } else if (i == 5 && !((Fragment82Flags *)(data + 0x100))->bit26) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0x80);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+            }
+            func_80049064(x + 0x3A, y + 0x3E + i * 0x1E, 0, func_8004C874(0x43, i + 6));
+        }
+        if (i == (s8)data[1]) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        func_80049064(x + 0x3A, y + 0x10A, 0, func_8004C874(0x43, 0xC));
+        if ((s8)data[1] == 0) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        func_80049064(x + 0x1DA, y + 0x20, 2, (s32)(data - (-8 - data[6] * 0x14)));
+        if ((s8)data[1] == 1) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        func_8004C594(3, data[0xBC]);
+        func_8004C8A0(buf, 0x50, 0x43, 0xD);
+        func_80049064(x + 0x1DA, y + 0x3E, 2, (s32)buf);
+        if ((s8)data[1] == 2) {
+            if (data[0] == 7) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            }
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        func_800496A4(8, 3);
+        func_800495BC(x + 0x18C, y + 0x5C, (s32)D_82D07310, data[0xF6]);
+        func_800495BC(x + 0x1BB, y + 0x5C, (s32)D_82D07318, data[0xF7]);
+        func_800496A4(4, 1);
+        func_80049064(x + 0x1AE, y + 0x5E, 0, (s32)D_82D07320);
+        func_800496A4(8, 3);
+        if ((s8)data[1] == 3) {
+            if (data[0] == 8) {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            }
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        func_800495BC(x + D_82D23D90, y + 0x7A, (s32)D_82D07324, *(u16 *)(data + 0xF8));
+        func_800496A4(4, 1);
+        func_80049064(x + D_82D23D92, y + 0x7E, 0, func_8004C874(0x43, 0xF));
+        func_80049064(x + D_82D23D94, y + 0x7E, 0, func_8004C874(0x43, 0x10));
+        func_800496A4(8, 1);
+        if (!(*(u16 *)(data + 0xF8) < data[0xF7] * 3)) {
+            func_80049064(x + 0x1DA, y + 0x98, 2, func_8004C874(0x43, 0xE));
+        }
+        if ((s8)data[1] == 4) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+        }
+        z = ((Fragment82Flags *)(data + 0x100))->bit26 ? 0x11 : 0x12;
+        func_80049064(x + 0x1DA, y + 0xB6, 2, func_8004C874(0x43, z));
+        if (((Fragment82Flags *)(data + 0x100))->bit26) {
+            if ((s8)data[1] == 5) {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+            }
+        } else {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0x80);
+        }
+        z = ((Fragment82Flags *)(data + 0x100))->bit29 ? 0x13 : 0x14;
+        func_80049064(x + 0x1DA, y + 0xD4, 2, func_8004C874(0x43, z));
+        break;
+    case 5:
+        break;
+    }
+    func_800499EC();
+    switch (data[0]) {
+    case 1:
+        func_8004B314(x + 0xA, y - (-9 - (s8)data[1] * 26), 0xB2, 0x20);
+        return;
+    case 2:
+        func_8004B2CC(x + 0xA, y - (-9 - (s8)data[1] * 26), 0xB2, 0x20, 0x96, 0x96, 0x5A, 0);
+        func_8004B314(x + 0xA, y - (-9 - (s8)data[3] * 26U), 0xB2, 0x20);
+        return;
+    case 3:
+        func_8004B2CC(x + 0xA, y - (-9 - (s8)data[1] * 26), 0xB2, 0x20, 0x96, 0x96, 0x5A, 0);
+        return;
+    case 4:
+        if ((s8)data[1] < 4) {
+            Ui_DrawAnimatedTextureMarker((s16)(x + 0x12), (s16)(y - (-0x1E - (s8)data[1] * 30)));
+        } else if ((s8)data[1] < 6) {
+            Ui_DrawAnimatedTextureMarker((s16)(x + 0x12), (s16)(y - (-0x3C - (s8)data[1] * 30)));
+        } else {
+            Ui_DrawAnimatedTextureMarker((s16)(x + 0x12), (s16)(y + 0x10A));
+        }
+        return;
+    case 7:
+        gSPDisplayList(D_800D0510++, D_82D071D8);
+        ParticleGfx_SetPrimColor_fragment82(0xFF, 0xFF, 0, 0xFF);
+        if ((s8)data[2] < 3) {
+            func_82D03BEC((s16)(x - (-0x18B - (s8)data[2] * 10)), (s16)(y + 0x52), 0x1F);
+        } else {
+            func_82D03BEC((s16)(x - (-0x19D - (s8)data[2] * 10)), (s16)(y + 0x52), 0x1F);
+        }
+        return;
+    case 8:
+        gSPDisplayList(D_800D0510++, D_82D071D8);
+        ParticleGfx_SetPrimColor_fragment82(0xFF, 0xFF, 0, 0xFF);
+        func_82D03BEC((s16)(x + D_82D23D90 - (0U - (s8)data[2] * 10)), (s16)(y + 0x70), 0x1F);
+        return;
+    case 5:
+        func_88701240();
+        return;
+    case 6:
+        func_8004AF18(x + 0x12, y - (-0x1E - (s8)data[1] * 30));
+        return;
+    }
+}
 
 extern u16 D_82D23D98[2], D_82D23D9A;
 extern u8 D_82D071D8[];
@@ -566,7 +794,7 @@ void func_82D0599C(void *arg0) {
     func_82D02B44(D_82D07198.x, D_82D07198.y, D_82D07198.width, D_82D07198.height);
 }
 
-extern void func_82D03CC0(void *);
+extern void func_82D03CC0(Fragment82MenuRow *);
 extern void func_82D049A0(void *);
 extern void func_82D04DC8(Fragment82MenuRow *);
 extern void func_82D0599C(void *);
