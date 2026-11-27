@@ -166,7 +166,12 @@ extern void func_816071AC(s32, s32, s32);
 // See func_8130728C.report.md.
 
 
-void func_8130728C(void *arg0, void *arg1, s32 arg2, s32 arg3, s32 arg4)
+void func_8130728C(arg0, arg1, arg2, arg3, arg4)
+    void *arg0;
+    void *arg1;
+    s32 arg2;
+    s32 arg3;
+    s32 arg4;
 {
   struct S { u8 pad[0x137C0]; f32 x; u8 pad4[4]; f32 y; };
   if ((func_81307228(arg0) != 0) && (func_81600DA8(arg1, (void *) 0x54455854) != 0))
@@ -602,10 +607,11 @@ typedef struct {
 #define SCALE (*(f32 *)(arg0 + 0x137D0))
 #define OWNER (*(u8 **)(arg0 + 0x137AC) + 0x15370)
 #define sx (x0 + i * 0x80)
-void func_81308078(u8 *arg0, s16 x0, s16 y, s16 x1, s16 y1, F14Mon *arg5, s32 arg6 /* FAKE: holds item; callers pass 6 args */) {
+void func_81308078(u8 *arg0, s16 x0, s16 y, s16 x1, s16 y1, F14Mon *arg5) {
     u8 col[4];
     s32 i;
-    char buf[0x20];
+    s32 item;
+    char buf[0x1C];
 
     if (x1 + 0x224 < x0 || x0 + 0x224 < x1 || y + 0x28 < y1 || y1 + 0x9F < y) {
         return;
@@ -665,10 +671,10 @@ void func_81308078(u8 *arg0, s16 x0, s16 y, s16 x1, s16 y1, F14Mon *arg5, s32 ar
     if (arg5 == 0) {} // FAKE
     for (i = 0; i < 4; i++) {
         s32 species = arg5[i].species;
-        arg6 = arg5[i].item; // FAKE: param slot keeps item out of the frame
+        item = arg5[i].item;
         if (!func_81304678(OWNER, (u8 *)&arg5[i])) {
             if (sx <= x1 + 0x224 && sx + 0x80 >= x1 && species != 0) {
-                func_81608550(sx + 0x65, y + 0x16, arg6, func_81601EAC(arg6, species) != 0 && func_81304884(OWNER, arg6) == 0, SCALE / 16);
+                func_81608550(sx + 0x65, y + 0x16, item, func_81601EAC(item, species) != 0 && func_81304884(OWNER, item) == 0, SCALE / 16);
             }
         }
     }
@@ -684,7 +690,126 @@ void func_81308078(u8 *arg0, s16 x0, s16 y, s16 x1, s16 y1, F14Mon *arg5, s32 ar
 #undef OWNER
 
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/14/fragment14_FF070/func_8130881C.s")
+extern void func_81308078(u8 *, s16, s16, s16, s16, F14Mon *);
+extern void func_80006F70(Gfx **, s16, s16, s16, s16);
+extern void Gfx_FillRectRgb(s16, s16, s16, s16, u8, u8, u8);
+extern void func_8004B314(s32, s32, s32, s32);
+extern void func_816048E0(s32, s32, s32, s32, f32);
+extern f32 (*D_8160BD00)(f32);
+extern void func_81607408(void);
+extern Gfx *D_800D0510;
+extern Gfx D_80094D90[];
+void func_8130881C(u8 *arg0, void *arg1) {
+    f32 fx;
+    f32 fy;
+    s16 pos[2];
+    f32 r;
+    s32 x;
+    s32 y;
+    s32 s1;
+    s32 i;
+    u8 *s2;
+    s16 t1;
+    s32 sy; // unused, keeps the retail frame layout
+    Gfx *gfx;
+    u8 mode; // unused, keeps the retail frame layout
+    f32 k;
+    s32 sx;
+
+    func_81306F74((unk_func_81306F74 *)arg0, pos);
+    x = pos[0] + 0x1F;
+    y = pos[1] + 0xB;
+    func_8130728C(arg0, arg1, pos[0], pos[1]);
+    if (func_81600DA8(arg1, arg0) == 0) {
+        return;
+    }
+    func_813074E4(arg0, arg1, pos[0], pos[1]);
+    func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+    func_816048E0(pos[0], pos[1], 0x224, 0x9F, 0.0f);
+    r = D_8160BD00((f32)*(s16 *)(arg0 + 0x137D4) / (f32)*(s16 *)(arg0 + 0x137D6));
+    if (*(s16 *)(arg0 + 0x137D6) < 0) {
+        r = -r;
+    }
+    sx = arg0[0x137F5];
+    switch (sx) {
+    case 7:
+        sx = (*(s16 *)(arg0 + 0x137D6) > 0) ? 0x1FB : -0x1FB;
+        func_80006F70(&D_800D0510, (s16)x, (s16)y, 0x1F5, 0x86);
+        gfx = D_800D0510++;
+        gfx->words.w0 = 0xDE000000; gfx->words.w1 = (u32)D_80094D90;
+        Gfx_FillRectRgb((s16)((s16)(s32)((f32)x - 501.0f * r) - 6), (s16)y, 6, 0x86, 200, 200, 200);
+        Gfx_FillRectRgb((s16)((s16)(s32)((f32)x - 501.0f * r) + 0x1F5), (s16)y, 6, 0x86, 200, 200, 200);
+        if (D_800D0510) {} // FAKE
+        if (D_800D0510 + 1) {} // FAKE
+        if (D_800D0510 + 1) {} // FAKE
+        if ((s16)y) {} // FAKE
+        t1 = sx - (0 - (s16)(s32)((f32)x - 501.0f * r));
+        for (i = 0, s1 = y, s2 = *(u8 **)(arg0 + 0x137A8); i < 0x8D; i += 0x2F) {
+            func_81308078(arg0, t1, (s16)s1, pos[0], pos[1], (F14Mon *)s2);
+            s1 += 0x2F;
+            s2 = *(u8 **)(s2 + 0x33A0);
+        }
+
+        for (i = 0, s1 = y; i != 0x8D; i += 0x2F) {
+            func_81308078(arg0, (s16)(s32)((f32)x - 501.0f * r), (s16)s1, pos[0], pos[1], (F14Mon *)s2);
+            s1 += 0x2F;
+            s2 = *(u8 **)(s2 + 0x33A0);
+        }
+        func_81607408();
+        func_81307128((unk_func_81307128 *)arg0, pos[0], pos[1]);
+        break;
+    case 8:
+
+        func_80006F70(&D_800D0510, (s16)x, (s16)y, 0x1F5, 0x86);
+        if (*(s16 *)(arg0 + 0x137D6) > 0) {
+            s2 = *(u8 **)(*(u8 **)(arg0 + 0x137A8) + 0x33A4);
+            s1 = (s16)(s32)((f32)y - 47.0f * r);
+            for (i = 0; i != 0xBC; i += 0x2F) {
+                func_81308078(arg0, (s16)x, (s16)(s1 + i), pos[0], pos[1], (F14Mon *)s2);
+                s2 = *(u8 **)(s2 + 0x33A0);
+            }
+        } else {
+            s2 = *(u8 **)(arg0 + 0x137A8);
+            s1 = (s16)(s32)((f32)y - 47.0f * r);
+            for (i = 0; i != 0xBCU; i += 0x2F) {
+                func_81308078(arg0, (s16)x, (s16)(s1 + i - 0x2F), pos[0], pos[1], (F14Mon *)s2);
+                s2 = *(u8 **)(s2 + 0x33A0);
+            }
+        }
+        func_80006F70(&D_800D0510, 0, 0, 0x280, 0x1E0);
+        func_81307128((unk_func_81307128 *)arg0, pos[0], pos[1]);
+        break;
+    default:
+        if ((s16)x) {} // FAKE
+        s2 = *(u8 **)(arg0 + 0x137A8);
+        for (i = 0, s1 = y; i != 0x8DU; i += 0x2F) {
+            func_81308078(arg0, (s16)x, (s16)s1, pos[0], pos[1], (F14Mon *)s2);
+            s1 += 0x2F;
+            s2 = *(u8 **)(s2 + 0x33A0);
+        }
+        func_81307128((unk_func_81307128 *)arg0, pos[0], pos[1]);
+        break;
+    }
+    fx = (f32)(*(s16 *)(arg0 + 0x137B4) * 128 + x);
+    fy = (f32)(*(s16 *)(arg0 + 0x137B6) * 47 + y);
+    if (arg0[0x137F5] == 10) {
+        k = (0.0f < r) ? -1.0f : 1.0f; fy += (r + k) * 47.0f;
+    } else if (arg0[0x137F5] == 9) {
+        k = (0.0f < r) ? -1.0f : 1.0f; fx += (r + k) * 128.0f;
+    }
+    switch (arg0[0x137F5]) {
+    case 3:
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        func_8004B314((s32)fx, (s32)fy, 0x75, 0x28);
+        break;
+    default:
+        break;
+    }
+    func_81307570(arg0, arg1, pos[0], pos[1]);
+}
 
 extern s32 func_8130F578(void *, s32 *);
 extern s32 func_81304444(void *, void *, s32);
