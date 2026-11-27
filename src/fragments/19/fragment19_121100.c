@@ -2,6 +2,24 @@
 
 #ifdef VERSION_US
 
+// Wipe setup words at 0x82305E68, written by func_82302320. It is the first object of this
+// file's .bss (pinned in datamig_bss.ld) so the transition header lands at 0x82305EB0. The
+// function reaches it through a pointer local: as1 then shares the `lui $at` of the
+// unk_04/unk_06 stores and IDO reloads unk_38 for every call, as retail does. The other
+// functions still use the D_82305E6A/D_82305E6E/D_82305E9C symbols for the same words.
+typedef struct F19WipeSetup {
+    /* 0x00 */ s16 unk_00;
+    /* 0x02 */ s16 unk_02; // D_82305E6A
+    /* 0x04 */ s16 unk_04; // D_82305E6C
+    /* 0x06 */ s16 unk_06; // D_82305E6E
+    /* 0x08 */ u8 unk_08[0x2C]; // D_82305E70..D_82305E98, written through their own symbols
+    /* 0x34 */ s32 unk_34; // D_82305E9C
+    /* 0x38 */ s32 unk_38; // D_82305EA0
+    /* 0x3C */ s32 unk_3C;
+    /* 0x40 */ s32 unk_40;
+    /* 0x44 */ s32 unk_44;
+} F19WipeSetup; // size = 0x48
+static F19WipeSetup sWipeSetup;
 typedef struct unk_D_82305EB0 {
     /* 0x00 */ u32 unk_00;
 } unk_D_82305EB0; // size = 0x4
@@ -1113,7 +1131,194 @@ void func_82302258(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82302320.s")
+extern void func_823020EC(u8 *);
+extern void func_82302258(u8 *);
+extern s16 D_82305E6A;
+extern s16 D_82305E68[];
+extern void func_8230009C(void);
+extern s32 func_8004C8C0(u16);
+extern s32 func_8004DC6C(s32);
+extern void func_8004DCFC(u8 *, s32 *);
+extern void func_8004E308(void *, void *, void *);
+extern s32 func_8004EB58(s32, s32);
+extern void *func_8005049C(void *, s32);
+extern void *main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern s32 func_8004C4B0(s32);
+extern s32 func_8004C874(s32, s32);
+extern void *func_80040E80(void *, void *);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_823053A8(void);
+extern void func_817000A4(void);
+extern void func_81700974(s32, s32, s32, s32, s32, void *, void *, s32);
+extern void func_81700C70(s32);
+extern s32 func_82301B2C(s32, u8 *);
+extern s32 func_823019F4(s32, u8 *);
+extern s32 func_82301434(s32, u8 *);
+extern s32 func_823015B0(s32, u8 *);
+extern s32 func_823014EC(s32, u8 *);
+extern s32 func_82301964(s32, u8 *);
+extern s32 func_82301C80(s32, u8 *);
+extern s32 func_82301EF0(s32, s16 *);
+extern s32 func_82301638(s32, u8 *);
+extern s32 func_823016B4(s32, u8 *);
+extern s32 func_82301814(s32, u8 *);
+extern void func_82301088(void);
+extern s16 D_82305E70;
+extern s32 D_82305EA8, D_82305EAC;
+extern u16 D_82305E72;
+extern u8 D_82305B34[];
+extern unk_func_82302B8C D_82305BA0;
+extern unk_func_82302B8C D_82305BA4;
+extern u8 D_82305E8C[];
+extern u8 D_82305E90[];
+typedef struct F19Node {
+    s16 kind;
+    s16 index;
+    u8 *data;
+    u8 unk_08[8];
+} F19Node; // size = 0x10
+extern s16 D_82306850[];
+extern F19Node D_82306860[];
+extern F19Node D_823068A0;
+extern F19Node D_823068B0[];
+
+extern u8 *D_82306854;
+extern u8 *D_823068A4;
+void func_82302320(s32 arg0, s32 arg1) {
+    F19WipeSetup *setup = &sWipeSetup;
+    s32 i;
+    void *node;
+    s32 fl;
+    unk_func_82302B8C px = D_82305BA0;
+    unk_func_82302B8C py = D_82305BA4;
+    s32 one;
+    F19TransitionHeader *hdr = &sTransitionHeader;
+    F19TransitionRows *rows = &sTransitionRows;
+
+    // Constants written through `one` so uopt does not colour 1/-1 across the stores.
+    one = 1;
+    switch (arg0) {
+        default:
+            setup->unk_02 = one;
+            break;
+        case 1:
+            setup->unk_02 = 0;
+            break;
+        case 2:
+            setup->unk_02 = one;
+            break;
+        case 3:
+            setup->unk_02 = 2;
+            break;
+        case 4:
+            setup->unk_02 = 3;
+            break;
+    }
+    setup->unk_04 = -one;
+    setup->unk_06 = 0;
+    D_82305E70 = -one;
+    D_82305EA8 = 0;
+    hdr->color.unk_00 = 0xFFFF00FF;
+    D_82305E98 = 0;
+    hdr->state = 0;
+    hdr->unk_06 = -one;
+    // FAKE: the never-taken loop below is fully unrolled, and uopt does not refold its leftover
+    // `fl | 0`, so `fl |= 3` stays retail's `or a0,zero,zero; ori a0,a0,3` instead of `li 3`.
+    fl = 0;
+    rows->unk_00 = 0;
+    for (arg0 = 0; arg0 < 4; arg0++) {
+        if (arg0 == 4) {
+            fl = fl | arg0 * 0;
+        }
+    }
+    fl |= 3;
+    D_82305E72 = fl;
+    for (i = 0; i < 4; i++) {
+        if (((unk_D_82305A74 *)D_82305A74)[i].unk_18) {} // FAKE
+        (&D_82305EB4)[i + 3] = ((unk_D_82305A74 *)D_82305A74)[i].unk_0E;
+        (&D_82305EB4)[i + 7] = -one;
+        (&D_82305EB4)[i + 11] = 0;
+        (&D_82305EB4)[i + 15] = 0;
+    }
+    func_82301088();
+    setup->unk_34 = func_8004DC6C(0x72);
+    if (setup->unk_34 != 0) {
+        func_8004DCFC((u8 *)setup->unk_34, 0);
+    }
+    func_8004C8C0(0x49);
+    func_8004C8C0(0x4D);
+    func_8004C8C0(0x4B);
+    func_8004C8C0(0x2C);
+    func_8004C8C0(0x93);
+    func_8004C4B0(0x2E);
+    node = MainPool_AllocState((s32)main_pool_get_available(), 0);
+    setup->unk_38 = func_8004EB58((s32)node, setup->unk_34);
+    D_82305EAC = (s32)func_80040E80(node, D_82305B34);
+    MainPool_FinalizeAllocation(node);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x42414259), func_82301434, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x4E494E54), func_82301434, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x43484C47), func_82301434, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x52545247), func_823015B0, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x52554C45), func_823015B0, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x625F7031), func_823014EC, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x625F7032), func_823014EC, (void *)1);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E5F7031), func_823014EC, (void *)2);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E5F7032), func_823014EC, (void *)3);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x755F7031), func_823014EC, (void *)4);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x755F7032), func_823014EC, (void *)5);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x635F7031), func_823014EC, (void *)6);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x696D6765), func_82301964, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x695F7769), func_82301C80, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x77695F63), func_82301D78, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x735F7769), func_82301EF0, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x736C6966), func_82301638, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E616D30), func_823016B4, 0);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6C765F30), func_82301814, (void *)1);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E616D31), func_823016B4, (void *)2);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6C765F31), func_82301814, (void *)3);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E616D32), func_823016B4, (void *)4);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6C765F32), func_82301814, (void *)5);
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E616D33), func_823016B4, (void *)6);
+    for (i = 0; i < 4; i++) {
+        func_8004E308(func_8005049C((void *)setup->unk_38, 0x74655F30 + i), func_823019F4, (void *)i);
+    }
+    func_823020EC(D_82305E68);
+    func_82302258(D_82305E68);
+    D_82306850[0] = 0;
+    D_82306850[1] = 0;
+    D_82306854 = D_82305E8C;
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x625F6370), func_82301B2C, D_82306850);
+    for (i = 0; i < 4; i++) {
+        D_82306860[i].kind = 1;
+        D_82306860[i].index = i;
+        D_82306860[i].data = D_82305E8C + 2;
+        func_8004E308(func_8005049C((void *)setup->unk_38, 0x6E695F30 + i), func_82301B2C, &D_82306860[i]);
+    }
+    D_823068A0.kind = 2;
+    D_823068A0.index = 0;
+    D_823068A4 = D_82305E90;
+    func_8004E308(func_8005049C((void *)setup->unk_38, 0x755F6370), func_82301B2C, &D_823068A0);
+    for (i = 0; i != 4; i++) {
+        D_823068B0[i].kind = 3;
+        D_823068B0[i].index = i;
+        D_823068B0[i].data = D_82305E90 + 2;
+        func_8004E308(func_8005049C((void *)setup->unk_38, 0x63685F30 + i), func_82301B2C, &D_823068B0[i]);
+    }
+    ModelRenderer_InitDisplayRoots();
+    func_823053A8();
+    func_8230009C();
+    func_817000A4();
+    node = func_8005049C((void *)setup->unk_38, 0x62617230);
+    func_81700974(0, 0, ((s16 *)node)[5], 0x10, func_8004C874(0x2E, 0xD), &px, &py, *(s16 *)D_82305A70);
+    node = func_8005049C((void *)setup->unk_38, 0x62617231);
+    func_81700974(2, 0, ((s16 *)node)[5], 8, 0, &px, &py, 0);
+    if (arg1 == 0) {
+        func_81700C70(0);
+    }
+    func_82300F00();
+}
 
 extern void func_800498C4(void);
 extern void func_800496A4(s32, s32);
