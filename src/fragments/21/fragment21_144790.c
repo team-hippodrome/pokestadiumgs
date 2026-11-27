@@ -589,16 +589,16 @@ typedef struct {
 } Fragment21Context;
 extern Fragment21Context D_82508FF0;
 
-// X-coordinate aliases within the fragment context; Y occupies the next halfword.
-extern s16 D_8250900C;
-extern s16 D_82509010;
+// The two text offsets (x, y) that Fragment21_SetRecordDefaults stores at
+// D_8250900C/D_82509010; D_82509014's x/y pair follows.
+typedef struct F21TextOffsets {
+    s16 x0, y0, x1, y1;
+} F21TextOffsets;
+extern F21TextOffsets D_8250900C;
 extern s16 D_82509014;
-
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250610C.s")
 
 extern Gfx *D_800D0510;
 extern u8 D_80094E38[];
-extern s16 D_8250902A;
 extern s16 D_82509016;
 extern s32 func_8004D19C(s32, s32, s32, s32, s32);
 extern void func_8004C54C(s32, void *);
@@ -609,13 +609,73 @@ extern void func_8004972C(s32, s32, s32, s32);
 extern void *func_8004C8A0(void *, s32, s32, s32);
 extern void func_800495F8(s32, s32, s32, void *);
 extern void func_800499EC(void);
+// Reading the offsets through a pointer local keeps D_8250900C an uncoloured
+// symbol+offset access, so each field is loaded once per use site like retail.
+void func_8250610C(Fragment21PoolNode *arg0) {
+    F21TextOffsets *p;
+    s16 y;
+    s16 x;
+    s32 pad2[1]; // FAKE
+    s32 alpha;
+    s32 tx;
+    s32 rem;
+    u8 buf[0x80];
+
+    p = &D_8250900C;
+    x = arg0->offset_x + arg0->x;
+    y = arg0->offset_y + arg0->y;
+    alpha = arg0->opacity;
+    if (arg0->image == arg0->next_image) {
+        alpha = 0xFF;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (alpha == 0xFF) {
+        gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    }
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, alpha);
+    func_8004D19C(x + D_82509014, y + D_82509016, arg0->image, 0, 0);
+    rem = 0xFF - alpha;
+    if (rem > 0) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, rem);
+        func_8004D19C(x + D_82509014, y + D_82509016, arg0->next_image, 0, 0);
+    }
+    if (arg0->unk_30 != -1) {
+        func_8004C54C(0x23, func_8004C874(0x31, arg0->unk_30));
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    alpha = arg0->opacity;
+    if (arg0->unk_2C == arg0->unk_5A) {
+        alpha = 0xFF;
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+    tx = x + p->x0 + (arg0->width - p->x0) / 2;
+    func_800495F8(tx, y + p->y0, 1, func_8004C8A0(buf, 0x80, arg0->unk_2A, arg0->unk_2C));
+    rem = 0xFF - alpha;
+    if (rem > 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, rem);
+        func_800495F8(tx, y + p->y0, 1, func_8004C8A0(buf, 0x80, arg0->unk_58, arg0->unk_5A));
+    }
+    alpha = arg0->opacity;
+    if (arg0->unk_2E == arg0->unk_5C) {
+        alpha = 0xFF;
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+    tx = x + p->x1 + (arg0->width - p->x1) / 2;
+    func_800495F8(tx, y + p->y1, 1, func_8004C874(0x2A, arg0->unk_2E));
+    rem = 0xFF - alpha;
+    if (rem > 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, rem);
+        func_800495F8(tx, y + p->y1, 1, func_8004C874(0x2A, arg0->unk_5C));
+    }
+    func_800499EC();
+}
+
+extern s16 D_8250902A;
 void func_825064A4(Fragment21PoolNode *arg0) {
-    // D_8250900C..D_82509012: the two text offsets that
-    // Fragment21_SetRecordDefaults stores (as externs) at arg4/arg5.
-    static struct {
-        s16 x0, y0, x1, y1;
-    } sOff = { 0 };
-    s32 pad[1]; // FAKE
+    F21TextOffsets *p;
     s16 y;
     s16 x;
     s32 alpha;
@@ -625,6 +685,7 @@ void func_825064A4(Fragment21PoolNode *arg0) {
     u8 buf[0x80];
     s32 pad2[1]; // FAKE
 
+    p = &D_8250900C;
     x = arg0->offset_x + arg0->x;
     y = arg0->offset_y + arg0->y;
     alpha = arg0->opacity;
@@ -661,9 +722,8 @@ void func_825064A4(Fragment21PoolNode *arg0) {
     rem = 0xFF - alpha;
     if (rem > 0) {
         func_8004972C(0xFF, 0xFF, 0xFF, rem);
-        if (&sOff) {} // FAKE: keeps sOff out of a register, so each field is loaded once per use site like retail
-        tx = x + sOff.x0 + (arg0->width - sOff.x0) / 2;
-        func_800495F8(tx, y + sOff.y0, 1, func_8004C8A0(buf, 0x80, arg0->unk_58, arg0->unk_5A));
+        tx = x + p->x0 + (arg0->width - p->x0) / 2;
+        func_800495F8(tx, y + p->y0, 1, func_8004C8A0(buf, 0x80, arg0->unk_58, arg0->unk_5A));
     }
     alpha = arg0->opacity;
     if (arg0->unk_2E == arg0->unk_5C) {
@@ -671,10 +731,10 @@ void func_825064A4(Fragment21PoolNode *arg0) {
     }
     func_8004972C(0xFF, 0xFF, 0xFF, alpha);
     rem = 0xFF - alpha;
-    tx = x + sOff.x1 + (arg0->width - sOff.x1) / 2;
+    tx = x + p->x1 + (arg0->width - p->x1) / 2;
     if (rem > 0) {
         func_8004972C(0xFF, 0xFF, 0xFF, rem);
-        func_800495F8(tx, y + sOff.y1, 1, func_8004C874(0x2A, arg0->unk_5C));
+        func_800495F8(tx, y + p->y1, 1, func_8004C874(0x2A, arg0->unk_5C));
     }
     func_800499EC();
 }
@@ -731,8 +791,8 @@ void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
     header->unk_0E = arg1;
     header->unk_10 = arg2;
     header->unk_12 = arg3;
-    *(struct Fragment21PackedWord *)&D_8250900C = *(struct Fragment21PackedWord *)arg4;
-    *(struct Fragment21PackedWord *)&D_82509010 = *(struct Fragment21PackedWord *)arg5;
+    *(struct Fragment21PackedWord *)&D_8250900C.x0 = *(struct Fragment21PackedWord *)arg4;
+    *(struct Fragment21PackedWord *)&D_8250900C.x1 = *(struct Fragment21PackedWord *)arg5;
     *(struct Fragment21PackedWord *)&D_82509014 = *(struct Fragment21PackedWord *)arg6;
     if (arg7) {
         header->flags = D_82508FF6 | 1;
