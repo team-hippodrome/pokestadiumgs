@@ -275,7 +275,144 @@ s32 func_86505934(s32 arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_28E360/func_865059A0.s")
+typedef struct F53Tint { s32 raw; } F53Tint;
+extern u8 D_8650DA60[];
+extern u8 D_8650DA70[];
+extern u8 D_865118F8[];
+extern s32 D_8650DB74;
+extern s32 D_8650DB78;
+extern s32 D_8650DB7C;
+extern u32 D_8650D1E8[];
+extern u8 D_8650C760[];
+extern u8 D_8650CFC4[];
+extern u8 D_8650CFF8[];
+extern u8 D_8650D02C[];
+extern u8 D_8650D060[];
+extern u8 D_8650CEE0[];
+extern u8 D_8650C884[];
+extern u8 D_8650C940[];
+extern u8 D_8650C9FC[];
+extern u8 D_8650CAB8[];
+extern u8 D_8650CB74[];
+extern u8 D_8650CC30[];
+extern u8 D_8650CCEC[];
+extern u8 D_8650CDA8[];
+extern s32 D_8650DB18;
+extern void *D_8650DB20;
+extern s32 D_8650DB24;
+extern s32 D_8650DB38;
+extern s32 D_8650DB40[];
+extern s32 D_8650DB50[];
+extern s32 D_8650DB70[];
+extern s32 D_8650DB28[];
+extern void *D_8650DB10;
+extern s32 D_8650C45C[];
+extern s32 D_8650C474;
+extern s32 D_8650C498;
+extern s32 D_8650C4B4;
+extern s32 D_8650C4C4;
+extern f32 D_8650C4D0;
+extern void func_87F0C650(void *);
+extern void func_87F0C694(void *, s32);
+extern s32 func_8004DDF4(s32);
+extern void func_81900020(void *);
+extern s32 main_pool_get_available(void);
+extern u8 *MainPool_AllocState(s32, s32);
+extern s32 func_80040E80(void *, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern F53Tint func_87F0AD50(void *, s32, s32);
+extern s32 func_8004DFEC(void *, s32, F53Tint);
+extern void func_86501D6C(void);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_87F01870(void *);
+extern void func_87F09EBC(void *, void *);
+extern void func_80041E2C(void);
+extern void func_87F024CC(void);
+
+void func_865059A0(void) {
+    s32 i;
+    u8 *pool;
+
+    if (*((u8 *)D_8650DB10 + 0x2180) == 4) {
+        func_87F0C650(D_8650DA60);
+        func_87F0C694(D_8650DA60, 0x14);
+    }
+    func_8004DDF4(0x82);
+    func_8004DDF4(0x83);
+    func_8004DDF4(0xBE);
+    func_81900020(*(void **)D_865118F8);
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8650DB74 = WidgetTree_RunMessagePanelSilent((s32)pool, 0x82);
+    D_8650DB78 = WidgetTree_RunMessagePanelSilent((s32)pool, 0x83);
+    D_8650DB7C = WidgetTree_RunMessagePanelSilent((s32)pool, 0xBE);
+    D_8650DB20 = (void *)func_80040E80(pool, D_8650D1E8);
+    D_8650DB24 = func_80040E80(pool, D_8650C760);
+    D_8650DB40[0] = func_80040E80(pool, D_8650CFC4);
+    D_8650DB40[1] = func_80040E80(pool, D_8650CFF8);
+    D_8650DB40[2] = func_80040E80(pool, D_8650D02C);
+    D_8650DB40[3] = func_80040E80(pool, D_8650D060);
+    D_8650DB70[0] = func_80040E80(pool, D_8650CEE0);
+    D_8650DB50[0] = func_80040E80(pool, D_8650C884);
+    D_8650DB50[1] = func_80040E80(pool, D_8650C940);
+    D_8650DB50[2] = func_80040E80(pool, D_8650C9FC);
+    D_8650DB50[3] = func_80040E80(pool, D_8650CAB8);
+    D_8650DB50[4] = func_80040E80(pool, D_8650CB74);
+    D_8650DB50[5] = func_80040E80(pool, D_8650CC30);
+    D_8650DB50[6] = func_80040E80(pool, D_8650CCEC);
+    D_8650DB50[7] = func_80040E80(pool, D_8650CDA8);
+    D_8650DB38 = func_80040E80(pool, (void *)D_8650DB18);
+    MainPool_FinalizeAllocation(pool);
+    for (i = 0; i < 4; i++) {
+        D_86511698[i].kind = *(u8 *)(*(u8 **)((u8 *)D_8650DB10 + i * 0x6C0 + 8) + 4);
+        if (D_86511698[i].kind == 0x7F) {
+            D_86511698[i].kind = 0x37;
+        } else if (D_86511698[i].kind == 0x7B) {
+            D_86511698[i].kind = 0x7A;
+        } else {
+            D_86511698[i].kind = 0xB3;
+        }
+        func_8004DDF4(D_86511698[i].kind);
+        pool = MainPool_AllocState(main_pool_get_available(), 0);
+        D_8650DB28[i] = func_8004DFEC(pool, D_86511698[i].kind, func_87F0AD50(D_8650DB10, 2, i));
+        MainPool_FinalizeAllocation(pool);
+    }
+    *(s32 *)((u8 *)&D_8650C5E0 + 0x54) = 0;
+    for (i = 0; i < 4; i++) {
+        if (*((u8 *)D_8650DB10 + 0x2182) & (1 << i)) {
+            D_8650C45C[i] = 0;
+            *(s32 *)((u8 *)&D_86511698[i] + 0x4C) = i + 5;
+        } else {
+            D_8650C45C[i] = 4 - *((s8 *)D_8650DB10 + 0x2181);
+            *(s32 *)((u8 *)&D_86511698[i] + 0x4C) = i + 1;
+            *(s32 *)((u8 *)&D_8650C5E0 + 0x54) = D_8650C45C[i];
+        }
+    }
+    if (*((u8 *)D_8650DB10 + 0x2180) == 4) {
+        // FAKE: D_8650C45C written through this file's .data symbol D_8650D1B0
+        // (0xD54 bytes below it). Retail shares one `lui at` across the stores
+        // to D_8650C460-D_8650C468, which as1 only does for an object defined
+        // in this file (an extern gets a lui per store). The address is the same.
+        for (i = 0; i < 4; i++) {
+            (&D_8650D1B0 - (0xD1B0 - 0xC45C) / 4)[i] = 4 - *((s8 *)D_8650DB10 + 0x2181);
+        }
+    }
+    *(f32 *)((u8 *)&D_8650C5E0 + 0x2C) = 760.0f;
+    D_8650C4D0 = 1.6f;
+    D_8650C4AC = 0x11D;
+    D_8650C4CC = 0x185;
+    D_8650C4C4 = 0xC4;
+    D_8650C4B8 = D_8650C508 * 0.4;
+    D_8650C474 = 0;
+    D_8650C4B4 = D_8650C498 - D_8650C4CC - 10;
+    D_8650D9D4 = sqrtf((D_8650C4AC - D_8650C498) / 4.9) / D_8650C4B8 + 1.0f - 2.0f;
+    func_86501D6C();
+    ModelRenderer_InitDisplayRoots();
+    func_87F01870(D_8650DB10);
+    func_87F09EBC(D_8650DA70, D_8650DB10);
+    func_80041E2C();
+    func_87F024CC();
+}
 #endif
 
 #ifdef VERSION_US
