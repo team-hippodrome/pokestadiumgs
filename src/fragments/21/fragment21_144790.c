@@ -19,6 +19,7 @@ typedef struct F21Pair9004 {
 } F21Pair9004;
 static F21State8FF0 sState8FF0;
 static F21Pair9004 sPair9004 = { 0 };
+static s32 sWord9008 = 0; // D_82509008, the saved default word (Fragment21_SetRecordDefaults arg0)
 
 s32 func_8004D690(s32);
 extern s32 *D_825087F0;
@@ -595,7 +596,88 @@ extern s16 D_82509014;
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_8250610C.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_144790/func_825064A4.s")
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern s16 D_8250902A;
+extern s16 D_82509016;
+extern s32 func_8004D19C(s32, s32, s32, s32, s32);
+extern void func_8004C54C(s32, void *);
+extern void *func_8004C874(s32, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern void func_800495F8(s32, s32, s32, void *);
+extern void func_800499EC(void);
+void func_825064A4(Fragment21PoolNode *arg0) {
+    // D_8250900C..D_82509012: the two text offsets that
+    // Fragment21_SetRecordDefaults stores (as externs) at arg4/arg5.
+    static struct {
+        s16 x0, y0, x1, y1;
+    } sOff = { 0 };
+    s32 pad[1]; // FAKE
+    s16 y;
+    s16 x;
+    s32 alpha;
+    s32 tx;
+    s32 rem;
+    s32 i;
+    u8 buf[0x80];
+    s32 pad2[1]; // FAKE
+
+    x = arg0->offset_x + arg0->x;
+    y = arg0->offset_y + arg0->y;
+    alpha = arg0->opacity;
+    if (arg0->image == arg0->next_image) {
+        alpha = 0xFF;
+    }
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (alpha == 0xFF) {
+        gDPSetRenderMode(D_800D0510++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
+    }
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, alpha);
+    for (i = 0; i < 4; i++) {
+        func_8004D19C(D_82508FF0.image_positions[i][0] + x, D_82508FF0.image_positions[i][1] + y, arg0->images[i], 0, 0);
+    }
+    rem = 0xFF - alpha;
+    if (rem > 0) {
+        gDPPipeSync(D_800D0510++);
+        gDPSetRenderMode(D_800D0510++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+        gDPSetEnvColor(D_800D0510++, 0xFF, 0xFF, 0xFF, rem);
+        func_8004D19C(x + D_82509014, y + D_82509016, arg0->next_image, 0, 0);
+    }
+    if (arg0->unk_30 != -1) {
+        func_8004C54C(0x23, func_8004C874(0x31, arg0->unk_30));
+    }
+    func_800498C4();
+    func_800496A4(8, 0);
+    alpha = arg0->opacity;
+    if (arg0->unk_2C == arg0->unk_5A) {
+        alpha = 0xFF;
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+    tx = x + arg0->width / 2;
+    func_800495F8(tx, y + D_8250902A, 1, func_8004C8A0(buf, 0x80, arg0->unk_2A, arg0->unk_2C));
+    rem = 0xFF - alpha;
+    if (rem > 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, rem);
+        if (&sOff) {} // FAKE: keeps sOff out of a register, so each field is loaded once per use site like retail
+        tx = x + sOff.x0 + (arg0->width - sOff.x0) / 2;
+        func_800495F8(tx, y + sOff.y0, 1, func_8004C8A0(buf, 0x80, arg0->unk_58, arg0->unk_5A));
+    }
+    alpha = arg0->opacity;
+    if (arg0->unk_2E == arg0->unk_5C) {
+        alpha = 0xFF;
+    }
+    func_8004972C(0xFF, 0xFF, 0xFF, alpha);
+    rem = 0xFF - alpha;
+    tx = x + sOff.x1 + (arg0->width - sOff.x1) / 2;
+    if (rem > 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, rem);
+        func_800495F8(tx, y + sOff.y1, 1, func_8004C874(0x2A, arg0->unk_5C));
+    }
+    func_800499EC();
+}
 
 extern void _bzero(s16 *, s32);
 extern void func_8004C8C0(s32);
@@ -640,12 +722,11 @@ void *Fragment21_FindRecord(s32 kind, s32 id) {
     return found;
 }
 
-extern s32 D_82509008;
 void Fragment21_SetRecordDefaults(void *arg0, s32 arg1, s32 arg2, s32 arg3,
                     void *arg4, void *arg5, void *arg6, s32 arg7, s32 arg8) {
     Fragment21Header *header;
 
-    *(struct Fragment21PackedWord *)&D_82509008 = *(struct Fragment21PackedWord *)arg0;
+    *(struct Fragment21PackedWord *)&sWord9008 = *(struct Fragment21PackedWord *)arg0;
     header = (Fragment21Header *)&D_82508FF0;
     header->unk_0E = arg1;
     header->unk_10 = arg2;
@@ -713,7 +794,7 @@ void Fragment21_CreateType1Record(s32 arg0, Fragment21Color *arg1, s16 arg2, s16
         *(s16 *)(node + 8) = 0;
         *(s16 *)(node + 10) = *(s16 *)(node + 2) * 10 + 50;
         *(s16 *)(node + 14) = -1;
-        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&D_82509008;
+        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&sWord9008;
         *(s16 *)(node + 36) = D_82508FFE;
         *(s16 *)(node + 38) = D_82509000;
         *(s16 *)(node + 40) = 255;
@@ -767,7 +848,7 @@ void func_82506BEC(s32 arg0, s32 arg1, s16 arg2, s16 arg3, s32 arg4) {
         *(s16 *)(node + 8) = 0;
         *(s16 *)(node + 10) = *(s16 *)(node + 2) + 1;
         *(s16 *)(node + 14) = -1;
-        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&D_82509008;
+        *(struct Fragment21PackedWord *)(node + 24) = *(struct Fragment21PackedWord *)&sWord9008;
         *(s16 *)(node + 36) = D_82509002;
         *(s16 *)(node + 38) = D_82509000;
         *(s16 *)(node + 40) = 0xFF;
