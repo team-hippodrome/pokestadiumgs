@@ -1936,6 +1936,8 @@ SECTIONS
         fragment21_TEXT_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.text);
         build/src/fragments/21/fragment21_13FFA0.o(.text);
+        build/src/fragments/21/fragment21_140700.o(.text);
+        build/src/fragments/21/fragment21_140B40.o(.text);
         build/src/fragments/21/fragment21_143DD0.o(.text);
         build/src/fragments/21/fragment21_144790.o(.text);
         build/src/fragments/21/fragment21_147D10.o(.text);
@@ -1946,6 +1948,10 @@ SECTIONS
         build/asm/us/data/fragments/21/fragment21_header.o(.data);
         fragments_21_fragment21_13FFA0 = .;
         build/src/fragments/21/fragment21_13FFA0.o(.data);
+        fragments_21_fragment21_140700 = .;
+        build/src/fragments/21/fragment21_140700.o(.data);
+        fragments_21_fragment21_140B40 = .;
+        build/src/fragments/21/fragment21_140B40.o(.data);
         fragments_21_fragment21_143DD0 = .;
         build/src/fragments/21/fragment21_143DD0.o(.data);
         fragments_21_fragment21_144790 = .;
@@ -1959,6 +1965,8 @@ SECTIONS
         fragment21_RODATA_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.rodata);
         build/src/fragments/21/fragment21_13FFA0.o(.rodata);
+        build/src/fragments/21/fragment21_140700.o(.rodata);
+        build/src/fragments/21/fragment21_140B40.o(.rodata);
         build/src/fragments/21/fragment21_143DD0.o(.rodata);
         build/src/fragments/21/fragment21_144790.o(.rodata);
         build/src/fragments/21/fragment21_147D10.o(.rodata);
@@ -1972,6 +1980,8 @@ SECTIONS
         fragment21_BSS_START = .;
         build/asm/us/data/fragments/21/fragment21_header.o(.bss);
         build/src/fragments/21/fragment21_13FFA0.o(.bss);
+        build/src/fragments/21/fragment21_140700.o(.bss);
+        build/src/fragments/21/fragment21_140B40.o(.bss);
         build/src/fragments/21/fragment21_143DD0.o(.bss);
         build/src/fragments/21/fragment21_144790.o(.bss);
         build/src/fragments/21/fragment21_147D10.o(.bss);
