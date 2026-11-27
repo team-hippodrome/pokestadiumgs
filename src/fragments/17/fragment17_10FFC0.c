@@ -211,7 +211,68 @@ void func_82200D28(void *arg0, s32 arg1)
 extern s32 func_82200CEC(s32 a0);
 void func_82200D8C(u8 *arg0, u8 arg1) { s32 result = func_82200CEC(arg1); *(u16 *)(arg0 + 4) = arg1; if (result != 0 && *(s16 *)arg0 == 1) { *(s16 *)arg0 = 2; *(s16 *)(arg0 + 2) = 0; *(s16 *)(arg0 + 8) = *(s16 *)(arg0 + 6); *(s16 *)(arg0 + 12) = *(s16 *)(arg0 + 10); *(f32 *)(arg0 + 20) = *(f32 *)(arg0 + 16); _bzero(arg0 + 36, 0x168); } }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_10FFC0/func_82200E04.s")
+#define ROUND_F(x) ((s32)((x) + ((0.0f < (x)) ? 0.5f : -0.5f)))
+extern s32 D_8220D7E8;
+extern s32 D_8220D7EC;
+
+struct Func82201460Record;
+s32 func_82200E04(struct Func82201460Record *arg0, s32 x, s32 y, u8 kind, s32 arg4) {
+    s32 value;
+    u32 frame;
+    s32 i;
+    s32 idx;
+    s32 period;
+    s32 duration;
+    s32 slot;
+
+    value = 0;
+    *(u16 *)((u8 *)arg0 + 4) = kind;
+    if (func_82200CEC(kind & 0xFF) == 0 && *(s16 *)arg0 != 0) {
+        *(s16 *)arg0 = 0;
+    }
+    *(s16 *)((u8 *)arg0 + 0x1C) = ((u16 *)arg4)[0] / 2 + x;
+    *(s16 *)((u8 *)arg0 + 0x1E) = ((u16 *)arg4)[1] / 2 + y;
+    *(s16 *)((u8 *)arg0 + 0x20) = ((u16 *)arg4)[0] / 2 + x;
+    *(s16 *)((u8 *)arg0 + 0x22) = y;
+    switch (*(s16 *)arg0) {
+        case 0:
+            break;
+        case 1:
+            period = D_8220D7E8;
+            slot = period;
+            *(u16 *)((u8 *)arg0 + 2) += 1;
+            frame = *(u16 *)((u8 *)arg0 + 2) % slot;
+            idx = (u16)((frame << 16) / slot - 0x4000) >> 4;
+            *(f32 *)((u8 *)arg0 + 0x10) = 1.5f;
+            *(s16 *)((u8 *)arg0 + 0xA) = ROUND_F((D_80087E50[idx] + 1.0f) * 0.5f * 127.0f) + 128;
+            /* FAKE: `+ slot * 0` adds no code; without it uopt assigns case 1's
+             * registers differently (20 instructions differ). */
+            *(s16 *)((u8 *)arg0 + 6) = value = ROUND_F((D_80087E50[idx] + 1.0f) * 0.5f * 128.0f) + slot * 0;
+            break;
+        case 2:
+            duration = D_8220D7EC;
+            if (*(u16 *)((u8 *)arg0 + 2) < duration) {
+                /* The (u32) cast puts the increment on the unsigned copy of the
+                 * counter that both products below share, as in the ROM. */
+                *(u16 *)((u8 *)arg0 + 2) = (u32)*(u16 *)((u8 *)arg0 + 2) + 1;
+            }
+            *(f32 *)((u8 *)arg0 + 0x10) = (2.0f - *(f32 *)((u8 *)arg0 + 0x14)) * (f32)*(u16 *)((u8 *)arg0 + 2) / (f32)duration + *(f32 *)((u8 *)arg0 + 0x14);
+            *(s16 *)((u8 *)arg0 + 0xA) = (s32)((255 - *(s16 *)((u8 *)arg0 + 0xC)) * *(u16 *)((u8 *)arg0 + 2)) / duration + *(s16 *)((u8 *)arg0 + 0xC);
+            value = (s32)((255 - *(s16 *)((u8 *)arg0 + 0x8)) * *(u16 *)((u8 *)arg0 + 2)) / duration + *(s16 *)((u8 *)arg0 + 0x8);
+            *(s16 *)((u8 *)arg0 + 6) = value;
+            if (y >= -31) {
+                for (i = 0; i < 2; i++) {
+                    slot = func_82200694((u8 *)arg0);
+                    if (slot != -1) {
+                        func_822006CC((F822006CC_Particle *)((u8 *)arg0 + 0x24 + slot * 12), *(s16 *)((u8 *)arg0 + 0x1C), *(s16 *)((u8 *)arg0 + 0x1E));
+                    }
+                }
+            }
+            func_822007D8((u8 *)arg0);
+            break;
+    }
+    return value;
+}
 
 extern u8 D_80094E38[];
 extern s32 func_8004C990();
@@ -932,7 +993,7 @@ extern Gfx *D_800D0510;
 extern s32 D_8220D784;
 extern Gfx D_8220D808[];
 extern s32 func_8004D150(s32, s32, s32, s32, s32, s32);
-extern s32 func_82200E04(Func82201460Record *, s16, s16, u8, s32);
+extern s32 func_82200E04(Func82201460Record *, s32, s32, u8, s32);
 
 
 
