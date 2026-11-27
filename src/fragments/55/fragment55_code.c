@@ -536,7 +536,7 @@ s32 func_8670122C(s32 arg0) {
 typedef struct { f32 x; f32 z; f32 tx; f32 spd; s32 slot; s32 done; } Ctx86701C6C;
 // One 0x38-byte record of D_86728328 per player.
 typedef struct {
-    f32 unk00; f32 unk04; f32 unk08; u8 pad0C[4]; s32 unk10; s32 unk14;
+    f32 unk00; f32 unk04; f32 unk08; f32 unk0C; s32 unk10; s32 unk14;
     s32 unk18; s32 unk1C; s32 unk20; s32 unk24; u8 pad28[4]; s32 unk2C; s32 unk30; s32 unk34;
 } Ent86728328;
 #define ENT_86701C6C(i) (((Ent86728328 *)&D_86728328)[i])
@@ -646,7 +646,89 @@ void func_867014C0(s32 idx, Ctx86701C6C *ctx) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/55/fragment55_code/func_86701874.s")
+extern f32 D_8670C8A4;
+extern s32 D_8670B390;
+extern f32 D_8670BAE8[];
+#define row (&D_86710C20[idx])
+#define e (&ENT_86701C6C(idx))
+// Pushes player idx back from the stage wall in its slot (dir from unk18) and sets
+// ctx->done once the row reaches it. st is written with dir * 0 so uopt cannot
+// propagate it (dir changes later), and wall is address-taken to keep its 0x2C home.
+void func_86701874(s32 idx, Ctx86701C6C *ctx) {
+    f32 angle;
+    f32 v;
+    f32 a;
+    f32 z;
+    f32 tx;
+    f32 d;
+    s32 dir;
+    s32 nv;
+    Stage55Slot *slot;
+    f32 sz;
+    s32 padx; // FAKE: unused, keeps st at its 0x30 home
+    State86703DF4 *st;
+    f32 wall;
+
+    z = ctx->z;
+    tx = ctx->tx;
+    dir = ctx->slot;
+    slot = &D_8670C980[idx][dir];
+    sz = slot->unk04[1] * D_8670C890; st = &D_86728408[dir * 0 + idx]; wall = st->unk1C; if (&wall) {} if (0) { if (e->unk18) {} if (e->unk0C) {} } if (tx < sz + wall) { ENT_86701C6C(idx).unk18 = 1; } else if (sz + wall < tx) { ENT_86701C6C(idx).unk18 = -1; } // FAKE: one line for as1 scheduling; the if (0) block gives the e item a bitpos between D_8670C890 and sz + wall so its spill lands at 0x24
+    nv = e->unk18;
+    d = z - row->z;
+    dir = nv;
+    e->unk24 = dir;
+    if (d == 0.0f) {
+        d = 1.0f;
+    }
+    D_8670C8A4 = e->unk0C;
+    if (dir > 0) {
+        angle = ((sz + wall) - tx) / d;
+        if (idx == D_8670B390) {
+            osSyncPrintf("angle=%f", angle);
+        }
+        if (-D_8670C8A4 < angle || st->unk2C == 6) {
+            v = slot->unk04[1] * D_8670C890 + (tx - st->unk1C);
+            if (v < 0.0f) {
+                a = -v;
+            } else {
+                a = v;
+            }
+            e->unk1C = e->unk08 * a;
+        }
+    } else {
+        angle = tx - wall;
+        angle = (sz + angle) / d;
+        if (v) {} // FAKE
+        if (idx == D_8670B390) {
+            osSyncPrintf("(angle=%f)", angle);
+        }
+        if (angle < D_8670C8A4 || st->unk2C == 6) {
+            v = slot->unk04[1] * D_8670C890 + st->unk1C;
+            if (v < tx) {
+                a = -(v - tx);
+            } else {
+                a = v - tx;
+            }
+            e->unk1C = e->unk08 * -a;
+        }
+    }
+    if (row->z <= (((f32 (*)[2])D_8670BAE8)[slot->unk04[0]][1] + 1.0f) * D_8670C890 + z) {
+        v = slot->unk04[1] * D_8670C890 + st->unk1C;
+        if (e->unk24 == 1) {
+            if (v < tx) {
+                row->x = v;
+                ctx->done = 1;
+            }
+        } else if (tx < v) {
+            row->x = v;
+            ctx->done = 1;
+        }
+    }
+}
+#undef row
+#undef e
+
 #endif
 
 #ifdef VERSION_US
