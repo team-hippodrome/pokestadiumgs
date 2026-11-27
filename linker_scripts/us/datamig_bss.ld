@@ -471,7 +471,9 @@ SECTIONS
         build/src/fragments/53/fragment53_28E360.o(.bss)
     }
 
-    /* Fragment 21's saved argument pair and three state halfwords. Both
+    /* Fragment 21's saved argument pair (D_82509004), saved default word
+     * (D_82509008) and func_825064A4's two text offsets (D_8250900C..
+     * D_82509012, a function static), plus the three state halfwords. The
      * records are loader-cleared; compiler alignment has no load image. */
     .fragment21_pair_9004_data 0x82509004 (NOLOAD) : SUBALIGN(2)
     {
