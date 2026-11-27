@@ -83,5 +83,93 @@ void func_88005714(void *arg0) {
     func_88005390(0, (*(s16 *)((u8 *)(arg0) + (4))), (*(s16 *)((u8 *)(arg0) + (6))), arg0);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/29/fragment29_16B030/func_88005740.s")
+extern s8 D_8800EF40;
+extern u8 D_8800EF41;
+extern s16 D_8800EF42;
+extern s16 D_8800EF44;
+extern u8 *D_8800ECC0;
+extern u8 *D_8800ECC4;
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern void func_8004C594(s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void *func_8004C8A0(void *, s32, s32, s32);
+extern s32 func_800472E0(u8 *);
+extern s32 func_88002958(u8 **, u16, s32, s16);
+extern s32 func_8004D27C(u8 *, s32, s32);
+extern s32 func_8004CA10(u8 *);
+extern void func_88002C2C(u8, u8, u8);
+extern void func_88002BA0(u8, u8, u8);
+extern void func_88002CB8(s16, s16, u16, u16);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004989C(s32);
+extern void func_80049064(s32, s32, s32, u8 *);
+extern void func_800499EC(void);
+
+#define MAX_88005740(a, b) ((a) > (b) ? (a) : (b))
+
+void func_88005740(void) {
+    s32 i;
+    s16 x;
+    s16 y;
+    s16 w;
+    u8 buf[0x80];
+    u8 *strs[4];
+    u8 lens[4];
+    u8 count;
+    s16 ys[4];
+    s32 n;
+
+    func_8004C594(1, D_8800EF41 + 1);
+    strs[0] = func_8004C874(0x27, 9);
+    strs[1] = func_8004C8A0(buf, 0x80, 0x27, 10);
+    strs[2] = func_8004C874(0x27, 11);
+    strs[3] = func_8004C874(0x27, 12);
+    for (i = 0; i < 4; i++) {
+        lens[i] = func_800472E0(strs[i]);
+    }
+    // FAKE: puts the lens[1]/lens[2] values ahead of the MAX temp in uopt's item order.
+    if (lens[1] > lens[2] && lens[2] > lens[1]) {}
+    n = MAX_88005740(lens[0], MAX_88005740(lens[1], lens[2]));
+    count = lens[3] + n + 1;
+    w = func_88002958(strs, 4, 8, 1) + 0x21;
+    x = D_8800EF42 - (w >> 1);
+    y = D_8800EF44 - ((s16)(count * 20 + count * 6 + 23) >> 1);
+    for (i = 0; i < 3; i++) {
+        ys[i] = y + 13;
+    }
+    // FAKE: keeps lens[1]/lens[2] live past the box height so its spill lands at 0x3C.
+    if (lens[1] > lens[2] && lens[2] > lens[1]) {}
+    ys[3] = y + (count - lens[3]) * 26 + 13;
+    func_8004D1FC(D_8800ECC4);
+    func_8004D27C(D_8800ECC0, 0x80, 1);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_88002C2C(0xFF, 0xAA, 0x8C);
+    // One line: as1 fills the delay slot as retail does.
+    n = func_8004CA10(D_8800ECC4); GfxRect_DrawTextured(x + 5, y + 5, w - 13, (s16)(count * 20 + count * 6 + 23) - 13, 0, 0, (s32)((((f32)func_8004CA10(D_8800ECC4) * 1024.0f / (f32)(w - 13)) > 0.0f ? 0.5f : -0.5f) + 1024.0f * (f32)n / (f32)(w - 13)), 0, 0);
+    func_88002BA0(0xFF, 0xAA, 0x8C);
+    func_88002CB8(x, y, w, (s16)(count * 20 + count * 6 + 23));
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(8, 1);
+    func_8004989C(0x1A);
+    switch (D_8800EF40) {
+        case 0:
+            func_80049064(D_8800EF42, ys[0], 1, strs[0]);
+            break;
+        case 2:
+            func_80049064(D_8800EF42, ys[1], 1, strs[1]);
+            break;
+        case 3:
+            func_80049064(D_8800EF42, ys[2], 1, strs[2]);
+            break;
+    }
+    if (D_8800EF40 != 0) {
+        func_80049064(D_8800EF42, ys[3], 1, strs[3]);
+    }
+    func_800499EC();
+}
+
 #endif
