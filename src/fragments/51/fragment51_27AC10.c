@@ -4,7 +4,6 @@
 #ifdef VERSION_US
 /* mkdraft:func_86304DF0 begin */
 extern const f32 D_86307464[];
-extern const f32 D_86307560;
 
 
 
@@ -32,7 +31,7 @@ void func_86304DF0(f32 *arg0, f32 *arg1, f32 *arg2, u8 *arg3, u8 *arg4) {
     } else {
         var_fv1 = D_86307464[0];
     }
-    scale = D_86307560;
+    scale = 0.15f;
     if (arg0) { } // karodo: empty block; its line boundary attributes the 60.0f materialization here instead of uopt's entry constant pool, so as1 fills the multiply latency slot with it. Without it: 495.
     arg0[0] = (*(f32 *)(arg4 + 0x20) * var_fv1 * scale) + *(f32 *)(arg3 + 0x48);
     arg0[1] = (*(f32 *)(arg4 + 0x24) * var_fv1 * scale) + *(f32 *)(arg3 + 0x4C);
@@ -59,9 +58,6 @@ void func_8630500C(void *a) {
     );
 }
 
-extern const f32 D_86307564;
-extern const f32 D_86307568;
-extern const f32 D_8630756C;
 extern u8 *D_863075D8;
 extern void func_87C03B60(void *, void *, void *);
 extern void func_800277F0(u16, void *);
@@ -76,13 +72,13 @@ void func_86305038(u8 *arg0, u8 *arg1) {
     y = *(f32 *)(arg1 + 20);
     length = sqrtf(x * x + y * y);
     sound = 28419;
-    if (D_86307564 < length) {
+    if (0.0569999963f < length) {
         sound = 28426;
     } else if (*(u32 *)(*(u8 **)(arg0 + 4) + 12) & 0x40000000) {
         sound = 28423;
-    } else if (D_86307568 < length) {
+    } else if (0.03f < length) {
         sound = 28425;
-    } else if (D_8630756C < length) {
+    } else if (0.012f < length) {
         sound = 28424;
     }
     func_87C03B60(D_863075D8 + 36700, *(u8 **)(arg0 + 12) + 72, position);
@@ -92,7 +88,64 @@ void func_86305038(u8 *arg0, u8 *arg1) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/51/fragment51_27AC10/func_86305144.s")
+extern f32 func_87D0059C(f32 *, f32 *);
+extern void func_863007B8(void *);
+void func_86305144(u8 *arg0, s32 arg1) {
+    f32 y;
+    f32 x;
+    f32 dy;
+    f32 dx;
+    f32 speed;
+    f32 t;
+    u8 *sub;
+    f32 ax;
+    f32 bx;
+
+    sub = *(u8 **)(*(u8 **)(arg0 + 0xC) + 0x20);
+    t = *(f32 *)(arg0 + 0x70) * 1.3f - 0.15f;
+    ax = (*(f32 **)(arg0 + 0x78))[0];
+    bx = (*(f32 **)(arg0 + 0x7C))[0];
+    x = (f32)ax + bx * t; // cast makes ugen load ax first, like retail
+    y = (*(f32 **)(arg0 + 0x7C))[1] * t + (*(f32 **)(arg0 + 0x78))[1];
+    t = sqrtf(*(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) * *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) + *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10) * *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10));
+    speed = t;
+    if (arg1 != 0) {
+        dx = x - ((ax + bx * 0.5f) + (ax + bx * 0.5f) - *(f32 *)(*(u8 **)(arg0 + 4) + 0x48));
+        dy = y - (((*(f32 **)(arg0 + 0x78))[1] + (*(f32 **)(arg0 + 0x7C))[1] * 0.5f) + ((*(f32 **)(arg0 + 0x78))[1] + (*(f32 **)(arg0 + 0x7C))[1] * 0.5f) - *(f32 *)(*(u8 **)(arg0 + 4) + 0x4C));
+    } else {
+        if (x == 0) {} // FAKE
+        dx = x - *(f32 *)(*(u8 **)(arg0 + 4) + 0x48);
+        dy = y - *(f32 *)(*(u8 **)(arg0 + 4) + 0x4C);
+    }
+    func_87D0059C(&dx, &dy);
+    speed += 1.0f; if (*(f32 *)(D_863075D8 + 0x8F34) < speed) { // one line: as1 schedules the 1.0f mtc1 like retail
+        speed = *(f32 *)(D_863075D8 + 0x8F34);
+    }
+    *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x10) = dx * speed;
+    *(f32 *)(*(u8 **)(arg0 + 0xC) + 0x14) = dy * speed;
+    *(f32 *)(sub + 0x10) = *(f32 *)(*(u8 **)(arg0 + 8) + 0x20) + (*(f32 *)(*(u8 **)(arg0 + 8) + 0x28) - *(f32 *)(*(u8 **)(arg0 + 4) + 0x48));
+    *(f32 *)(sub + 0x14) = *(f32 *)(*(u8 **)(arg0 + 8) + 0x24) + (*(f32 *)(*(u8 **)(arg0 + 8) + 0x2C) - *(f32 *)(*(u8 **)(arg0 + 4) + 0x4C));
+    *(f32 *)(sub + 0x10) = *(f32 *)(sub + 0x10) / 8.14587f * 0.06f;
+    *(f32 *)(sub + 0x14) = *(f32 *)(sub + 0x14) / 8.14587f * 0.06f;
+    if ((*(s32 *)(*(u8 **)(arg0 + 4) + 0xC) << 1) < 0 && *(s32 *)(*(u8 **)(arg0 + 4) + 0x1C) >= 3 &&
+        *(s32 *)(*(u8 **)(arg0 + 4) + 0x1C) < 0x18) {
+        *(f32 *)(sub + 0x18) = 2.0f;
+        *(s32 *)(*(u8 **)(arg0 + 0xC) + 0xC) |= 0x02000000;
+        *(s32 *)(*(u8 **)(arg0 + 0xC) + 0xC) &= ~0x01000000;
+        *(s32 *)(*(u8 **)(arg0 + 0xC) + 0x1C) = 0;
+    } else {
+        *(f32 *)(sub + 0x18) *= 0.5f;
+        *(s32 *)(*(u8 **)(arg0 + 0xC) + 0xC) &= ~0x02000000;
+        *(s32 *)(*(u8 **)(arg0 + 0xC) + 0xC) &= ~0x01000000;
+    }
+    func_863007B8(*(void **)(arg0 + 8));
+    if (arg1 == 0) {
+        sub[0x21] = *(s32 *)arg0;
+    }
+    if (*(s32 *)D_863075D8 == 4) {
+        func_86305038(arg0, sub);
+    }
+}
 
 extern s32 func_86304CA8(u8 *, f32 *, u8 *, u8 *, f32 *, u8 *, u8 *);
 extern void func_86305144(u8 *, s32);
