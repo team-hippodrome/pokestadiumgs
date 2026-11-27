@@ -1041,13 +1041,204 @@ void func_88226378(void) {
 #undef F
 #undef S
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/31/fragment31_197640/func_88226918.s")
+extern s32 func_80049290(s32,s32,void *);
+extern void func_88002820(s16,s16,s32,void *,s32,s32,void *);
+extern Gfx *D_800D0510;
+extern Gfx D_80094DE0[];
+extern Gfx D_80094E38[];
+extern Gfx D_80094F50[];
+extern u8 *D_8800ECC8;
+extern u8 *D_882345CC;
+extern u8 *D_88A01C30;
+extern u8 *D_88A01C34;
+extern void func_88002BA0();
+extern void func_8004D27C();
+extern void func_8004D1FC();
+extern void func_8004D40C();
+extern void func_8004D5B8();
+extern void *func_8004C874();
+extern void func_88000FC4();
+extern void GfxRect_DrawTextured();
+extern s32 func_8003514C();
+extern s32 func_88225EA0();
+extern s32 func_88225EEC();
+extern void func_800498C4();
+extern void func_800496A4();
+extern void func_80048E30();
+extern void func_8004972C();
+extern void func_800495F8();
+extern void func_8004989C();
+extern void func_80049064();
+extern void func_800499EC();
+extern void func_8004B314();
+#define ST ((u8 *)D_88234870)
+#define F(o, t) (*(t *)(ST + (o)))
+
+void func_88226918(s32 arg0) {
+    u8 *M;
+    u32 i;
+    s32 s0;
+    s32 x;
+    u8 *A;
+    u8 *B;
+    s32 y;
+    s8 *C;
+    u8 *s2;
+
+    switch (arg0 = F(0x84, s16)) {
+    case 1:
+        A = ST + 0x14;
+        B = F(0x98, u8 *);
+        C = F(0xA8, s8 *);
+        s2 = D_88A01C30[0x10] * 0x18 + D_88A01C34;
+        break;
+    case 2:
+        A = ST + 0x24;
+        B = F(0x9C, u8 *);
+        C = F(0xAC, s8 *);
+        s2 = D_88A01C34 + D_88A01C30[0x10] * 0x18 + D_88A01C30[0x24] * 0x18;
+        break;
+    }
+
+    gSPDisplayList(D_800D0510++, D_80094DE0);
+    func_880008B0(0xB2, 0xB3, 0xB1);
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    func_88002BA0(0xFF, 0xFF, 0xFF);
+    func_8004D334(0xEF, 0);
+    func_8004D27C(D_8800ECC8, 0x100, 2);
+    func_88002EC0(0xE7, 0x10B, 0x44, 0x1E, 2);
+    func_8004D40C(2);
+    func_8004D5B8(func_80049290(8, 1, func_8004C874(0x25, 0x2C)) + 0xD6, 0xC3, 0, "%d/%d",
+                  D_88A01C34[0x15], D_88A01C34[0x14]);
+    func_8004D40C(1);
+    i = 0;
+    switch (arg0 = F(0x84, s16)) {
+    case 1:
+    case 2:
+        M = F(8, u8 *);
+        s0 = F(0x3C, u16) + *(s16 *)(M + 0xC) + 0x34;
+        x = *(s16 *)(M + 0xE) + 0xC;
+        for (i = 0; i < *(u16 *)(A + 4); i++) {
+            func_88000FC4(s0, x, 1, 2, s2[0x15], s2[0x14]);
+            x += 0x14;
+            s2 += 0x18;
+        }
+        i = 0;
+        break;
+    }
+    switch (arg0 = F(0x84, s16)) {
+    case 1:
+    case 2:
+        gDPPipeSync(D_800D0510++);
+        gDPSetEnvColor(D_800D0510++, 255, 255, 0, 255);
+        func_8004D1FC(D_882345CC);
+        GfxRect_DrawTextured(0x15C, (s16)(F(0x84, s16) * 0x1A + 0xBF), 0xA, *(s16 *)(D_882345CC + 2), 0, 0,
+                             0x400, 0x400, 0);
+        if (F(0x84, s16) == 1) {
+            x = F(0x1A, s16);
+        } else {
+            x = F(0x2A, s16);
+        }
+        if (func_8003514C() == 0) {
+            x++;
+        }
+        GfxRect_DrawTextured(0x17D, (s16)(x * 0x14 + 0x89), 0xA, *(s16 *)(D_882345CC + 2), 0x120, 0,
+                             -0x400, 0x400, 0);
+        break;
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetRenderMode(D_800D0510++, 0x504240, 0);
+    gDPSetCombine(D_800D0510++, 0xFFFFFF, 0xFFFCF279);
+    func_8004D1FC(F(0xB0, u8 *));
+    func_8004D27C(F(0xB4, u8 *), 0x80, 1);
+    func_8004D27C(F(0xB8, u8 *), 0x100, 2);
+    func_8004D27C(F(0xBC, u8 *), 0x180, 3);
+    for (i = 0; i < 3; i++) {
+        switch (i) {
+        case 0:
+            y = (F(0x94, u8) != 0) ? 0 : 1;
+            break;
+        case 1:
+            y = (func_88225EA0() != 0) ? 0 : 1;
+            break;
+        case 2:
+            y = (func_88225EEC() != 0) ? 0 : 1;
+            break;
+        }
+        func_882261CC(0xB6, i * 0x1A + 0xBD, *(u16 *)F(0xB0, u8 *), *(u16 *)(F(0xB0, u8 *) + 2), y,
+                      *(s8 *)(ST + 0xA0 + i * 2) * 3);
+    }
+    switch (arg0 = F(0x84, s16)) {
+    case 1:
+    case 2:
+        for (i = 0; i < *(u16 *)(A + 4); i++) {
+            x = (*B != 0) ? 2 : 3;
+            M = F(8, u8 *);
+            func_882261CC(*(s16 *)(M + 0xC) + 0x18, (s16)(*(s16 *)(M + 0xE) + i * 0x14 + 0xB),
+                          *(u16 *)F(0xB8, u8 *), *(u16 *)(F(0xB8, u8 *) + 2), x, C[i * 2] * 2);
+            B++;
+        }
+        i = 0;
+        break;
+    }
+    gSPDisplayList(D_800D0510++, D_80094F50);
+    func_800498C4();
+    func_800496A4(4, 1);
+    func_80048E30(D_8800687C, 0xB2, 0x9D, func_8004C874(0x25, 0x2A), 1);
+    switch (arg0 = F(0x84, s16)) {
+    case 1:
+    case 2:
+        M = F(8, u8 *);
+        func_88002820((s16)(*(s16 *)(M + 0xC) + 0x2E), (s16)(*(s16 *)(M + 0xE) + 0xB), 0, *(void **)A,
+                      *(u16 *)(A + 4), *(s16 *)(ST + 0x3A), A + 8);
+        break;
+    }
+    func_800496A4(8, 1);
+    x = 0xBD;
+    for (i = 0; i != 3; i++) {
+        func_80048E30(D_8800687C, 0xD0, x, func_8004C874(0x25, i + 0x2C), 1);
+        x += 0x1A;
+    }
+    if (F(0x93, u8) != 0) {
+        func_8004972C(0xFF, 0xFF, 0xFF, 0x64);
+    }
+    func_800495F8(0x108, 0x110, 1, func_8004C874(0x25, 0x2F));
+    if (F(0, u8) == 3 && F(0x84, s16) == 2) {
+        u8 *p = ST + 0x40;
+        func_8004989C(0x1A);
+        func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        func_80049064(*(s16 *)p, *(s16 *)(p + 2), *(s32 *)(p + 4), **(s32 **)(p + 8));
+    }
+    func_800499EC();
+    if (F(0x80, s32) != 0) {
+        if (F(0x84, s16) == 3) {
+            func_8004B314(0xE2, 0x106, 0x4E, 0x28);
+        } else {
+            func_8004B314(0xB1, F(0x84, s16) * 0x1A + 0xB8, 0x9C, 0x1E);
+        }
+    } else {
+        if (F(0x84, s16) == 1) {
+            y = F(0x1A, s16);
+        } else {
+            y = F(0x2A, s16);
+        }
+        M = F(8, u8 *);
+        func_8004B314(*(s16 *)(M + 0xC) + 0x13, *(s16 *)(M + 0xE) + y * 0x14 + 6, F(0x3E, u16) + 0xA, 0x1A);
+    }
+}
+
+#undef F
+#undef ST
+
+// Unreferenced empty strings that follow func_88226918's "%d/%d" in .rodata.
+const char D_882343C8[] = "";
+const char D_882343CC[] = "";
 
 extern u8 D_88000E4C[];
 extern s8 D_88006868;
 extern void *func_8004C874(s32, void *);
 extern void func_88226378(void);
-extern void func_88226918(void);
+extern void func_88226918(s32 arg0);
 extern void _bzero(void *, s32);
 extern s32 func_8003514C(void);
 extern void func_8004C8C0(s32);
