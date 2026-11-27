@@ -93,7 +93,157 @@ void func_86600160(s32 arg0, s32 arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_86600678.s")
+extern u8 D_8660A990[];
+extern s32 D_866066F4[];
+extern u8 D_86606788;
+extern s32 D_86606710;
+extern s32 D_8660670C;
+extern u32 func_8003570C(void);
+typedef struct {
+    s32 x0; s32 x4; s32 x8; s32 xC; s32 x10; s32 x14; s32 x18; s32 x1C;
+    s32 x20; s32 x24; s32 x28[6]; s32 x40; s32 x44; s32 x48; s32 x4C; s32 x50; s32 x54;
+} Rec54;
+typedef struct {
+    s32 x0; s32 x4; s32 x8; s32 xC; s32 x10; s32 pad14[18]; s32 x5C; s32 pad60[12]; s32 x90;
+} St54;
+#define G54 ((St54 *)&D_86606788)
+#define REC (((Rec54 *)D_8660A990)[i])
+void func_86600678(void) {
+    s32 i;
+    s32 pad[4]; // FAKE
+    s32 flagB;
+    s32 flagA;
+    s32 pad2; // FAKE
+    s32 r;
+    s32 a0;
+    s32 base;
+    s32 v1;
+
+    for (i = 0; i < 4; i++) {
+        if (D_866066F4[i] == 0) {
+            continue;
+        }
+        if (REC.x4 != 0) {
+            continue;
+        }
+        REC.x4 = 1;
+        r = guRandom();
+        base = 0;
+        switch (D_866066F4[i]) {
+            case 1:
+                switch (REC.x48) {
+                    case 0: a0 = D_86606710; break;
+                    case 1: a0 = D_86606710 - 10; break;
+                    case 2: a0 = D_86606710 - 30; break;
+                    case 3: a0 = D_86606710 - 40; break;
+                    case 4: a0 = D_86606710 - 50; break;
+                    default: a0 = 100; break;
+                }
+                a0 += G54->x90 << 3;
+                base += (r % 399) / a0 + D_8660670C;
+                v1 = G54->x0 + base;
+                REC.x14 = v1;
+                REC.x8 = G54->xC;
+                if ((G54->x10 - REC.x40) < v1) {
+                    flagB = 1;
+                    if (((r % 399) < 10) && (G54->x90 < 7)) {
+                        flagA = 1;
+                    } else {
+                        REC.x24 = 1;
+                    }
+                }
+                break;
+            case 2:
+                switch (REC.x48) {
+                    case 0: a0 = D_86606710; break;
+                    case 1: a0 = D_86606710 - 20; break;
+                    case 2: a0 = D_86606710 - 40; break;
+                    case 3: a0 = D_86606710 - 70; break;
+                    case 4: a0 = D_86606710 - 90; break;
+                    default: a0 = 100; break;
+                }
+                a0 += G54->x90 * 10;
+                base += (r % 399) / a0 + D_8660670C;
+                v1 = G54->x0 + base;
+                REC.x14 = v1;
+                REC.x8 = G54->xC;
+                if ((G54->x10 - REC.x40) < v1) {
+                    flagB = 1;
+                    if ((r % 399) < 30) {
+                        flagA = 1;
+                    } else {
+                        REC.x24 = 1;
+                    }
+                }
+                break;
+            case 3:
+                switch (REC.x48) {
+                    case 0: a0 = D_86606710; break;
+                    case 1: a0 = D_86606710 - 20; break;
+                    case 2: a0 = D_86606710 - 30; break;
+                    case 3: a0 = D_86606710 - 40; break;
+                    case 4: a0 = D_86606710 - 50; break;
+                    default: a0 = 70; break;
+                }
+                a0 += G54->x90 * 20;
+                if (G54->x90 >= 8) {
+                    base = -1;
+                    a0 -= 150;
+                }
+                if (a0 <= 0) {
+                    a0 = 10;
+                }
+                base += (r % 399) / a0 + D_8660670C;
+                v1 = G54->x0 + base;
+                REC.x14 = v1;
+                REC.x8 = G54->xC;
+                if ((G54->x10 - REC.x40) < v1) {
+                    flagB = 1;
+                    if (G54->x90 >= 7) {
+                        if ((r % 399) < 50) {
+                            flagA = 1;
+                        } else {
+                            REC.x24 = 1;
+                        }
+                    } else if ((r % 399) < 100) {
+                        flagA = 1;
+                    } else {
+                        REC.x24 = 1;
+                    }
+                }
+                break;
+            case 4:
+                switch (REC.x48) {
+                    case 0: a0 = D_86606710; break;
+                    case 1: a0 = D_86606710 - 10; break;
+                    case 2: a0 = D_86606710 - 30; break;
+                    case 3: a0 = D_86606710 - 40; break;
+                    case 4: a0 = D_86606710 - 50; break;
+                    default: a0 = 100; break;
+                }
+                a0 += G54->x90 * 25;
+                base += (r % 399) / a0 + D_8660670C;
+                v1 = G54->x0 + base;
+                REC.x14 = v1;
+                REC.x8 = G54->xC;
+                if ((G54->x10 - REC.x40) < v1) {
+                    flagB = 1;
+                    if ((r % 399) < 120) {
+                        flagA = 1;
+                    }
+                }
+                break;
+        }
+        if (flagB == 1) {
+            if (flagA == 1) {
+                REC.x8 = (func_8003570C() & 3) + 1;
+            } else {
+                REC.x8 = G54->x5C;
+            }
+        }
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
