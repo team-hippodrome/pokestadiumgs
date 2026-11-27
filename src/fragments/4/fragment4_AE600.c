@@ -169,7 +169,83 @@ void func_81800E30(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/4/fragment4_AE600/func_81800E38.s")
+extern void func_800459AC(u8 *image, s32 format, s32 size, u32 width, u32 height, s32 swapped, s32 palette, s32 cms,
+                          s32 cmt, s32 masks, s32 maskt, s32 shifts, s32 shiftt);
+extern void GfxRect_DrawTextured(s16 x, s16 y, s16 width, s16 height, s16 s, s16 t, s16 dsdx, s16 dtdy, s32 cycle);
+
+void func_81800E38(s16 x, s16 y, u16 w, u16 h, u16 imgw, u16 imgh, u8 *img, s32 fmt, s32 size, s32 swapped) {
+    s32 left;
+    s32 chunk;
+    s32 row;
+    s32 bpp;
+    f32 inv;
+    s32 cy;
+    f32 acc;
+    s32 whole;
+    f32 fw;
+    s32 xs;
+    s32 rowsz;
+    s32 ys;
+    s32 n;
+    u8 *src;
+    s32 cnt;
+    s32 width;
+
+    if (img != NULL && w > 0 && h > 0 && imgh > 0 && imgw > 0) {
+        xs = func_81800DE4((f32)(u32)imgw / (f32)(u32)w);
+        // acc holds (f32)imgh until the loop reuses it as the row remainder.
+        acc = (f32)(u32)imgh;
+        fw = (f32)(u32)h;
+        ys = func_81800DE4(acc / fw);
+        cy = y;
+        inv = fw / acc;
+        left = x;
+        width = w;
+        switch (size) {
+        case 0:
+            bpp = 0;
+            break;
+        case 1:
+            bpp = 1;
+            break;
+        case 2:
+            bpp = 2;
+            break;
+        case 3:
+            bpp = 4;
+            break;
+        }
+        if (bpp != 0) {
+            rowsz = 0x1000 / bpp;
+        } else {
+            rowsz = 0x2000;
+        }
+        acc = 0.0f;
+        for (row = 0; row < imgh; row += chunk) {
+            chunk = (rowsz / imgw) & ~1;
+            n = imgh - row;
+            cnt = (n < chunk) ? n : chunk;
+            if (bpp != 0) {
+                src = img + imgw * row * bpp;
+            } else {
+                src = img + (imgw * row) / 2;
+            }
+            whole = (f32)cnt * inv;
+            acc += (f32)cnt * inv - whole;
+            if (acc >= 1.0) {
+                if (!whole && !whole && !whole) { // FAKE
+                }
+                whole++;
+                acc -= 1.0;
+            }
+            if (cy + whole > 0 && cy < 0x1E0) {
+                func_800459AC(src, fmt, size, imgw, cnt, swapped, 0, 2, 2, 0, 0, 0, 0);
+                GfxRect_DrawTextured(left, cy, width, whole, -0x10, -0x10, xs, ys, 0);
+            }
+            cy += whole;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
