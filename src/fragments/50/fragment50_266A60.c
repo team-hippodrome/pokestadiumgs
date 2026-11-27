@@ -667,7 +667,96 @@ void func_862017F8(void *arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/50/fragment50_266A60/func_86201A58.s")
+extern void *D_87F119D8;
+extern void func_87C03B60(void *, void *, void *);
+extern void func_87F026E8(void *, void *);
+extern void func_862017F8(void *);
+#define G ((u8 *)D_8620E198)
+#define O ((u8 *)D_87F119DC)
+#define F(p, off) (*(f32 *)((p) + (off)))
+void func_86201A58(void) {
+    f32 len;
+    f32 f;
+    f32 k[3];
+    f32 scale;
+    u8 *st;
+    f32 a, b;
+
+    st = *(u8 **)(O + 0x20);
+    a = len; b = len; // FAKE
+    if (&k) {} // FAKE
+    scale = F(st, 0x34) * (F(G, 0x64) * 0.75f);
+    F(O, 0x5C) = scale;
+    F(O, 0x58) = scale;
+    F(O, 0x54) = scale;
+    f = F(st, 0x24);
+    F(O, 0x10) += F(st, 0x0C) + f;
+    F(O, 0x14) += F(st, 0x10) + F(st, 0x28);
+    F(O, 0x18) += F(st, 0x14) + F(st, 0x2C);
+    F(O, 0x10) *= F(G, 0x30);
+    F(O, 0x14) *= F(G, 0x30);
+    F(O, 0x18) *= F(G, 0x30);
+    len = sqrtf(F(O, 0x18) * F(O, 0x18) + (F(O, 0x14) * F(O, 0x14) + F(O, 0x10) * F(O, 0x10)));
+    if (a != b) {} // FAKE
+    switch (*(s32 *)(st + 0x30)) {
+        case 1:
+            f = 1.0f;
+            break;
+        case 2:
+            f = 0.95f;
+            break;
+        case 3:
+            f = 0.9f;
+            break;
+        case 5:
+            f = 0.8f;
+            break;
+        default:
+            f = 0;
+            break;
+    }
+    if (F(O, 0x14)) {} if (F(O, 0x18)) {} // FAKE
+    if (F(G, 0x24) < len) {
+        scale = F(G, 0x24) / len * f;
+    if (f) {} // FAKE
+        F(O, 0x10) *= scale;
+        F(O, 0x14) *= scale;
+        F(O, 0x18) *= scale;
+    }
+    F(st, 0x0) = F(O, 0x48);
+    F(st, 0x4) = F(O, 0x4C);
+    F(st, 0x8) = F(O, 0x50);
+    F(O, 0x48) += F(st, 0x18);
+    F(O, 0x4C) += F(st, 0x1C);
+    F(O, 0x50) += F(st, 0x20);
+    F(O, 0x48) += F(O, 0x10);
+    F(O, 0x4C) += F(O, 0x14);
+    F(O, 0x50) += F(O, 0x18);
+    func_87C03B60(G + 0x73CC4, O + 0x48, st + 0x38);
+    F(st, 0x14) = 0.0f;
+    F(st, 0x0C) = 0.0f;
+    F(st, 0x10) = F(G, 0);
+    F(st, 0x18) = 0.0f;
+    F(st, 0x1C) = 0.0f;
+    F(st, 0x20) = 0.0f;
+    F(st, 0x24) = 0.0f;
+    F(st, 0x28) = 0.0f;
+    F(st, 0x2C) = 0.0f;
+    func_862017F8(st);
+    if (F(O, 0x4C) < -200.0f) {
+        func_87F026E8(D_87F119D8, O);
+    }
+    if (*(s32 *)(G + 0x73BAC) == 0 && (*(s32 *)(O + 0xC) << 3) >= 0) {
+        if (O[0x41] >= 9) {
+            O[0x41] -= 8;
+        } else {
+            func_87F026E8(D_87F119D8, O);
+        }
+    }
+}
+#undef G
+#undef O
+#undef F
 #endif
 
 #ifdef VERSION_US
