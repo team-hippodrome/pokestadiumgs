@@ -1504,7 +1504,155 @@ s32 func_82503954(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/21/fragment21_140B40/func_82503988.s")
+extern u8 D_82508F68[];
+extern u8 D_82508D10[];
+extern u8 D_82508FD8[];
+extern void *D_82508680;
+extern s16 D_82508F6A;
+extern s16 D_82508F6C;
+extern s16 D_82508F72;
+extern s32 func_82507B58(void);
+extern s32 func_82503954(s32);
+extern s32 func_82501490(s32, s32, void *, u8, s32);
+extern s16 func_82502924(u8 *);
+extern s32 Fragment21_SetRecordColorTransition(s32, void *, s16, s16, s16, s16, s32);
+extern void func_82507B18(void);
+extern void Fragment21_RequestClose(void);
+extern void func_800226C0(s32);
+extern void func_825015D8(u16);
+extern void func_82507BFC(void);
+extern void func_82507C48(void);
+extern s32 func_80001FF0(void);
+extern void func_800225C4(s32);
+s32 func_82503988(void) {
+    s32 ret;
+    s32 pad; // FAKE
+    u8 *menu;
+    u8 *rec;
+    u8 *slot;
+    s32 prev;
+    s32 pad2; // FAKE
+    s32 flag;
+    u16 res;
+    s32 r;
+    u16 b;
+    s16 *sel; // FAKE: pointer view of D_82508F6A for the slot index and call argument
+
+    ret = 0;
+    menu = *(u8 **)(D_82508F68 + 0x1C);
+    rec = *(s16 *)(D_82508F68 + 2) * 0x30 + *(u8 **)(menu + 0x1C);
+    prev = *(s16 *)(D_82508F68 + 2);
+    flag = 0;
+    sel = &D_82508F6A;
+    if ((*(s16 *)D_82508F68 == 1) && (*(s16 *)(*(u8 **)(menu + 0x1C) + D_82508F6A * 0x30 + 0x26) == 0xE)) {
+    } else if (func_82507B58() == 0) {
+        return 0;
+    }
+    b = *(u16 *)((u8 *)D_80087200 + 0xC);
+    if (b & 0x800) {
+        switch (r = func_82503954((s8)rec[4])) {
+            case -2:
+                flag = 1;
+                break;
+            case -1:
+                break;
+            default:
+                D_82508F6A = r;
+                break;
+        }
+    } else if (b & 0x400) {
+        switch (r = func_82503954((s8)rec[5])) {
+            case -2:
+                flag = 1;
+                break;
+            case -1:
+                break;
+            default:
+                D_82508F6A = r;
+                break;
+        }
+    } else if (b & 0x200) {
+        switch (r = func_82503954((s8)rec[6])) {
+            case -2:
+                flag = 1;
+                break;
+            case -1:
+                break;
+            default:
+                D_82508F6A = r;
+                break;
+        }
+    } else if (b & 0x100) {
+        switch (r = func_82503954((s8)rec[7])) {
+            case -2:
+                flag = 1;
+                break;
+            case -1:
+                break;
+            default:
+                D_82508F6A = r;
+                break;
+        }
+    }
+    rec = *(u8 **)(menu + 0x1C) + D_82508F6A * 0x30;
+    slot = D_82508D10 + *sel * 0x3C;
+    // D_82508F6A is the halfword at D_82508F68 + 2, so sel[-1] is the halfword at D_82508F68 + 0.
+    res = func_82501490(sel[-1], *sel, rec, D_82508FD8[0], 0); // FAKE
+    if (prev != D_82508F6A) {
+        if (*(s32 *)(slot + 8) != 0 && res == 0) {
+            Fragment21_SetRecordColorTransition(0, (u8 *)(*(s32 *)(slot + 8) + 0x28), *(s16 *)(rec + 0x22), 0x31,
+                                                *(s16 *)(rec + 0x22), func_82502924(*(u8 **)(slot + 0xC)),
+                                                ((s32 *)(slot + 0x18))[**(u8 **)(slot + 0xC)]);
+        }
+        if (*(s16 *)(rec + 0x2C) != 0) {
+            func_82507B18();
+        } else {
+            Fragment21_RequestClose();
+        }
+        func_800226C0(1);
+    }
+    if (res != 0) {
+        ret = -4;
+        func_825015D8(res);
+    } else if (*(s16 *)(rec + 0x20) != -1) {
+        ret = -3;
+        D_82508F72 = *(s16 *)(rec + 0x20);
+        func_82507BFC();
+        ((s16 *)D_82508680)[1] = -1;
+        func_800226C0(0x10E);
+    } else {
+        b = *(u16 *)((u8 *)D_80087200 + 8);
+        if (b & 0x8000) {
+            ret = D_82508F6A + 1;
+        } else if (*(s16 *)(rec + 0x2E) != 0 && (b & 0x4000)) {
+            if (*(s16 *)(menu + 0xA) == 1) {
+                if (menu) {} // FAKE
+                ret = -3;
+                D_82508F72 = *(s16 *)(menu + 0x26);
+                func_82507BFC();
+                func_800226C0(0x10E);
+            } else {
+                ret = -1;
+                func_800226C0(3);
+            }
+        } else if ((D_82508F6C != 0 && (*(u16 *)(menu + 0x24) & (b + (*(u16 *)(menu + 0x24) - *(u16 *)(menu + 0x24))))) || flag) { // FAKE
+            ret = -3;
+            D_82508F72 = *(s16 *)(menu + 0x26);
+            func_82507BFC();
+            func_800226C0(0x10E);
+            if (!flag) {
+                func_800226C0(0x12);
+                func_800225C4(func_80001FF0());
+            }
+        } else if (*(s16 *)(menu + 0xC) != 0 && (b & 0x10)) {
+            func_82507C48();
+            ret = -2;
+            D_82508F72 = 4;
+            func_800226C0(0xD2);
+        }
+    }
+    return ret;
+}
 #endif
 
 #ifdef VERSION_US
