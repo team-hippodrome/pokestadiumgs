@@ -1,6 +1,19 @@
 #include "global.h"
 #include "controller.h"
 
+#ifdef VERSION_US
+// 0x81-entry table, DMA-loaded by func_8F1027F8 and given defaults by
+// func_8F100E78. This TU owns it: as1 shares one lui for
+// stores within its first 8 bytes, which only happens for TU-defined objects.
+typedef struct {
+    s16 id;
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+} Frag69Entry;
+static Frag69Entry D_8F1DEE68[0x81];
+#endif
+
 
 #ifdef VERSION_US
 s32 func_8F10008C(s32 arg0, void *arg1);
@@ -537,7 +550,129 @@ void func_8F100DCC(void *arg0, void *arg1) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/69/fragment69_code/func_8F100E78.s")
+// Four signed bytes passed to func_80041FD0 as one word.
+typedef union {
+    s32 word;
+    s8 bytes[4];
+} Fragment69PackedState;
+#endif
+
+#ifdef VERSION_US
+typedef struct Unk8F101318_AnimRec {
+    u8 unk00[0x20];
+    s32 unk20;
+    u8 unk24[8];
+    s32 unk2C;
+    u8 unk30[4];
+    s32 unk34;
+} Unk8F101318_AnimRec;
+
+typedef struct { s16 x; s16 y; s16 z; } Frag69Vec3s;
+
+extern s32 D_8F1DEE18;
+extern s32 D_8F1DEE1C;
+extern s32 D_8F1DEE20;
+extern s32 D_8F1DEE24;
+extern s32 D_8F1DEE28;
+extern s32 D_8F1DEE2C;
+extern s32 D_8F1DEE34;
+extern s32 D_8F1DEE38;
+extern s32 D_8F1DEE3C;
+extern s32 D_8F1DEE44;
+extern s8 D_8F1DEE48[];
+extern f32 D_8F1DEE4C;
+extern Frag69Vec3s D_8F1DEE50;
+extern s32 D_8F1DEE58;
+extern s32 D_8F1DEE5C;
+extern s32 D_8F1DEE60;
+extern u16 D_8F1DEE26;
+extern u8 D_8F1DECA8;
+extern u8 D_8F1DECCC;
+extern u8 D_8F1DF288[];
+extern s32 D_8F1DECA4;
+extern Unk8F101318_AnimRec *D_8F1DECA0;
+extern Frag69Vec3s D_800948DC;
+extern s32 main_pool_get_available(void);
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_8003F018(void *);
+extern void func_80037E3C(void *, void *, void *);
+extern s32 func_80041FD0(s32, u16, Fragment69PackedState, s32);
+extern s32 func_80040E80(void *, void *);
+extern f32 func_8004B888(s32);
+extern s32 func_80041C98(s32);
+extern void func_80041E2C(void);
+extern s32 func_800428F8(s32);
+extern void func_8003F1DC(void *);
+extern void func_8003F114(u8 *, s16, s16, void *);
+extern s32 func_8003F2C4(s32, u8 *, s32);
+extern s32 func_8003F3BC(u8 *, s32);
+extern void func_800476A0(void *, s32);
+extern void func_800476FC(void *, s32);
+extern s32 func_8004C990(s32, s32);
+extern void func_80047738(s32, s32, void *, s32);
+
+void func_8F100E78(void) {
+    void *cb;
+    void *pool;
+    s32 i;
+
+    pool = MainPool_AllocState(main_pool_get_available(), 0);
+    D_8F1DECA4 = func_80040E80(pool, D_8F103900);
+    MainPool_FinalizeAllocation(pool);
+    D_8F1DEE58 = 0;
+    D_8F1DEE18 = 0;
+    D_8F1DEE1C = 0x97;
+    D_8F1DEE20 = 0;
+    D_8F1DEE24 = D_8F1DEE1C + D_8F1DEE20;
+    D_8F1DEE44 = 0;
+    *(s32 *)D_8F1DEE48 = 0;
+    D_8F1DEE4C = func_8004B888(D_8F1DEE24);
+    D_8F1DEE50 = D_800948DC;
+    D_8F1DEE60 = 0;
+    D_8F1DEE5C = 0;
+    func_8F100C64(D_8F1DEE4C, &D_8F1DEE50);
+    ModelRenderer_InitDisplayRoots();
+    func_8003F018(&D_8F1DECA8);
+    func_8F100D58(D_8F1DEE24, &D_8F1DECCC);
+    func_80037E3C(&D_8F1DECA8, func_8F100020, NULL);
+    D_8F1DECA0 = (Unk8F101318_AnimRec *)func_80041C98(5);
+    func_80041E2C();
+    D_8F1DEE34 = 0;
+    func_80041FD0((s32)D_8F1DECA0, D_8F1DEE26, *(Fragment69PackedState *)&D_8F1DEE44, 0);
+    func_800428F8((s32)D_8F1DECA0);
+    D_8F1DEE2C = D_8F1DEE28 = 0;
+    D_8F1DEE3C = D_8F1DEE38 = 0;
+    func_8003F1DC(&D_8F1DECA8);
+    func_8003F114(&D_8F1DECA8, 0, D_8F1DEE26, *(void **)(*(s32 *)(*(s32 *)((u8 *)D_8F1DECA0 + 0x38) + 8)));
+    func_8003F2C4((s32)D_8F1DECA0, &D_8F1DECA8, D_8F1DEE28);
+    func_8003F3BC(&D_8F1DECA8, D_8F1DEE38);
+    if (D_8F1DEE24 != 0) {
+        D_8F1DEE4C = func_8004B888(D_8F1DEE24);
+    } else {
+        D_8F1DEE4C = 10.0f;
+    }
+    func_8F100D58(D_8F1DEE24, &D_8F1DECCC);
+    for (i = 0; i < 0x81; i++) {
+        D_8F1DEE68[i].id = i + 0x98;
+        D_8F1DEE68[i].unk4 = -1;
+        D_8F1DEE68[i].unk6 = -1;
+    }
+    cb = func_8F100DCC;
+    func_800476A0(D_8F1DF288, 0x10);
+    func_800476FC(D_8F1DF288, 0x10);
+    func_80047738(0, func_8004C990(0x33, 0), cb, 0);
+    func_80047738(1, func_8004C990(0x33, 1), cb, 0);
+    func_80047738(2, func_8004C990(0x33, 7), cb, 0);
+    func_80047738(3, func_8004C990(0x33, 4), cb, 0);
+    func_80047738(4, func_8004C990(0x33, 3), cb, 0);
+    func_80047738(5, func_8004C990(0x33, 5), cb, 0);
+    func_80047738(6, func_8004C990(0x33, 6), cb, 0);
+    func_80047738(7, func_8004C990(0x32, 1), cb, 0);
+    func_80047738(8, func_8004C990(0x32, 0), cb, 0);
+    func_8F100160();
+}
 #endif
 
 #ifdef VERSION_US
@@ -579,15 +714,6 @@ typedef struct {
     s8 unk02;
     s8 unk03;
 } Unk8F101318_Mode;
-
-typedef struct Unk8F101318_AnimRec {
-    u8 unk00[0x20];
-    s32 unk20;
-    u8 unk24[8];
-    s32 unk2C;
-    u8 unk30[4];
-    s32 unk34;
-} Unk8F101318_AnimRec;
 
 extern s32 D_8F1DEE24;
 
@@ -881,7 +1007,7 @@ void func_8F101CDC(void) {
 #ifdef VERSION_US
 /* mkdraft:func_8F101DA0 begin */
 extern f32 D_8F1DEE4C;
-extern u8 D_8F1DEE50[];
+extern Frag69Vec3s D_8F1DEE50;
 extern Unk8F101318_AnimRec *D_8F1DECA0;
 extern u8 D_8F1DECA8;
 extern s32 D_8F1DEE28;
@@ -908,18 +1034,18 @@ void func_8F101DA0(void) {
         }
     }
     if (D_80087200->stickXNorm != 0.0f) {
-        *(s16 *)((u8 *)D_8F1DEE50 + 2) -= (s16)(D_80087200->stickXNorm * 32.0f);
+        *(s16 *)((u8 *)&D_8F1DEE50 + 2) -= (s16)(D_80087200->stickXNorm * 32.0f);
     }
     if (D_80087200->stickYNorm != 0.0f) {
-        *(s16 *)((u8 *)D_8F1DEE50 + 0) += (s16)(D_80087200->stickYNorm * 32.0f);
-        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) > 0x3F00) {
-            *(s16 *)((u8 *)D_8F1DEE50 + 0) = 0x3F00;
+        *(s16 *)((u8 *)&D_8F1DEE50 + 0) += (s16)(D_80087200->stickYNorm * 32.0f);
+        if (*(s16 *)((u8 *)&D_8F1DEE50 + 0) > 0x3F00) {
+            *(s16 *)((u8 *)&D_8F1DEE50 + 0) = 0x3F00;
         }
-        if (*(s16 *)((u8 *)D_8F1DEE50 + 0) < -0x3F00) {
-            *(s16 *)((u8 *)D_8F1DEE50 + 0) = -0x3F00;
+        if (*(s16 *)((u8 *)&D_8F1DEE50 + 0) < -0x3F00) {
+            *(s16 *)((u8 *)&D_8F1DEE50 + 0) = -0x3F00;
         }
     }
-    func_8F100C64(D_8F1DEE4C, D_8F1DEE50);
+    func_8F100C64(D_8F1DEE4C, &D_8F1DEE50);
     if (D_80087200->buttonsPressed & 0x20) {
         D_8F1DEE28 = D_8F1DEE2C;
         func_8003F2C4(D_8F1DECA0, &D_8F1DECA8, -1);
@@ -940,14 +1066,6 @@ void func_8F101DA0(void) {
     }
 }
 /* mkdraft:func_8F101DA0 end */
-#endif
-
-#ifdef VERSION_US
-// Four signed bytes passed to func_80041FD0 as one word.
-typedef union {
-    s32 word;
-    s8 bytes[4];
-} Fragment69PackedState;
 #endif
 
 #ifdef VERSION_US
@@ -1206,13 +1324,12 @@ void func_8F102708(void) {
 #ifdef VERSION_US
 extern void Dma_CopyChunks(s32 *, s32, s32);
 s32 func_800356CC(s32);
-extern u8 D_8F1DEE68;
 
 void func_8F1027F8(void) {
     s32 temp_v0;
 
     temp_v0 = func_800356CC(9);
-    Dma_CopyChunks(&D_8F1DEE68, temp_v0, temp_v0 + 0x408);
+    Dma_CopyChunks((s32 *)D_8F1DEE68, temp_v0, temp_v0 + 0x408);
 }
 #endif
 
@@ -1226,7 +1343,7 @@ void func_8F10282C(void)
   void *temp_v0;
   if (((D_80094BB0 != NULL) && (D_8F1DEE24 >= 0x98)) && (D_8F1DEE24 < 0xFC))
   {
-    temp_v0 = ((D_8F1DEE24 * 8) - 0x4C0) + (&D_8F1DEE68);
+    temp_v0 = ((D_8F1DEE24 * 8) - 0x4C0) + (u8 *)D_8F1DEE68;
     if ((D_80087200->buttonsPressed) & 2)
     {
       D_8F1DEE60 ^= 1;
@@ -1491,7 +1608,6 @@ extern s32 D_8F1DEE34;
 extern s32 D_8F1DEE38;
 extern s32 D_8F1DEE3C;
 extern f32 D_8F1DEE4C;
-extern u8 D_8F1DEE68;
 extern u8 D_8F1DECCC;
 extern void *D_80094BB0;
 
@@ -1542,7 +1658,7 @@ void func_8F102FB4(s32 arg0, s32 arg1) {
             func_8F100D58(D_8F1DEE24, &D_8F1DECCC);
             if (D_80094BB0 != NULL) {
                 if (D_8F1DEE24 >= 0x98) {
-                    values = (s16 *)(((D_8F1DEE24 * 8) - 0x4C0) + (&D_8F1DEE68));
+                    values = (s16 *)(((D_8F1DEE24 * 8) - 0x4C0) + (u8 *)D_8F1DEE68);
                     if ((values[2] == -1) && (values[3] == -1)) {
                         values[2] = *((s16 *)(((u8 *)D_80094BB0) + 0x1A));
                         values[3] = *((s16 *)(((u8 *)D_80094BB0) + 0x1C));
