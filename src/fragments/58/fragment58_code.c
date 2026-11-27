@@ -274,15 +274,128 @@ s32 func_83400AFC(s32 arg0, u8 *arg1) {
     return 0;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400B98.s")
-
 typedef struct { s32 w[8]; } F58Blob;
+extern F58Blob D_83404808;
+extern F58Blob D_83404828;
+typedef union { s32 word; s8 bytes[4]; } State_83400B98;
+extern State_83400B98 D_83403EFC;
+extern s32 D_834047F0;
+extern s16 *D_8340416C;
+extern s32 D_83404248;
+extern s32 D_834047F8;
+extern s32 D_83404800;
+extern s32 D_83404130;
+extern s32 D_83404148[7];
+extern s32 D_8340424C;
+extern u8 D_83404250;
+extern void *D_83404164;
+extern u8 *D_83404168;
+extern u8 D_83404688;
+extern u8 D_834043B8;
+extern u8 D_83403E20[];
+extern void *MainPool_AllocState(s32, s32);
+extern void MainPool_FinalizeAllocation(void *);
+extern s32 main_pool_get_available(void);
+extern void *func_80037E9C(void *, void *);
+extern void ModelRenderer_InitDisplayRoots(void);
+extern void func_8003F018(void *);
+extern void func_800428F8(s32);
+extern s32 func_800356CC(s32);
+extern void *main_pool_alloc(s32, s32);
+extern void _bzero(void *, s32);
+extern s32 BinArchive_Open(s32, s32, s32, s32);
+extern void *func_80004B4C(s32, s32);
+extern void func_8003F03C(void *, s32);
+extern void func_80041FA0(s32, u16, State_83400B98);
+extern s32 func_80041C98(s32);
+extern s32 func_80040E80(void *, void *);
+extern s32 WidgetTree_RunMessagePanelSilent(void *, s32);
+extern void func_8004DDF4(s32);
+extern void func_80041E2C(void);
+extern void func_87F024CC(void);
+extern void func_87F02CE0(void *, void *, s32);
+#define B250 (&D_83404250)
+#define B688 (&D_83404688)
+#define B3B8 (&D_834043B8)
+#define P164 ((u8 *)D_83404164)
+#define OF(p, o) (*(f32 *)((u8 *)(p) + (o)))
+
+// Scene init: loads the message panels and the anim/model resources, then resets
+// the actor at D_83404250 (scale 4), D_83404688 and D_834043B8 (scale 1).
+// The (s32) casts on the func_8003F03C args make those uses separate uopt
+// expressions, so &D_83404130 is rematerialised at every use as in retail.
+void func_83400B98(void) {
+    void *block;
+    s32 i;
+    s32 *new_var;
+    s32 n;
+
+    D_834047F0 = 0x53;
+    if (*D_8340416C != 0) {
+        D_834047F0 = 0xCF;
+    }
+    func_8004DDF4(0xDE);
+    new_var = &D_83404130;
+    func_8004DDF4(0xD9);
+    block = MainPool_AllocState(main_pool_get_available(), 0);
+    D_83404248 = func_80040E80(block, D_83403E20);
+    D_834047F8 = WidgetTree_RunMessagePanelSilent(block, 0xDE);
+    D_83404800 = WidgetTree_RunMessagePanelSilent(block, 0xD9);
+    MainPool_FinalizeAllocation(block);
+    ModelRenderer_InitDisplayRoots();
+    func_80041E2C();
+    func_80037E9C(NULL, new_var);
+    func_80037E9C(NULL, D_83404148);
+    if (!D_834047F0) {} // FAKE
+    func_87F024CC();
+    func_87F02CE0(new_var, &D_83404808, 200);
+    func_87F02CE0(D_83404148, &D_83404828, 99);
+    for (i = 0; i < 1; i++) {
+        if (((&D_8340424C)[i] = func_80041C98(1)) == 0) {
+            break;
+        }
+    }
+    n = 1;
+    for (i = 0; i < n; i++) {
+        func_8003F018(B250 + i * 0x168);
+        OF(B250 + i * 0x168, 0x24) = 0.0f;
+        OF(B250 + i * 0x168, 0x2C) = 0.0f;
+        OF(B250 + i * 0x168, 0x28) = 0.0f;
+        OF(B250 + i * 0x168, 0x30) = 4.0f;
+        OF(B250 + i * 0x168, 0x38) = 4.0f;
+        OF(B250 + i * 0x168, 0x34) = 4.0f;
+        (&D_8340424C)[i] = func_80041C98(1);
+        func_80041FA0((&D_8340424C)[i], *(u16 *)((u8 *)&D_834047F0 + 2), D_83403EFC);
+        func_800428F8((&D_8340424C)[i]);
+        D_83404168 = main_pool_alloc(0x7F8, 0);
+        _bzero(D_83404168, 0x7F8);
+        D_83404164 = D_83404168;
+        *(s16 *)(P164 + 0x658) = D_834047F0;
+        *(s32 *)(P164 + 0x2D0) = BinArchive_Open(func_800356CC(0), 0, 1, 1);
+        *(void **)(P164 + 0x2D4) = func_80004B4C(*(s32 *)(P164 + 0x2D0), *(s16 *)(P164 + 0x658) - 1);
+    }
+    func_8003F03C(B688, (s32)new_var);
+    OF(B688, 0x38) = 0.0f;
+    OF(B688, 0x34) = OF(B688, 0x38);
+    OF(B688, 0x30) = OF(B688, 0x34);
+    OF(B688, 0x24) = 0.0f;
+    OF(B688, 0x2C) = 0.0f;
+    OF(B688, 0x28) = 0.0f;
+    for (i = 0; i < 1; i++) {
+        func_8003F03C(B3B8 + i * 0x168, (s32)new_var);
+        OF(B3B8 + i * 0x168, 0x24) = 0.0f;
+        OF(B3B8 + i * 0x168, 0x2C) = 0.0f;
+        OF(B3B8 + i * 0x168, 0x28) = 0.0f;
+        OF(B3B8 + i * 0x168, 0x30) = 1.0f;
+        OF(B3B8 + i * 0x168, 0x38) = 1.0f;
+        OF(B3B8 + i * 0x168, 0x34) = 1.0f;
+    }
+}
+
 // Position block inside the D_83404188 state record.
 typedef struct { u8 unk_00[0x4C]; f32 x; f32 y; f32 z; } F58Pos;
 typedef struct { u8 unk_00[0x10]; u8 c[8]; f32 unk_18; u8 unk_1C[4]; f32 unk_20; f32 unk_24; f32 unk_28; } F58Sub;
 typedef struct { u8 unk_00[0x10]; f32 unk_10; f32 unk_14; f32 unk_18; u8 unk_1C[4]; F58Sub *unk_20; } F58Obj;
-extern F58Blob D_83404808;
-extern F58Blob D_83404828;
 extern f32 D_834048F4;
 extern f32 D_834048F8;
 extern u32 func_8003570C(void);
@@ -1485,7 +1598,7 @@ void func_800548C4(void *);                     /* extern */
 s32 func_80055028(void);                        /* extern */
 void func_80055EF0(void *, s32);                /* extern */
 void func_80055F6C(void *, s32);                /* extern */
-s32 func_83400B98(void);                        /* extern */
+void func_83400B98(void);
 s32 func_87F0DBE0(u8 *, s32);                   /* extern */
 s32 main_pool_pop_state(s32);                   /* extern */
 s32 main_pool_push_state(s32);                  /* extern */
