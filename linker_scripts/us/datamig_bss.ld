@@ -356,12 +356,13 @@ SECTIONS
     {
         build/src/fragments/19/fragment19_121100.o(.data)
     }
-    /* Loader-cleared color/state header, transition rows and state halfwords
-     * (sState5EE4) for fragment 19. The input sections contain the real objects
-     * and compiler alignment; the loaded relocation metadata retains its
-     * original bytes. */
+    /* Fragment 19's wipe setup record (sWipeSetup at 0x82305E68, used by
+     * func_82302320), then the loader-cleared color/state header, transition
+     * rows and state halfwords (sState5EE4). The input sections contain the
+     * real objects and compiler alignment; the loaded relocation metadata
+     * retains its original bytes. */
 
-    .fragment19_transition_5EB0_bss 0x82305EB0 (NOLOAD) : SUBALIGN(2)
+    .fragment19_transition_5E68_bss 0x82305E68 (NOLOAD) : SUBALIGN(2)
     {
         build/src/fragments/19/fragment19_121100.o(.bss)
     }
@@ -678,7 +679,7 @@ ASSERT(SIZEOF(.fragment66_intro_state_data) == 16,
 
 ASSERT(SIZEOF(.fragment19_wipe_duration_5B84_data) == 16,
        "fragment19 wipe duration must retain its native aligned input footprint");
-ASSERT(SIZEOF(.fragment19_transition_5EB0_bss) == 64,
+ASSERT(SIZEOF(.fragment19_transition_5E68_bss) == 128,
        "fragment19 transition records must retain their native aligned input footprint");
 
 ASSERT(SIZEOF(.fragment11_panel_color_cache_bss) == 16,
