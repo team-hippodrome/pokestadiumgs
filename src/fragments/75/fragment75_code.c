@@ -314,8 +314,10 @@ void func_8FA00AC8(void) {
     func_800498C4();
     func_800496A4(2, 0);
     func_8004972C(255, 255, 255, 255);
-    func_800495BC(30, 190, "モデル %dK", (u32)(*(s32 *)(D_8FA02014 + 0x2C) + 0x3FF) >> 10);
-    func_800495BC(30, 210, "アニメ %dK", (u32)(*(s32 *)(D_8FA02014 + 0x34) + 0x3FF) >> 10);
+    // "モデル %dK" in EUC-JP (asm-processor no longer runs on this file to convert it).
+    func_800495BC(30, 190, "\xA5\xE2\xA5\xC7\xA5\xEB %dK", (u32)(*(s32 *)(D_8FA02014 + 0x2C) + 0x3FF) >> 10);
+    // "アニメ %dK" in EUC-JP.
+    func_800495BC(30, 210, "\xA5\xA2\xA5\xCB\xA5\xE1 %dK", (u32)(*(s32 *)(D_8FA02014 + 0x34) + 0x3FF) >> 10);
     {
         u8 *p;
         for (i = 0, p = b5C; i < 16; i++) {
