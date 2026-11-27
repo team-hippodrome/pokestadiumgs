@@ -300,7 +300,7 @@ extern u8 D_8650CDA8[];
 extern s32 D_8650DB18;
 extern void *D_8650DB20;
 extern s32 D_8650DB24;
-extern s32 D_8650DB38;
+extern s32 D_8650DB38[];
 extern s32 D_8650DB40[];
 extern s32 D_8650DB50[];
 extern s32 D_8650DB70[];
@@ -361,7 +361,7 @@ void func_865059A0(void) {
     D_8650DB50[5] = func_80040E80(pool, D_8650CC30);
     D_8650DB50[6] = func_80040E80(pool, D_8650CCEC);
     D_8650DB50[7] = func_80040E80(pool, D_8650CDA8);
-    D_8650DB38 = func_80040E80(pool, (void *)D_8650DB18);
+    D_8650DB38[0] = func_80040E80(pool, (void *)D_8650DB18);
     MainPool_FinalizeAllocation(pool);
     for (i = 0; i < 4; i++) {
         D_86511698[i].kind = *(u8 *)(*(u8 **)((u8 *)D_8650DB10 + i * 0x6C0 + 8) + 4);
