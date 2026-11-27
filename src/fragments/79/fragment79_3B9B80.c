@@ -105,7 +105,225 @@ void func_8414A4E4(u8 *arg0, u8 arg1, u8 arg2, u8 arg3) {
     } while (i != 0x80);
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_3B9B80/func_8414A59C.s")
+typedef struct {
+    u8 flags;
+    u8 unk1;
+    u8 b2[2];
+    u8 c4[2];
+    u8 c6[2];
+    u8 unk8[2];
+    u16 hA[2];
+    u16 hE[2];
+    u16 h12[2];
+    u16 h16[2];
+    u16 h1A[2];
+    u16 h1E[2];
+    u16 h22[2];
+    u8 unk26[6];
+    s32 w2C[2];
+    s32 w34[2];
+} A59CSub;
+typedef struct {
+    u8 unk0[0x3E];
+    u16 hp;
+    u16 hq;
+    u8 unk42[0x16];
+} A59CMon;
+typedef struct {
+    u8 b0;
+    u8 flags;
+    u8 idx[2];
+    A59CSub sub;
+} A59CEnt;
+typedef struct {
+    u8 flags;
+    u8 count;
+    u16 u2;
+    u16 u4;
+    u16 u6;
+    u16 u8_;
+    u8 padA[6];
+    s32 w10;
+    s32 w14;
+    s32 w18;
+    s32 w1C;
+    s32 w20;
+    s32 w24;
+    A59CEnt ent[2];
+} A59CRec;
+extern u8 func_80062D20(u8);
+extern u8 *D_84195200[];
+extern u8 *D_84195208[];
+extern u8 *func_8414A3A0(u8);
+extern void func_841485A4(u8 *, u16, u16);
+extern u8 func_8414A240(void);
+extern u8 func_8414A24C(void);
+extern u8 *func_84154B64(u8);
+#define rec ((A59CRec *)recp)
+void func_8414A59C(u8 *recp, u8 side) {
+    u8 *fp;
+    s32 i;
+    A59CEnt *ent;
+    A59CSub *sub;
+    u8 other;
+    s32 v;
+    s32 v0, v1;
+    s32 r0, r1, r2, r3;
+    f32 f;
+    s32 sum160;
+    s32 sum15C;
+    s32 adj;
+    u16 hp[2];
+    u16 hq[2];
+    u16 hr[2];
+    u16 hs[2];
+    u8 a144[4];
+    u8 a140[4];
+    u8 a13C[4];
+    u8 a138[4];
+    u8 a134[4];
+    s32 flag;
+    s32 pad;
+    f32 A[2];
+    f32 B[2];
+    s32 pad2[3];
+
+    fp = func_8414A3A0(side);
+    rec->w10 = 0;
+    rec->w14 = 0;
+    rec->u2 = 0;
+    rec->u4 = 0;
+    sum160 = 0;
+    sum15C = 0;
+    flag = 0;
+    adj = (fp[5] - 0x80) * 0.6;
+    other = 1 - side;
+    for (i = 0; i < rec->count; i++) {
+        ent = &rec->ent[i];
+        sub = &ent->sub;
+        hp[side] = ((A59CMon *)D_841951F8[side])[ent->idx[side]].hp;
+        hp[other] = ((A59CMon *)D_841951F8[other])[ent->idx[other]].hp;
+        hq[side] = ((A59CMon *)D_841951F8[side])[ent->idx[side]].hq;
+        hq[other] = ((A59CMon *)D_841951F8[other])[ent->idx[other]].hq;
+        hr[side] = *(u16 *)(D_84195208[side] + 0x46);
+        hr[other] = *(u16 *)(D_84195208[other] + 0x46);
+
+        hs[side] = ((hp[other] < rec->ent[i].sub.hA[side]) ? hp[other] : sub->hA[side]) + ((hr[other] < sub->h16[side]) ? hr[other] : sub->h16[side]);
+        hs[other] = ((hp[side] < sub->hA[other]) ? hp[side] : sub->hA[other]) + ((hr[side] < sub->h16[other]) ? hr[side] : sub->h16[other]);
+
+        func_841485A4(&a144[side], hs[side], hp[other]);
+        func_841485A4(&a144[other], hs[other], hq[side]);
+        func_841485A4(&a140[side], sub->h12[side], hq[side]);
+        func_841485A4(&a140[other], sub->h12[other], hq[other]);
+        func_841485A4(&a13C[side], sub->h1A[side], hp[side]);
+        func_841485A4(&a13C[other], sub->h1A[other], hp[other]);
+        func_841485A4(&a138[side], sub->h1E[side], hp[side]);
+        func_841485A4(&a138[other], sub->h1E[other], hp[other]);
+        func_841485A4(&a134[side], sub->h22[side], hp[side]);
+        func_841485A4(&a134[other], sub->h22[other], hp[other]);
+
+        if (sub->c6[side] + adj > 255) {
+            sub->c6[side] = 255;
+        }
+        if (sub->c6[side] + adj < 0) {
+            sub->c6[side] = 0;
+        }
+        if (sub->c6[other] - adj > 255) {
+            sub->c6[other] = 255;
+        }
+        if (sub->c6[other] - adj < 0) {
+            sub->c6[other] = 0;
+        }
+
+        f = ent->b0 / 255.0f;
+        A[0] = sub->c4[0] / 255.0f;
+        A[1] = sub->c4[1] / 255.0f;
+        B[0] = sub->c6[0] / 255.0f;
+        B[1] = sub->c6[1] / 255.0f;
+
+        if (sub->hA[0] >= hp[1]) {
+            rec->u2 = A[0] * sub->c6[0] * f;
+        }
+        if (sub->hA[1] >= hp[0]) {
+            rec->u4 = A[1] * sub->c6[1] * f;
+        }
+        if (func_80062D20(sub->b2[0]) == 7) {
+            rec->u4 = 0xFF;
+        }
+        if (func_80062D20(sub->b2[1]) == 7) {
+            rec->u2 = 0xFF;
+        }
+
+        if (!(ent->flags & 4) && sub->c4[side] > 0) {
+            if (sub->hA[side] > 0) {
+                flag = 1;
+            }
+            if (sub->h16[side] > 0) {
+                flag = 1;
+            }
+            if (sub->flags & 2) {
+                flag = 1;
+            }
+        }
+
+        v0 = ((sub->hA[side] + sub->h16[side]) * A[side]) * sub->c6[side];
+        v1 = ((sub->hA[other] + sub->h16[other]) * A[other]) * sub->c6[other];
+        sum160 += v0 * f;
+        sum15C += v1 * f;
+
+        v0 = a144[side] * B[side];
+        v1 = (a13C[side] - a140[side]) * B[side];
+        v1 += a138[side] * (1.0 - B[side]);
+        r0 = A[side] * v0;
+        r1 = v1 * A[side] + a134[side];
+        r2 = v0;
+        r3 = v1;
+        v1 = a144[other] * B[other];
+        v0 = (a13C[other] - a140[other]) * B[other];
+        v0 += a138[other] * (1.0 - B[other]);
+        r0 += v0 * A[other];
+        r1 += v1 * A[other];
+        r2 += v0 * A[other];
+        r3 += v1 * A[other];
+
+        r0 *= func_8414A240();
+        r1 *= func_8414A24C();
+        r2 *= func_8414A240();
+        r3 *= func_8414A24C();
+        if (ent->flags & 1) {
+            r1 <<= 2;
+        }
+        if (func_84154B64(other)[0x19] & 0x40) {
+            r0 >>= 2;
+        }
+        if ((rec->flags & 2) && !(rec->flags & 4)) {
+            r0 = r0 * *(u16 *)(D_84195200[side] + 0x26) / *(u16 *)(D_84195200[side] + 0x28);
+            r2 = r2 * *(u16 *)(D_84195200[side] + 0x26) / *(u16 *)(D_84195200[side] + 0x28);
+        }
+        sub->w2C[side] = r0;
+        sub->w2C[other] = r1;
+        rec->w10 += r0 * f * fp[8] + sub->hA[side] + sub->h16[side];
+        rec->w10 -= r1 * f * fp[9];
+        rec->w1C += r2 * f * fp[8] + sub->hA[side] + sub->h16[side];
+        rec->w1C -= r3 * f * fp[9];
+
+        v1 = sub->w34[side] * f;
+        if (rec->flags & 2) {
+            v1 = fp[7] * v1 / 0x9F6;
+        }
+        v0 = v1;
+        v1 = (v1 * A[side]) * B[side];
+        v0 = B[side] * v0;
+        rec->w14 += v1 * fp[10];
+        rec->w20 += v0 * fp[10];
+    }
+    rec->u6 = sum160 / 255;
+    rec->u8_ = sum15C / 255;
+    if (flag == 0) {
+        rec->flags |= 0x10;
+    }
+}
+#undef rec
 
 /* mkdraft:func_8414B574 begin */
 extern u8 D_8419D7C0[];
