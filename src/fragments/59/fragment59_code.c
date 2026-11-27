@@ -219,7 +219,7 @@ extern s32 func_87F08208(void *);
 extern void ModelAnim_SetAnimation(void *, s32);
 extern void ModelAnim_SetFrame(u8 *, s16);
 extern void StageContext_SetClearColor(s32);
-extern void StageFade_StartFromTransparent(s32);
+extern s32 StageFade_StartFromTransparent(s32);
 extern void func_800225C4(s32);
 extern void Audio_PlayDefaultSound(s32);
 extern void func_869015F0(s32);
@@ -812,7 +812,7 @@ void func_86901414(void) {
 #ifdef VERSION_US
 extern u8 *D_8691AD58;
 extern void StageContext_SetClearColor(s32);
-extern void StageFade_StartFromTransparent(s32);
+extern s32 StageFade_StartFromTransparent(s32);
 void func_869015F0(s32 arg0) {
     *(s32 *)(D_8691AD58 + 0x10) = arg0;
     *(s32 *)D_8691AD58 = 0xB;
@@ -941,7 +941,214 @@ void func_86901640(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86901AA8.s")
+extern u8 D_86919B80[];
+extern void func_87F0277C(u8 *);
+extern void func_87F006BC(void);
+extern s32 func_87F006AC(void);
+extern s32 func_87F01A40(void);
+extern s32 func_87F02104(void);
+extern void func_80021ED8(s32);
+extern s32 StageContext_GetFadeMode(void);
+extern void func_869054D4(void);
+extern void func_86905630(void);
+extern void func_8690580C(void);
+extern void func_86901640(void);
+extern void func_8690941C(void);
+extern void func_86909FAC(void);
+extern s32 Fragment64_UpdateBounceAndConfirm(u8 *);
+extern void func_87F0D5B8(u8 *);
+extern s32 func_87F0C6F4(u8 *);
+typedef struct { u8 pad0[0x48]; s32 f48; u8 pad4C[0x188-0x4C]; s32 f188; s32 f18C; s32 f190; } SA_t;
+#define SA ((SA_t *)D_8691A2A0)
+void func_86901AA8(void) {
+    s32 i;
+    u8 *obj;
+    u8 *m;
+    s32 *p;
+
+    func_87F0277C(&D_8690FFE8);
+    if (func_87F00930() == 0) {
+        func_87F006BC();
+    }
+    if (*(s32 *)D_8691AD58 == 4 && SA->f48 == 0 && SA->f18C != 0) {
+        if (SA->f188++ == 0x7D) {
+            func_80021ED8(0x1E);
+            SA->f190 = 1;
+        }
+    }
+    switch (*(s32 *)D_8691AD58) {
+    case 3:
+    case 4:
+    case 6:
+    case 7:
+    case 8:
+        for (i = 0; i < 4; i++) {
+            if (guRandom() % 300 == 0) {
+                obj = &D_869195E0 + i * 0x168;
+                ModelAnim_SetEventFrame(obj, 0);
+            }
+        }
+        break;
+    case 5:
+    default:
+        break;
+    }
+    switch (*(s32 *)D_8691AD58) {
+    case 0:
+        m = &D_869195E0; do {
+            func_8003F1DC(m);
+            m += 0x168;
+        } while (m != D_86919B80);
+        if (StageContext_GetFadeMode() == 0) {
+            *(s32 *)D_8691AD58 = 1;
+        }
+        break;
+    case 1:
+        func_869003C8();
+        break;
+    case 2:
+        func_869054D4();
+        break;
+    case 4:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86905630();
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 3:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            if (func_87F006AC() == 2) {
+                *(s32 *)D_8691AD58 = 4;
+            }
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 5:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_8690580C();
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 6:
+        switch (func_87F01A40()) {
+        case 0:
+            func_86901640();
+            break;
+        case 2:
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 7:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_8690941C();
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 8:
+        switch (func_87F01A40()) {
+        case 0:
+        case 2:
+            func_86909FAC();
+            break;
+        case 3:
+            func_869015F0(0);
+            break;
+        case 4:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 9:
+        func_86909FAC();
+        if (Fragment64_UpdateBounceAndConfirm(D_8690FA20) != 0) {
+            if (*(u8 *)(*(u8 **)(D_8691AD58 + 0xC) + 0x2180) == 1) {
+                func_869015F0(2);
+            } else {
+                *(s32 *)D_8691AD58 = 0xA;
+            }
+        }
+        break;
+    case 10:
+        D_8690E120 = 1;
+        func_86909FAC();
+        switch (func_87F02104()) {
+        case 1:
+            StageContext_SetClearColor(0);
+            *(s32 *)D_8691AD58 = 0xB;
+            *(s32 *)(D_8691AD58 + 4) = 0;
+            StageFade_StartFromTransparent(0xA);
+            p = D_86919030;
+            i = 0;
+            do {
+                func_8003F114(&D_86919040 + i * 0x168, 0, -1, *p);
+                func_8003F210(&D_86919040 + i * 0x168, 0);
+                ModelAnim_SetFrame(&D_86919040 + i * 0x168, (s16)(guRandom() % 20));
+                p++;
+                i++;
+            } while (p != (s32 *)&D_86919040);
+            break;
+        case 2:
+            func_869015F0(0);
+            break;
+        case 3:
+            func_869015F0(1);
+            break;
+        }
+        break;
+    case 11:
+        if (StageContext_GetFadeMode() == 1) {
+            *(s32 *)D_8691AD58 = *(s32 *)(D_8691AD58 + 4);
+            if (*(s32 *)D_8691AD58 == 0) {
+                func_869001AC();
+                StageFade_StartFromOpaque(0xA);
+            }
+        }
+        break;
+    }
+    func_87F0D5B8(&D_8690FA88);
+    if (func_87F0C6F4(D_8691AD58 + 0x14) != 0) {
+        *(s32 *)(D_8691AD58 + 0x10) = 3;
+        *(s32 *)D_8691AD58 = 0xC;
+    }
+}
 #endif
 
 #ifdef VERSION_US

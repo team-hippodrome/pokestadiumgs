@@ -1465,7 +1465,156 @@ void func_82B03934(s32 arg0, s32 arg1) { s32 temp = func_8004C990(0x156, 0); fun
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/24/fragment24_150C10/func_82B03978.s")
+extern void func_82B0284C(u8 *, u8 *);
+extern void func_800498C4(void);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void *func_8004C874(s32, s32);
+extern void func_800495F8(s32, s32, s32, const char *, ...);
+extern void func_800499EC(void);
+extern s32 func_8004C990(s32, s32);
+extern void func_82B03934(s32, s32);
+extern void func_8004D150(s32, s32, s32, s32, u32, s32);
+extern void func_8004C594(s32, s32);
+extern s32 func_8004C8A0(void *, s32, s32, s32);
+extern Gfx *D_800D0510;
+extern u8 D_80094E38[];
+extern f32 D_80087E50[];
+extern void *D_82B126A4;
+extern s16 D_82B1245C;
+extern s16 D_82B12464[4];
+extern s16 D_82B08644;
+extern s16 D_82B08648[];
+extern s16 D_82B08650[];
+extern u8 D_82B12450[];
+void func_82B03978(u8 *arg0) {
+    s32 step;
+    void **opt = &D_82B126A4;
+    s16 *cur = &D_82B1245C;
+    s32 pad[13]; // FAKE
+    s32 i;
+    s32 arrow;
+    u8 buffer[0x80];
+    s16 coords[2];
+    s32 flagA;
+    s32 flagB;
+    s32 off;
+    f32 f;
+
+    step = 0x24;
+    arrow = func_8004C990(0xF6, 0);
+    func_82B0284C(arg0, (u8 *)coords);
+    if (D_82B08648[i]) {} // FAKE
+    gSPDisplayList(D_800D0510++, D_80094E38);
+    if (*(s16 *)(D_82B12450 + 0x14 + i * 2)) {} // FAKE
+    for (i = 0; i < 4; i++) {
+        off = 0;
+        switch (i) {
+        case 0:
+            off = 1;
+            break;
+        case 1:
+        case 2:
+            if (*(s16 *)((u8 *)*opt + 4) == 0) {
+                off = 2;
+            } else {
+                off = 1;
+            }
+            break;
+        }
+        if (off > 0) {
+            gDPPipeSync(D_800D0510++);
+            if (off == 1) {
+                gDPSetEnvColor(D_800D0510++, 0x32, 0x64, 0xFF, 0xFF);
+            } else {
+                gDPSetEnvColor(D_800D0510++, 0x64, 0x64, 0x64, 0xFF);
+            }
+            func_82B03934(coords[0] + 0x124, coords[1] + i * 0x24 + 0xB);
+        }
+    }
+    gDPPipeSync(D_800D0510++);
+    gDPSetEnvColor(D_800D0510++, 0xFF, 0x96, 0x32, 0xFF);
+    f = D_80087E50[(u16)D_82B08644 >> 4];
+    off = (s32)((f + f) + ((0.0f < (f + f)) ? 0.5f : -0.5f));
+if (off) {} // FAKE
+if (off) {} // FAKE
+    for (i = 0; i < 4; i++) {
+        flagA = 0;
+        flagB = 0;
+        switch (i) {
+        case 1:
+            if (D_82B12464[i] != 0 && i == *cur) {
+                if (*(s16 *)((u8 *)*opt + 6) != 5) {
+                    flagA = 1;
+                }
+                if (*(s16 *)((u8 *)*opt + 6) != 0x5A) {
+                    flagB = 1;
+                }
+            }
+            break;
+        case 2:
+            if (D_82B12464[i] != 0 && i == *cur) {
+                if (*(s16 *)((u8 *)*opt + 8) != 10) {
+                    flagA = 1;
+                }
+                if (*(s16 *)((u8 *)*opt + 8) != 0x5A) {
+                    flagB = 1;
+                }
+            }
+            break;
+        }
+        if (flagA != 0) {
+            func_8004D150(coords[0] - off + 0x112, coords[1] + step * i + 0xE, arrow, 0, 0, 0);
+        }
+        if (flagB != 0) {
+            func_8004D150(coords[0] + off + 0x19E, coords[1] + step * i + 0xE, arrow, 0, 1, 0);
+        }
+    }
+    func_800498C4();
+    for (i = 0; i < 4; i++) {
+        func_800496A4(0x10, 0);
+        flagB = 0;
+        if (i == *cur) {
+            func_8004972C(0xFF, 0xFF, 0, 0xFF);
+        } else if (*(s16 *)(D_82B12450 + 0x14 + i * 2) != 0) {
+            func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+        } else {
+            func_8004972C(0x64, 0x64, 0x64, 0xFF);
+        }
+        func_800495F8(coords[0] + 0x32, coords[1] + i * 0x24 + 0xF, 0, func_8004C874(0x1B, D_82B08648[i]));
+        if (*(s16 *)(D_82B12450 + 0x14 + i * 2) != 0) {
+            if (i == *cur) {
+                func_8004972C(0xFF, 0xFF, 0, 0xFF);
+            } else {
+                func_8004972C(0xFF, 0xFF, 0xFF, 0xFF);
+            }
+        } else {
+            func_8004972C(0x64, 0x64, 0x64, 0xFF);
+        }
+        switch (i) {
+        case 0:
+            flagB = (s32)func_8004C874(0x1B, D_82B08650[*(s16 *)((u8 *)*opt + 4)]);
+            break;
+        case 1:
+            func_8004C594(2, *(s16 *)((u8 *)*opt + 6));
+            if (*(s16 *)((u8 *)*opt + 6) % 10 != 0) {
+                flagB = func_8004C8A0(buffer, 0x80, 0x1B, 0x1F);
+            } else {
+                flagB = func_8004C8A0(buffer, 0x80, 0x1B, 0x20);
+            }
+            break;
+        case 2:
+            func_8004C594(2, *(s16 *)((u8 *)*opt + 8));
+            flagB = func_8004C8A0(buffer, 0x80, 0x1B, 0x21);
+            break;
+        }
+        if (flagB != 0) {
+            func_800495F8(coords[0] + 0x15F, coords[1] + i * 0x24 + 0xF, 1, flagB);
+        }
+    }
+    func_800499EC();
+    D_82B08644 += 0x1000;
+}
 #endif
 
 #ifdef VERSION_US
@@ -1910,7 +2059,7 @@ void func_82B050E8(arg0)
 extern void Panel_DrawHeadingAndOptions(u8 *, s32);
 extern void func_82B03688(u8 *);
 extern void func_82B0373C(void *);
-extern void func_82B03978(void);
+extern void func_82B03978(u8 *);
 extern void func_82B03F38();
 extern void func_82B04008();
 extern void func_82B04718();
@@ -1921,7 +2070,7 @@ void func_82B05494(void *arg0, s32 arg1) {
     case 2: func_82B03688(arg0); break;
     case 3: func_82B0373C(arg0); break;
     case 4: func_82B038BC(arg0); break;
-    case 5: func_82B03978(); break;
+    case 5: func_82B03978(arg0); break;
     case 6: func_82B03F38(); break;
     case 7: func_82B04008(); break;
     case 8: func_82B04718(); break;
