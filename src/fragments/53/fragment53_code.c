@@ -596,7 +596,104 @@ void Fragment53_UpdateTrajectoryPosition(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_865020D8.s")
+struct Fragment53ModelPos {
+    u8 pad0[0x1E];
+    s16 rotY;
+    u8 pad20[2];
+    s16 unk22;
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 rest[0x168 - 0x30];
+};
+extern struct Fragment53ModelPos D_8650F200[];
+
+// F53Model: view of the 0x168-byte model records (D_8650DB80; D_8650F200 is record 16).
+typedef struct {
+    u8 pad0[0x24];
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 unk30;
+    volatile f32 unk34;
+    u8 rest[0x168 - 0x38];
+} F53Model;
+typedef struct {
+    f32 scale;
+    s32 height;
+    s32 top;
+    s32 speed;
+} F53Course;
+extern s32 D_8650C470;
+extern s32 D_8650C474;
+extern f32 D_8650C478;
+extern s32 D_8650C498;
+extern s32 D_8650C4AC;
+extern s32 D_8650C4B4;
+extern f32 D_8650C4B8;
+extern s32 D_8650C4C4;
+extern s32 D_8650C4CC;
+extern f32 D_8650C4D0;
+extern s32 D_8650C4E0[];
+extern F53Course D_8650C50C[];
+extern s32 D_8650C5E0;
+extern s32 D_8650D9D4;
+extern u8 D_8650DB80[];
+extern void Fragment53_CountTrajectorySamplesInRange(void);
+extern void Fragment53_UpdateTrajectoryPosition(void);
+extern f32 sqrtf(f32);
+#pragma intrinsic(sqrtf)
+#define MODELS ((F53Model *)D_8650DB80)
+#define POS ((F53Model *)D_8650F200)
+void func_865020D8(void) {
+    s32 i;
+    F53Course *c;
+    s32 *dist = &D_8650C4CC;
+
+    Fragment53_CountTrajectorySamplesInRange();
+    switch (D_8650C470) {
+    case 0:
+        POS[0].unk34 = D_8650C4CC / D_8650C478;
+        D_8650C4B4 = D_8650C498 - D_8650C4CC - 10;
+        break;
+    case 1:
+        c = &D_8650C50C[D_8650C5E0];
+        POS[0].unk34 = D_8650C50C[D_8650C5E0].scale;
+        D_8650C4C4 = c->speed;
+        D_8650C4AC = c->top;
+        (*dist) = c->height;
+        POS[0].unk34 = D_8650C4CC / D_8650C478;
+        D_8650C4B4 = D_8650C498 - (*dist) - 10;
+        break;
+    case 2:
+        POS[0].unk34 = 0.182f;
+        D_8650C4C4 = 190;
+        D_8650C4AC = 138;
+        D_8650C4CC = 375;
+        D_8650C4B8 = 0.6f;
+        ((F53Model *)(u32)D_8650F200)->unk34 = (*dist) / D_8650C478;
+        D_8650C4B4 = D_8650C498 - (*dist) - 10;
+        break;
+    case 3:
+        POS[0].unk34 = D_8650C4CC / D_8650C478;
+        D_8650C4C4 = POS[0].unk34 * 1000.0f + 10.0f;
+        D_8650C4B4 = D_8650C498 - D_8650C4CC - 10;
+        break;
+    default:
+        MODELS[16].unk34 = (*dist) / D_8650C478;
+        D_8650C4B4 = D_8650C498 - D_8650C4CC - 10;
+        break;
+    }
+    D_8650D9D4 = (s32)(sqrtf((f32)((f64)(D_8650C4AC - D_8650C498) / 4.9)) / D_8650C4B8 + 1.0f - 2.0f);
+    for (i = 0; i < 4; i++) {
+        POS[i].unk34 = POS[0].unk34;
+        MODELS[4 + i].y = D_8650C474;
+        MODELS[4 + i].x = (i * 120.0f + -180.0f) * D_8650C4D0;
+        MODELS[i].x = D_8650C4E0[i] + (i * 120.0f + -180.0f) * D_8650C4D0;
+        POS[i].x = (i * 120.0f + -180.0f) * D_8650C4D0;
+    }
+    Fragment53_UpdateTrajectoryPosition();
+}
 #endif
 
 #ifdef VERSION_US
@@ -668,16 +765,6 @@ extern s32 D_8650C5E0;
 extern s32 D_8650D0A8;
 extern s32 D_8650D9D8;
 extern u8 D_8650D9F8[];
-struct Fragment53ModelPos {
-    u8 pad0[0x1E];
-    s16 rotY;
-    u8 pad20[2];
-    s16 unk22;
-    f32 x;
-    f32 y;
-    f32 z;
-    u8 rest[0x168 - 0x30];
-};
 extern struct Fragment53ModelPos D_8650F200[];
 extern u8 D_865105B0[];
 extern u8 D_865110F0[];
@@ -879,7 +966,75 @@ void func_86502B88(void)
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/53/fragment53_code/func_86502D80.s")
+extern s32 D_8650C494;
+extern f32 D_8650D0AC;
+extern f32 D_8650D0B0;
+extern s32 D_8650D0B4[];
+extern f32 D_8650D0C4;
+extern f32 D_8650D0D0;
+extern u32 func_8003570C(void);
+extern void *func_87F0328C(void *, s32, f32, f32, f32, f32, s32);
+
+#define RAND01() ((f32)func_8003570C() / 4294967296.0f)
+#define ABSF(x) ((x) < 0 ? -(x) : (x))
+
+void func_86502D80(s32 arg0) {
+    s32 r;
+    s32 i;
+    s32 n;
+    f32 a;
+    f32 b;
+    u8 *obj;
+    u8 *sub;
+    u8 *col;
+    f32 one;
+
+    if (D_8650C494 == 1) {
+        return;
+    }
+    D_8650D0C4 = ((178.0f + D_8650D0B0) - (f32)*(s32 *)((u8 *)&D_86511698[arg0] + 0x44)) *
+                 ((f32)D_8650C4CC - D_8650D0AC) / 146.0f;
+    n = 5;
+    one = 1.0f;
+    for (i = 0; i < 2; i++) {
+        r = guRandom() % 4;
+        if (r <= 0) {
+            b = 2.8f;
+            a = 2.8f;
+        } else if (r < 2) {
+            if (n) {} // FAKE
+            a = -2.8f;
+            b = 2.8f;
+        } else {
+            b = -2.80f;
+            if (r < 3) {
+                a = -2.800f;
+            } else {
+                a = 2.8f;
+            }
+        }
+        obj = func_87F0328C(D_8650D9F8, 0 * (i / n), // FAKE: 0 * (i / n)
+                            *(f32 *)((u8 *)&D_8650E120[arg0] + 0x24) + (f32)D_8650D0B4[arg0] + RAND01() * b * 10.0f,
+                            *(f32 *)&D_8650D0B4[4] + RAND01() * ABSF(a) * 15.0f, 150.0f, RAND01() * 1.2f * one,
+                            func_8003570C() % 1 + 10);
+        if (obj != NULL) {
+            sub = *(u8 **)(obj + 0x20);
+            *(f32 *)(obj + 0x10) = RAND01() * b * D_8650D0D0;
+            *(f32 *)(obj + 0x14) = RAND01() * ABSF(a) * 1.6;
+            *(f32 *)(obj + 0x18) = 0.0f;
+            *(f32 *)(sub + 0x18) = 1.0f;
+            col = *(u8 **)(obj + 0x20);
+            col[0x10] = 0xFF;
+            col[0x11] = 0xFF;
+            col[0x12] = 0xFF;
+            col[0x13] = 0xFF;
+            col[0x14] = 0xFF;
+            col[0x15] = 0xFF;
+            col[0x16] = 0;
+            col[0x17] = 0xFF;
+        }
+    }
+}
 #endif
 
 #ifdef VERSION_US
