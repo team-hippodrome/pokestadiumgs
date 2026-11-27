@@ -1594,7 +1594,6 @@ extern s32 D_8650C4B0;
 extern s32 D_8650C4C8;
 extern s32 D_8650DB38[];
 extern s32 D_8650DB40[];
-extern u8 D_8650FD40[];
 extern u8 D_865110F0[];
 extern u8 D_865118F8[];
 extern u8 D_8650DB80[];
@@ -1652,7 +1651,7 @@ void func_8650952C(void) {
                 D_8650C5E0.f48 = 1;
             }
             if (D9D8 == 0) {
-                func_8003F114(D_8650FD40, 0, -1, D_8650DB70[0]);
+                func_8003F114((u8 *)&D_8650FD40, 0, -1, D_8650DB70[0]);
             }
             break;
         case 2:
@@ -1660,7 +1659,7 @@ void func_8650952C(void) {
                 D9D8 -= (s32)ROUND_MAX(4 * D_8650C508);
             }
             if (D9D8 <= 0) {
-                func_8003F1DC(D_8650FD40);
+                func_8003F1DC((u8 *)&D_8650FD40);
             }
             break;
         case 1:
