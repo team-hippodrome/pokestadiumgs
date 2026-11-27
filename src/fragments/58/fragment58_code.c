@@ -25,6 +25,15 @@ typedef struct {
     s32 unk38;
 } Fragment58State;
 static Fragment58State D_83404888;
+// Camera values func_834006A8 computes from its preset table (0x834048C4-0x834048E0);
+// its function-scope statics follow at 0x834048E0-0x834048F4.
+static f32 D_834048C4;
+static f32 D_834048C8;
+static f32 D_834048CC;
+static f32 D_834048D0;
+static f32 D_834048D4;
+static f32 D_834048D8;
+static f32 D_834048DC;
 extern Fragment58State D_83403DCC;
 extern s32 D_83403D68[];
 extern s32 D_83403E08[];
@@ -131,23 +140,95 @@ void func_8340010C(Fragment58State *arg0) {
     }
     gSPDisplayList((*(Gfx **)&D_800D0510)++,D_80094F50);
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_834006A8.s")
-
 // Fragment state record at D_83404188 (only the fields C code here reads are named).
 typedef struct {
     /* 0x00 */ s32 state;
     /* 0x04 */ s32 unk_04;
     /* 0x08 */ s32 unk_08;
-    /* 0x0C */ u8 unk_0C[0x8];
+    /* 0x0C */ s32 frame;
+    /* 0x10 */ s32 cameraMode;
     /* 0x14 */ s32 unk_14;
     /* 0x18 */ s32 unk_18;
     /* 0x1C */ u8 unk_1C[0x18];
     /* 0x34 */ s32 unk_34;
-    /* 0x38 */ u8 unk_38[0x40];
+    /* 0x38 */ u8 unk_38[0x24];
+    /* 0x5C */ f32 cameraPos[2];
+    /* 0x64 */ f32 cameraAt[3];
+    /* 0x70 */ f32 perspNear;
+    /* 0x74 */ f32 perspFar;
     /* 0x78 */ u8 colorA[4];
     /* 0x7C */ u8 unk_7C[0x10];
     /* 0x8C */ u8 colorB[4];
 } Fragment58State188;
+extern Fragment58State188 D_83404188;
+extern void GeoCamera_SetPerspective(void *, f32, f32, f32);
+extern void func_80038E14(void *, f32, f32, f32, f32, f32, f32, u16);
+extern f32 D_80087E50[];
+extern f32 D_80088E50[];
+extern s16 D_83403780[];
+extern s16 D_83403E18;
+extern s16 D_83403E1C;
+typedef struct { s32 w[17]; } Func834006A8Entry;
+extern Func834006A8Entry D_83403C80[];
+
+s32 func_834006A8(s32 arg0, u8 *arg1) {
+    static f32 D_834048E0;
+    static s32 D_834048E4; // FAKE
+    static s32 D_834048E8;
+    static s16 *D_834048EC;
+    static s32 D_834048F0;
+
+    D_834048E0 = sqrtf(D_83404188.cameraPos[1] * D_83404188.cameraPos[1] + D_83404188.cameraPos[0] * D_83404188.cameraPos[0]);
+    if (D_83404188.cameraMode == 1) {
+        D_834048EC = D_83403780;
+        D_834048F0 = 0;
+    } else {
+        func_80038E14(arg1, (D_834048E0 * D_80088E50[(u16)D_83403E1C >> 4]) * D_80088E50[(u16)D_83403E18 >> 4] + 1.0f,
+                      D_80087E50[(u16)D_83403E1C >> 4] * D_834048E0,
+                      (D_834048E0 * D_80088E50[(u16)D_83403E1C >> 4]) * D_80087E50[(u16)D_83403E18 >> 4],
+                      D_83404188.cameraAt[0], D_83404188.cameraAt[1], D_83404188.cameraAt[2], 0);
+        return 0;
+    }
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[15] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048DC = (D_834048EC + D_83403C80[D_834048F0].w[16])[D_83404188.frame * D_834048E8];
+    GeoCamera_SetPerspective((void *)arg1, D_834048DC, D_83404188.perspNear, D_83404188.perspFar);
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[1] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048C4 = (D_834048EC + D_83403C80[D_834048F0].w[2])[D_83404188.frame * D_834048E8];
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[3] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048C8 = (D_834048EC + D_83403C80[D_834048F0].w[4])[D_83404188.frame * D_834048E8];
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[5] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048CC = (D_834048EC + D_83403C80[D_834048F0].w[6])[D_83404188.frame * D_834048E8];
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[7] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048D0 = (D_834048EC + D_83403C80[D_834048F0].w[8])[D_83404188.frame * D_834048E8];
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[9] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048D4 = (D_834048EC + D_83403C80[D_834048F0].w[10])[D_83404188.frame * D_834048E8];
+    D_834048E8 = 1;
+    if (D_83403C80[D_834048F0].w[11] == 1) {
+        D_834048E8 = 0;
+    }
+    D_834048D8 = (D_834048EC + D_83403C80[D_834048F0].w[12])[D_83404188.frame * D_834048E8];
+    func_80038E14(arg1, D_834048C4, D_834048C8, D_834048CC, D_834048D0, D_834048D4, D_834048D8, 0);
+    return 0;
+}
+
 extern u8 *D_80094908;
 extern void func_80037120(void *, void *, f32 *, s16 *, s16 *);
 extern Fragment58State188 D_83404188;
