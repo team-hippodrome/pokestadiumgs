@@ -2108,5 +2108,107 @@ s32 func_81407258(void *arg0) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/12/fragment12_E7C00/func_81407310.s")
+#define MGR (*(u8 **)(arg0 + 0x14F30))
+extern void func_842033EC(void *, void *);
+extern void func_80073080(u8 *, u8, u8, u8, u8);
+extern void func_84203360(u8);
+extern void func_800730BC(void *, void *);
+
+void func_81407310(u8 *arg0) {
+    s32 i;
+    u8 *r;
+    u8 *o;
+    u8 *u;
+    u8 *out;
+    u8 *p;
+    u8 *q;
+    s32 j;
+    s32 k;
+    s32 m;
+    s32 found;
+
+    out = *(u8 **)(MGR + 0x840);
+    r = *(u8 **)(MGR + 0x844);
+    if (*(s32 *)(MGR + 0x890) == 0) {
+        func_842033EC(out, r);
+    }
+    if (*(s32 *)(MGR + 0x890) == 1 && *(u8 **)(MGR + 0x88C) != NULL) {
+        for (i = 0; i != 2; i++) {
+            u = *(u8 **)(arg0 + i * 0xCC8);
+            for (k = 0; k < *(s8 *)(u + 0x12); k++) {
+                u[k + 0xA] = ((u8 (*)[0x1DC])*(u8 **)(MGR + 0x88C))[i][0x1D4 + k];
+            }
+        }
+    }
+    for (i = 0; i != 2; i++) {
+        // -i * -0x4E0 keeps o's per-pass step separate from the i * 0x4E0 uses below
+        o = out + -i * -0x4E0;
+        o[8] = 0;
+        o[2] = 0;
+        o[0xA] = 0;
+        for (j = 0; j < 2; j++) {
+            p = ((u8 **)(arg0 + i * 0xCC8))[j];
+            if (p == NULL) {
+                continue;
+            }
+            o[2]++;
+            if (*(s8 *)(p + 8) >= 0) {
+                out[i * 0x4E0 + j + 4] = *(s8 *)(p + 8);
+            } else {
+                out[i * 0x4E0 + j + 4] = p[7];
+            }
+            if (j == 0) {
+                if (*(s32 *)(MGR + 0x890) == 0 && *(u8 **)(MGR + 0x88C) != NULL) {
+                    func_80073080(*(u8 **)(MGR + 0x88C), i, p[0xA], p[0xB], *(s8 *)(p + 0xC));
+                }
+                HAL_Strcpy((char *)(o + 0x48C), (char *)(p + 0x4D50));
+            }
+            if (p[7] == *(s16 *)(arg0 + i * 0xCC8 + 0x210)) {
+                o[0xA] = o[8];
+            }
+            for (k = 0; k < *(s8 *)(p + 0x12); k++) {
+                if (k) {} // FAKE
+                if (*(s8 *)(p + 0xA + k) >= 0 && *(u8 *)&((Fragment12SelectionPayloads *)p)->entries[*(s8 *)(p + 0xA + k)] != 0) {
+                    ((Fragment12SelectionEntry *)(o + 0x18))[o[8]] = ((Fragment12SelectionPayloads *)p)->entries[*(s8 *)(p + 0xA + k)];
+                    o[8]++;
+                }
+            }
+            if (j == 0) {
+                o[3] = o[8];
+            }
+        }
+        o[7] = o[9] = o[8];
+        for (j = 0; j < 2; j++) {
+            q = ((u8 **)(arg0 + i * 0xCC8))[j];
+            if (q == NULL) {
+                continue;
+            }
+            for (k = 0; k != 6; k++) {
+                found = 0;
+                if (q[k * 0x58 + 0x4B40] == 0) {
+                    continue;
+                }
+                for (m = 0; m < *(s8 *)(q + 0x12); m++) {
+                    if (k == *(s8 *)(q + 0xA + m)) {
+                        found = 1;
+                        break;
+                    }
+                }
+                if (!found) {
+                    ((Fragment12SelectionEntry *)(o + 0x18))[o[7]] = *(Fragment12SelectionEntry *)(q + k * 0x58 + 0x4B40);
+                    o[7]++;
+                }
+            }
+        }
+        for (j = o[7]; j < 12; j++) {
+            out[i * 0x4E0 + j * 0x58 + 0x18] = 0;
+        }
+        if (*(s32 *)(MGR + 0x890) == 0) {
+            func_84203360(i);
+        }
+    }
+    if (*(s32 *)(MGR + 0x890) == 0 && *(u8 **)(MGR + 0x88C) != NULL) {
+        func_800730BC(*(u8 **)(MGR + 0x88C), MGR);
+    }
+}
 #endif

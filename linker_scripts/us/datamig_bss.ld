@@ -474,7 +474,7 @@ SECTIONS
      * are function-scope statics. */
     .fragment21_archive_8D08_data 0x825087C0 (NOLOAD) : SUBALIGN(4)
     {
-        build/src/fragments/21/fragment21_13FFA0.o(.data)
+        build/src/fragments/21/fragment21_140B40.o(.data)
     }
 
     /* func_82502EBC's four state halfwords at D_82508F70. IDO shares one
@@ -482,7 +482,15 @@ SECTIONS
      * static. */
     .fragment21_state_8F70_bss 0x82508F70 (NOLOAD) : SUBALIGN(2)
     {
-        build/src/fragments/21/fragment21_13FFA0.o(.bss)
+        build/src/fragments/21/fragment21_140B40.o(.bss)
+    }
+
+    /* func_82500780's counter halfword at D_82508F7C (inside the
+     * D_82508F78 record that func_82503F28 also resets). Its own file
+     * (fragment21_140700.c) so the function static can be pinned here. */
+    .fragment21_counter_8F7C_bss 0x82508F7C (NOLOAD) : SUBALIGN(2)
+    {
+        build/src/fragments/21/fragment21_140700.o(.bss)
     }
 
     /* func_82503F28's timer halfwords at D_82508F78. Its own file

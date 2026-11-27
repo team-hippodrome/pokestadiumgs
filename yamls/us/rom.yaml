@@ -817,6 +817,8 @@
     subsegments:
     - [0x13FF80, textbin, fragments/21/fragment21_header]
     - [0x13FFA0, c,       fragments/21/fragment21_13FFA0]
+    - [0x140700, c,       fragments/21/fragment21_140700]
+    - [0x140B40, c,       fragments/21/fragment21_140B40]
     - [0x143DD0, c,       fragments/21/fragment21_143DD0]
     - [0x144790, c,       fragments/21/fragment21_144790]
     - [0x147D10, c,       fragments/21/fragment21_147D10]
@@ -1322,6 +1324,8 @@
     - [0x253F90, rodata]
     - [0x253FB0, .rodata, fragments/47/fragment47_2507E0] # image positions, texture indices, fixed-point bias and draw scales
     - [0x254010, rodata]
+    - [0x2542F0, .rodata, fragments/47/fragment47_251C30] # func_8600B610 double literals
+    - [0x254430, rodata]
 
   - name: fragment48
     type: code
@@ -1492,7 +1496,7 @@
     - [0x2C8410, textbin, fragments/58/fragment58_header]
     - [0x2C8430, c,       fragments/58/fragment58_code]
     - [0x2CBB90, data,    fragments/58/fragment58_data]
-    - [0x2CC330, .data,   fragments/58/fragment58_code] # D_83403F20, an unreferenced word, func_83401AAC's
+    - [0x2CC310, .data,   fragments/58/fragment58_code] # func_83400EA4's statics, D_83403F18, D_83403F20, an unreferenced word, func_83401AAC's
                                                           # blink counter, D_83403F2C and func_834022F8's statics
     - [0x2CC350, data]
     - [0x2CC360, .rodata, fragments/58/fragment58_code] # strings, jump tables, float literals

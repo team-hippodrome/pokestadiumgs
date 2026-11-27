@@ -1868,5 +1868,114 @@ s32 func_8AF133C0(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/44/fragment44_1FD260/func_8AF13718.s")
+extern void func_8AC0077C(s32, s32, s32, s32);
+extern void func_800496A4(s32, s32);
+extern void func_8004972C(s32, s32, s32, s32);
+extern void func_800495BC(s32, s32, void *);
+extern void func_8AC00738(void);
+extern s32 func_8AC0665C(void *, s16);
+extern s32 func_8AC0672C(void *, s16);
+extern void func_8AC05F00(void *);
+extern void func_8004B314(s32, s32, s32, s32);
+typedef struct {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} F8AF13718_Color;
+extern F8AF13718_Color D_8AC081B0[];
+extern u32 D_8AF2BDC4;
+extern s16 D_8AF316BA;
+extern s16 D_8AF31E06;
+extern s16 D_8AF31E08;
+typedef struct {
+    u32 w;
+} F8AF13718_Word;
+
+void func_8AF13718(void) {
+    s32 pad;
+    s16 *top;
+    F8AF13718_Color *color;
+    struct MenuGridEntry *entry;
+    s32 col;
+    s16 x;
+    s16 y;
+    s16 x2;
+    s16 y2;
+    s16 rows;
+    u8 kind;
+    u8 alpha;
+    s16 py;
+    s16 px;
+    F8AF13718_Color *p;
+    F8AF13718_Color tmp;
+    s32 row;
+
+    rows = (D_8AF31C40 - 1) / 4 + 1;
+    if (D_8AF31198 < 10) {
+        D_8AF31198++;
+    }
+    x = *(s16 *)((u8 *)D_8AF31184 + 8) - 3;
+    y = *(s16 *)((u8 *)D_8AF31184 + 0xA);
+    x2 = *(s16 *)((u8 *)D_8AF31184 + 0xC) + *(s16 *)((u8 *)D_8AF31184 + 8);
+    y2 = *(s16 *)((u8 *)D_8AF31184 + 0xE) + *(s16 *)((u8 *)D_8AF31184 + 0xA);
+    func_8AC0077C(x, y, x2, y2);
+    *(u16 *)((u8 *)D_8AF3118C + 2) &= 0xFFFD;
+    *(u16 *)((u8 *)D_8AF31190 + 2) &= 0xFFFD;
+    func_800498C4();
+    func_800496A4(4, 0);
+    entry = D_8AF316C8;
+    for (row = 0; row < rows; row++) {
+        for (col = 0; col < 4; col++, entry++) {
+            if (col) {} // FAKE
+            kind = entry->kind;
+            if (kind == 0) {
+                row = rows;
+                break;
+            }
+            if (kind == 0xFF) {
+                continue;
+            }
+            top = &D_8AF316BA;
+            if (*top - 2 < row && row < *top + 11) {
+                px = *(s16 *)((u8 *)D_8AF31184 + 8) + col * 130 + 6;
+                py = *(s16 *)((u8 *)D_8AF31184 + 0xA) + row * 20 - D_8AF316B8.fields[0] + 4;
+                if (y - 20 < py && py < y2 + 20) {
+                    if (entry->blink == 0) {
+                        alpha = 0xFF;
+                    } else {
+                        alpha = (D_8AF2BDC4 % 20 >= 10) ? 0x80 : 0xFF;
+                    }
+                    color = &D_8AC081B0[entry->palette];
+                    func_8004972C(color->r, color->g, color->b, alpha);
+                    if (col == D_8AF316A4 && row == D_8AF316A6 && (*(u16 *)((u8 *)D_8AF3118C + 2) & 1)) {
+                        p = &tmp;
+                        *p = *color;
+                        tmp.a = 0xFF;
+                        *(F8AF13718_Word *)((u8 *)D_8AF3118C + 0x28) = *(F8AF13718_Word *)p;
+                        *(F8AF13718_Word *)((u8 *)D_8AF3118C + 0x2C) = *(F8AF13718_Word *)p;
+                        *(F8AF13718_Word *)((u8 *)D_8AF31190 + 0x2C) = *(F8AF13718_Word *)p;
+                        *(u16 *)((u8 *)D_8AF3118C + 2) |= 2;
+                        *(u16 *)((u8 *)D_8AF31190 + 2) |= 2;
+                    }
+                    func_800495BC(px, py, func_8004C874(6, kind - 1));
+                }
+            }
+        }
+    }
+    func_800499EC();
+    func_8AC00738();
+    if (func_8AC0665C(&D_8AF316B8, D_8AF316A6)) {
+        func_8AC05F00(D_8AF31088);
+    }
+    if (func_8AC0672C(&D_8AF316B8, D_8AF316A6)) {
+        func_8AC05F00(D_8AF31100);
+    }
+    if (D_8AF316BC == 0) {
+        D_8AF31E06 = D_8AF316A0 + D_8AF316A4 * 130 - 4;
+        D_8AF31E08 = D_8AF316A2 + D_8AF316A6 * 20 - D_8AF316B8.fields[0] - 6;
+    }
+    func_8004B314(D_8AF31E06, D_8AF31E08, 130, 36);
+}
+
 #endif
