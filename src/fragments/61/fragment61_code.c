@@ -152,11 +152,28 @@ extern f32 __cosf(f32);
 extern f32 __sinf(f32);
 // Fragment 61's 0x4B4-byte runtime state at 0x86B17A78 (D_86B17A78 in the other
 // functions), reset from the D_86B0D384 template. This unit's .bss is pinned at
-// 0x86B17A78 in datamig_bss.ld and is laid out in declaration order:
-// sStateHead (0x00-0x37), func_86B01A94's sStatePair (0x38-0x3F) and
-// sStateTail (0x40-0x4B3). func_86B007D0 reaches the whole record through
+// 0x86B17A78 in datamig_bss.ld. func_86B007D0 reaches the whole record through
 // sStateHead; as an in-unit static the mode stores share one lui.
-static u8 sStateHead[0x38];
+typedef struct {
+    /* 0x000 */ s32 unk_000;
+    /* 0x004 */ u8 unk_004[0x34 - 0x04];
+    /* 0x034 */ s32 panelMode[4];
+    /* 0x044 */ u8 unk_044[0xF8 - 0x44];
+    /* 0x0F8 */ f32 phase;
+    /* 0x0FC */ u8 unk_0FC[0x17C - 0xFC];
+    /* 0x17C */ s32 targetCount[4];
+    /* 0x18C */ s32 count[4];
+    /* 0x19C */ s32 unk_19C;
+    /* 0x1A0 */ s32 countDone;
+    /* 0x1A4 */ u8 unk_1A4[0x274 - 0x1A4];
+    /* 0x274 */ s32 panelArg[4];
+    /* 0x284 */ s32 timer;
+    /* 0x288 */ u8 unk_288[0x35C - 0x288];
+    /* 0x35C */ s32 unk_35C;
+    /* 0x360 */ u8 unk_360[0x4B4 - 0x360];
+} State86B17A78;
+static State86B17A78 sState;
+#define sStateHead ((u8 *)&sState)
 #define sBlob (*(Blob86B007D0 *)sStateHead)
 void func_86B007D0(void) {
     f32 *p;
@@ -738,9 +755,6 @@ extern u8 D_86B17A78[];
         } \
     }
 void func_86B01A94(void) {
-    // D_86B17AB0/D_86B17AB4 (state record +0x38). As a function-scope static the
-    // two clears share one `lui $at` and get no base register, as in retail.
-    static struct { s32 a, b; } sStatePair;
     s32 i;
     u8 *p;
     s32 pad;
@@ -781,10 +795,9 @@ void func_86B01A94(void) {
             }
             if (func_87F006AC() == 2) {
                 *(s32 *)D_86B181C0 = 4;
-                D_86B17AAC = 0;
-                sStatePair.a = 0;
-                sStatePair.b = 0;
-                D_86B17AB8 = 0;
+                for (i = 0; i < 4; i++) {
+                    sState.panelMode[i] = 0;
+                }
                 *(s32 *)(D_86B17A78 + 0x284) = 0;
             }
             break;
@@ -946,8 +959,6 @@ void func_86B01A94(void) {
     }
 }
 
-// Rest of the state record after sStatePair (0x86B17AB8-0x86B17F2B).
-static u8 sStateTail[0x474];
 
 #endif
 
@@ -3299,7 +3310,106 @@ void func_86B08F18(void) {
 }
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/61/fragment61_code/func_86B08F20.s")
+extern s32 D_86B18214;
+extern s32 D_86B18218;
+extern s32 D_86B17CEC;
+extern s32 D_86B17CF0;
+extern s32 D_86B17CF4;
+extern s32 D_86B17CF8;
+extern u8 D_86B0E0E0[];
+extern void func_87F0C930(void *);
+extern void func_86B0B500(void);
+extern void Fragment64_StartPlayerPanel(void *, void *, s32, s32, s32, s32, s32);
+void func_86B08F20(void) {
+    s32 i;
+    s32 old;
+    s32 found;
+    s32 flag;
+    s32 *p;
+
+    old = sState.timer;
+    sState.timer = old + 1;
+    if (old == 0) {
+        D_86B18214 = 0;
+        D_86B18218 = 0;
+        sState.unk_19C = 1;
+    }
+    if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 4) {
+        func_87F0C930(D_86B181C0 + 0x1C);
+    }
+    // Read through a pointer so the compare's load stays a scratch temp (t9) shared with the increment.
+    p = &D_86B18214;
+    if (sState.countDone == 0) {
+        sState.phase = (f32)((f64)sState.phase - 0.016);
+        if (sState.phase < 0.0f) {
+            sState.phase += 6.2831855f;
+        }
+        func_86B057B0();
+        func_86B081B4();
+        flag = 0;
+        for (i = 0; i < 4; i++) {
+            if (sState.count[i] < sState.targetCount[i]) {
+                flag = 1;
+                sState.count[i] += (&D_86B18214)[1];
+                if (sState.count[i] >= sState.targetCount[i]) {
+                    sState.count[i] = sState.targetCount[i];
+                    func_800279C4(0x8F13);
+                }
+            }
+        }
+        if (flag) {
+            func_800279C4(0x8012);
+        }
+        if (sState.count[0] == sState.targetCount[0] && sState.count[1] == sState.targetCount[1] && sState.count[2] == sState.targetCount[2] && sState.count[3] == sState.targetCount[3]) {
+            sState.countDone = 1;
+        }
+        D_86B18218++;
+        if (sState.countDone != 0) {
+            func_86B0B500();
+            if (*(u8 *)(*(u8 **)(D_86B181C0 + 0xC) + 0x2180) == 4) {
+                func_87F0C930(D_86B181C0 + 0x1C);
+            } else {
+                Fragment64_StartPlayerPanel(D_86B0E0E0, *(void **)(D_86B181C0 + 0xC), 0xB, sState.panelArg[0], sState.panelArg[1], sState.panelArg[2], sState.panelArg[3]);
+            }
+            for (i = 0; i < 4; i++) {
+                sState.panelMode[i] = (&D_86B17CEC)[i] ? 0xD : 0x13;
+            }
+        }
+    }
+    if (sState.countDone != 0) {
+        found = *p >= 30;
+        D_86B18214++;
+        if (found) {
+            sState.unk_35C = 1;
+        }
+    }
+    if (sState.countDone != 0) {
+        if (sState.panelArg[0] + sState.panelArg[1] + sState.panelArg[2] + sState.panelArg[3] != 0) {
+            found = 0;
+            for (i = 0; i < 4; i++) {
+                if (sState.panelMode[i] == 0x15) {
+                    found = 1;
+                }
+            }
+            if (found) {
+                sState.timer = 0;
+                *(s32 *)D_86B181C0 = 9;
+            }
+        } else {
+            sState.timer = 0;
+            *(s32 *)D_86B181C0 = 9;
+        }
+    }
+    if (sState.countDone != 0) {
+        sState.phase = (f32)((f64)sState.phase - 0.024);
+        if (sState.phase < 0.0f) {
+            sState.phase += 6.2831855f;
+        }
+        func_86B057B0();
+        func_86B081B4();
+    }
+}
+
 #endif
 
 void func_86B09378(void) {
