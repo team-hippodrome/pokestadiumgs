@@ -195,10 +195,114 @@ s32 func_83400AFC(s32 arg0, u8 *arg1) {
 
 #pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400B98.s")
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/58/fragment58_code/func_83400EA4.s")
+typedef struct { s32 w[8]; } F58Blob;
+// Position block inside the D_83404188 state record.
+typedef struct { u8 unk_00[0x4C]; f32 x; f32 y; f32 z; } F58Pos;
+typedef struct { u8 unk_00[0x10]; u8 c[8]; f32 unk_18; u8 unk_1C[4]; f32 unk_20; f32 unk_24; f32 unk_28; } F58Sub;
+typedef struct { u8 unk_00[0x10]; f32 unk_10; f32 unk_14; f32 unk_18; u8 unk_1C[4]; F58Sub *unk_20; } F58Obj;
+extern F58Blob D_83404808;
+extern F58Blob D_83404828;
+extern f32 D_834048F4;
+extern f32 D_834048F8;
+extern u32 func_8003570C(void);
+extern F58Obj *func_87F0328C(F58Blob *, s32, f32, f32, f32, f32, s32);
+void func_83400EA4(s32 arg0) {
+    static f32 D_83403F00 = 200.0f;
+    static f32 D_83403F04 = 0.0f;
+    static f32 D_83403F08 = 0.0f;
+    static f32 D_83403F0C = 0.0f;
+    static s32 D_83403F10 = 0;
+    static s32 D_83403F14 = 1;
+    s32 count;
+    s32 i;
+    s32 r;
+    f32 fx;
+    f32 fy;
+    u32 rnd;
+    u32 rnd2;
+    F58Blob blob;
+    F58Obj *obj;
+    F58Sub *sub;
+    f32 baseX; // unused, but its home slot gives retail's frame layout
+    F58Sub *sub0;
+    F58Sub *sub1;
+
+    if (arg0 != 0) {
+        D_83403F00 = ((F58Pos *)&D_83404188)->y - 160.0f;
+        D_83403F0C = 4.5f;
+        D_83403F04 = 5.0f;
+        count = 3;
+        if (arg0 == 1) {
+            blob = D_83404808;
+            D_834048F4 = 3.5f;
+            D_834048F8 = 0.5f;
+            count = 6;
+            D_83403F08 = 4.0f;
+        } else {
+            blob = D_83404828;
+            D_834048F4 = 2.0f;
+            D_834048F8 = 1.5f;
+            D_83403F0C = 3.0f;
+            D_83403F00 = ((F58Pos *)&D_83404188)->y + 80.0f;
+            D_83403F08 = 0.0f;
+        }
+        for (i = 0; i < count; i++) {
+            r = (s32)guRandom() % 4;
+            if (r <= 0) {
+                fx = 2.8f;
+                fy = 2.8f;
+            } else if (r < 2) {
+                fx = 2.8f;
+                fy = -2.8f;
+            } else if (r < 3) {
+                fx = -2.8f;
+                fy = -2.8f;
+            } else {
+                fx = -2.8f;
+                fy = 2.8f;
+            }
+            fx = (f32)func_8003570C() / 4294967296.0f * fx;
+            fy = (f32)func_8003570C() / 4294967296.0f * fy;
+            rnd = func_8003570C();
+            rnd2 = func_8003570C();
+            obj = func_87F0328C(&blob, 0,
+                                30.0f * D_83403F0C * fx + ((F58Pos *)&D_83404188)->x,
+                                35.0f * D_83403F0C * fy + D_83403F00,
+                                ((F58Pos *)&D_83404188)->z + 100.0f,
+                                (f32)((f32)rnd / 4294967296.0f * 0.8f * 4.5),
+                                (s32)((f32)(rnd2 % 9) + D_83403F04));
+            if (obj != NULL) {
+                D_83403F10++;
+                if (D_83403F10 >= 0x7E) {
+                    D_83403F10 = 0;
+                }
+                obj->unk_18 = 0;
+                obj->unk_10 = D_83403F08 * fx;
+                obj->unk_14 = D_83403F08 * fy;
+                sub0 = obj->unk_20; sub0->unk_18 = 1.0f;
+                sub1 = obj->unk_20;
+                sub1->unk_28 = 0;
+                sub1->unk_20 = fx / 20.0f * D_83403F08;
+                sub1->unk_24 = fy / 20.0f * D_83403F08;
+                sub = obj->unk_20;
+                sub->c[0] = 0xFF;
+                sub->c[1] = 0xFF;
+                sub->c[2] = 0xFF;
+                sub->c[3] = 0xFF;
+                sub->c[4] = func_8003570C() % 0xB0 + 0x50;
+                sub->c[5] = 0xFF;
+                sub->c[6] = 0;
+                sub->c[7] = 0xFF;
+            }
+        }
+    }
+}
+
+// Shared offset read by func_8340135C, and the unreferenced word after it.
+f32 D_83403F18 = 32.0f;
+f32 D_83403F1C = 0.0f;
 
 /* mkdraft:func_8340135C begin */
-extern f32 D_83403F18;
 
 // Moves the state's 0x08/0x0C position inward by the shared offset in D_83403F18: x by
 // the offset, the other axis by the offset scaled by unk14/unk10, with the applied
@@ -207,7 +311,7 @@ extern f32 D_83403F18;
 // func_8340156C, the only caller, passes &D_83404888, so arg0 is a Fragment58State
 // (typedef earlier in src/fragments/58/fragment58_code.c); unk38 holds a float although
 // that struct declares its word s32.
-// D_83403F18 is initialised to .float 32 in asm/us/data/fragments/58/fragment58_data.data.s
+// D_83403F18 is initialised to 32.0f above, after func_83400EA4.
 
 
 void func_8340135C(Fragment58State *arg0) {
