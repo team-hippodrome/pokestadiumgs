@@ -270,7 +270,8 @@ SECTIONS
 
     /* fragment54_code's .bss: player models (sPlayerModels, overlapping the
      * relocation tail the loader clears), then the per-player position
-     * records (D_866098A0), 0x86607410-0x86609E40. */
+     * records (D_866098A0), filler, func_86600298's state (D_8660AB00 and
+     * its function statics), 0x86607410-0x8660AB50. */
     .fragment54_code_bss 0x86607410 (NOLOAD) : SUBALIGN(16)
     {
         build/src/fragments/54/fragment54_code.o(.bss)
@@ -687,8 +688,8 @@ ASSERT(SIZEOF(.fragment2_blink_bss) == 0x5E0,
 ASSERT(SIZEOF(.fragment24_state_12450_bss) == 48,
        "fragment24 state and parameter prefix must retain its compiler section footprint");
 
-ASSERT(SIZEOF(.fragment54_code_bss) == 0x2A30,
-       "fragment54_code's .bss must end at 0x86609E40");
+ASSERT(SIZEOF(.fragment54_code_bss) == 0x3740,
+       "fragment54_code's .bss must end at 0x8660AB50");
 
 ASSERT(SIZEOF(.fragment57_dialog_context_bss) == 0x100,
        "fragment57 runtime bss must end after func_83300CB0's statics");
