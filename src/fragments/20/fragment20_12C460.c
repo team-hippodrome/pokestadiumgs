@@ -20,7 +20,6 @@ extern s16 D_8261A4A2;
 extern void func_80043A30(void *, void *, s32);
 extern s32 func_8004418C(void *, s32, s32, s32);
 extern s32 func_80043BD4(void *, s32, s32);
-extern s32 D_826155D8, D_826155DC, D_826155E0, D_826155E4, D_826155E8, D_826155EC, D_826155F0;
 extern f32 D_80087E50[], D_80088E50[];
 
 #ifdef VERSION_US
@@ -1772,11 +1771,170 @@ unk_func_82606E90* func_82606E90(unk_func_82606E90* arg0) {
     return result;
 }
 
-// Placeholder for func_82606EC8's function-scope statics (D_826155D8..D_826155F0)
-// until that function is in C; keeps func_82607528's statics at 0x826155F4.
-static s32 D_826155D8_82606EC8[7] = { 6, 3, 4, 2, 12, 40, 10 };
+#define S16(base, o) (*(s16 *)((base) + (o)))
+void func_82606EC8(u8 *arg0) {
+    static s32 D_826155D8 = 6;
+    static s32 D_826155DC = 3;
+    static s32 D_826155E0 = 4;
+    static s32 D_826155E4 = 2;
+    static s32 D_826155E8 = 12;
+    static s32 D_826155EC = 40;
+    static s32 D_826155F0 = 10;
+    u8 *sub = arg0 + 0x30;
+    s32 duration;
+    s32 i;
+    s32 stagger;
+    s32 t;
+    s32 prod;
+    s32 flag;
+    s32 flag2;
+    s32 flag3;
+    s32 idx;
+    s16 prev;
+    s32 v;
+    s16 ang;
+    s32 n;
+    s32 amp;
+    s32 r;
+    u8 *e;
+    unk_func_82606E90 *p;
+    s32 state;
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_82606EC8.s")
+    if (S16(arg0, 0x34) != 0) {
+        duration = D_826155DC;
+        stagger = D_826155E4;
+    } else {
+        duration = D_826155D8;
+        stagger = D_826155E0;
+    }
+    if (S16(sub, 0xE) == 0) {
+        if (*(u16 *)(arg0 + 4) & 2) {
+            flag = 1;
+            if (S16(arg0, 8) < 0x800) {
+                S16(arg0, 8)++;
+            }
+            for (i = 0; i < S16(sub, 6); i++) {
+                t = S16(arg0, 8) - stagger * i;
+                prev = ((s16 *)(sub + 0x208))[S16(sub, 0x220 + i * 2)];
+                if (t < 0) {
+                    t = 0;
+                } else if (t > duration) {
+                    t = duration;
+                }
+                prod = t * 0xFF;
+                ((s16 *)(sub + 0x208))[S16(sub, 0x220 + i * 2)] = 0xFF - prod / duration;
+                if (prev == 0xFF && ((s16 *)(sub + 0x208))[S16(sub, 0x220 + i * 2)] < prev) {
+                    if (i != S16(sub, 6)) {
+                        func_800226C0(0x67);
+                    } else {
+                        func_800226C0(0x68);
+                    }
+                }
+                if (prod < duration * 0xFF) {
+                    flag = 0;
+                }
+            }
+            if (flag != 0) {
+                *(u16 *)(arg0 + 4) &= ~2;
+            }
+        }
+    } else if (*(u16 *)(arg0 + 4) & 4) {
+        flag2 = 1;
+        for (i = 0; i < S16(sub, 6); i++) {
+            v = S16(sub, 0x214 + i * 2);
+            if (v >= 0) {
+                if (v < duration) {
+                    S16(sub, 0x214 + i * 2) = v + 1;
+                    v = S16(sub, 0x214 + i * 2);
+                }
+                S16(sub, 0x208 + i * 2) = (v * 0xFF) / duration;
+            }
+            if (v < duration) {
+                flag2 = 0;
+            }
+        }
+        if (flag2 != 0) {
+            *(u16 *)(arg0 + 4) &= ~4;
+        }
+    }
+
+    state = S16(sub, 0x18);
+    switch (state) {
+    case 0:
+        break;
+    case 1:
+        S16(sub, 0x1A)++;
+        r = D_826155E8;
+        i = 0;
+        if (S16(sub, 0x1A) < r) {
+            n = 4;
+            S16(sub, 0x1C) = 0;
+            amp = 100 - (S16(sub, 0x1A) * 100) / r;
+            ang = ((S16(sub, 0x1A) * 0x4000) / r);
+            S16(sub, 0x1E) = (S16(sub, 0x1A) * 0xFF) / r;
+            for (i = 0; i < n; i++) {
+                p = func_82606E90((unk_func_82606E90 *)(sub + 0x20));
+                if (p != NULL) {
+                    p->unk_00 = 1;
+                    p->unk_02 = 0;
+                    p->unk_04 = p->unk_06 = 0x40;
+                    idx = ((u16)(ang + i * 0x4000)) >> 4;
+                    p->unk_08 = D_80087E50[idx] * (f32)amp + 74.0f;
+                    p->unk_0A = D_80088E50[idx] * (f32)amp + 144.0f;
+                }
+            }
+        }
+        flag3 = 1;
+        for (i = 0; i < 40; i++) {
+            e = sub + 0x20 + i * 12;
+            if (*(s16 *)e != 0) {
+                S16(e, 2)++;
+                if (S16(e, 2) < 8) {
+                    S16(e, 4) = S16(e, 6) - (S16(e, 2) * S16(e, 6)) / 8;
+                } else {
+                    _bzero(e, 12);
+                }
+            }
+            if (*(s16 *)e != 0) {
+                flag3 = 0;
+            }
+        }
+        if (flag3 != 0) {
+            S16(sub, 0x18) = 2;
+            S16(sub, 0x1A) = 0;
+            S16(sub, 0x1C) = 0;
+            S16(sub, 0x1E) = 0xFF;
+            func_800226C0(0xE);
+        }
+        break;
+    case 2:
+        S16(sub, 0x1A)++;
+        prod = S16(sub, 0x1A);
+        t = prod - 8;
+        if (prod < D_826155EC) {
+            S16(sub, 0x18) = 2;
+            if (prod < 0x10) {
+                if (prod < 8) {
+                    S16(sub, 0x1C) = (prod * 0xFF) / 8;
+                } else {
+                    S16(sub, 0x1C) = 0xFF - (t * 0xFF) / 8;
+                }
+            } else {
+                S16(sub, 0x1C) = 0;
+            }
+            S16(sub, 0x1E) = 0xFF;
+        } else if (prod < D_826155EC + D_826155F0) {
+            S16(sub, 0x1C) = (prod - D_826155EC) * 0; // FAKE
+            S16(sub, 0x1E) = 0xFF - ((prod - D_826155EC) * 0xFF) / D_826155F0;
+        } else {
+            S16(sub, 0x18) = 3;
+            S16(sub, 0x1C) = 0;
+            S16(sub, 0x1E) = prod * 0; // FAKE
+        }
+        break;
+    }
+}
+
 
 extern void func_82606CE8(u8 *);
 extern void func_82606EC8(u8 *);
