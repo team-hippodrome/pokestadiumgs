@@ -431,7 +431,84 @@ void func_82209360(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/17/fragment17_118870/func_822094C4.s")
+extern f32 D_822106B0[];
+extern s16 D_822106D4;
+typedef struct F17ScreenPair { s16 x; s16 y; } F17ScreenPair;
+// Idle animation and input for the transition menu: bobs the record's scale
+// (state[6]/unk_14), sways the cursor (unk_1C/1E by unk_20/22) and handles A/B
+// and the D-pad.
+void func_822094C4(void) {
+    s16 *state;
+    f32 r;
+    Fragment17ChoiceEntry *entry;
+    s16 a;
+    u16 btn;
+    s32 pad; // FAKE
+    s32 sel;
+    f32 r2;
+    F17TransitionRecord *rec;
+
+    rec = &sTransitionRecord;
+    state = (s16 *)D_822106B0;
+    entry = &D_8220DEF4[state[4]];
+    state[7] += 0x1800;
+    ((f32 *)state)[6] = (D_80087E50[(u16)state[7] >> 4] * 0.20000005f + 1.0f) * 0.75f;
+    r2 = func_822091E0(((f32 *)state)[6]);
+    a = *(s16 *)&rec->unk_0A[6] + 0x1000;
+    rec->unk_14 = r2;
+    r = D_80087E50[(u16)a >> 4] * 10.0f;
+    *(s16 *)&rec->unk_0A[6] = a;
+    if (!(rec->unk_06 & 1)) {
+        r = 0 - r;
+    }
+    rec->unk_20 = (r > 0.0f ? 0.5f : -0.5f) + r;
+    rec->unk_1C = *(s16 *)((u8 *)entry + 0xC) + rec->unk_20;
+    r2 = D_80087E50[*(u16 *)&rec->unk_0A[6] >> 4] * 10.0f;
+    rec->unk_22 = -(s32)(s16)(s32)((r2 > 0.0f ? 0.5f : -0.5f) + r2);
+    rec->unk_1E = *(s16 *)((u8 *)entry + 0xE) + rec->unk_22;
+    if (*(s16 *)&rec->unk_0A[0] == -1) {
+        do { btn = *(u16 *)((u8 *)D_80087200 + 8); } while (0); // FAKE
+        if (btn & 0x8000) {
+            sel = 0;
+            switch (rec->unk_08) {
+                case 0:
+                    *(s16 *)&rec->unk_0A[0] = rec->unk_08;
+                    func_800226C0(0xA3);
+                    break;
+                case 1:
+                    sel = 1;
+                    func_800226C0(0x37);
+                    break;
+                case 2:
+                    sel = 1;
+                    func_800226C0(0x38);
+                    break;
+                default:
+                    sel = 1;
+                    func_800226C0(0x37);
+                    break;
+            }
+            if (sel) {
+                rec->transition.state = 5;
+                rec->transition.unk_02 = 0;
+                *(F17ScreenPair *)&D_822106D4 = *(F17ScreenPair *)&rec->unk_1C;
+                rec->unk_14 = 0.75f;
+                rec->unk_18 = 0.75f;
+            }
+        } else if (btn & 0x4000) {
+            *(s16 *)&rec->unk_0A[0] = -2;
+            func_800226C0(3);
+        } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x800) {
+            func_82209000(0);
+        } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x400) {
+            func_82209000(1);
+        } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x200) {
+            func_82209000(2);
+        } else if (*(u16 *)((u8 *)D_80087200 + 0xC) & 0x100) {
+            func_82209000(3);
+        }
+    }
+}
 
 extern s16 D_822106C0, D_822106D4;
 typedef struct F17Point { s16 x, y; } F17Point;
