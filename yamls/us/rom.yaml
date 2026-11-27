@@ -1322,6 +1322,8 @@
     - [0x253F90, rodata]
     - [0x253FB0, .rodata, fragments/47/fragment47_2507E0] # image positions, texture indices, fixed-point bias and draw scales
     - [0x254010, rodata]
+    - [0x2542F0, .rodata, fragments/47/fragment47_251C30] # func_8600B610 double literals
+    - [0x254430, rodata]
 
   - name: fragment48
     type: code
