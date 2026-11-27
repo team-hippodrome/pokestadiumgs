@@ -396,7 +396,104 @@ s32 func_82300AD4(void) {
     return result;
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/19/fragment19_121100/func_82300AF8.s")
+extern void func_800226C0(s32 arg0);
+
+extern u8 D_82305A98[];
+
+// Slides each row in (case 1), then fades it in; case 3 slides all rows back out.
+// The frame counts are function statics in this file's .data (0x82305B88..0x82305B93),
+// so uopt keeps them in registers across the loops.
+void func_82300AF8(void) {
+    static s32 sSlideInFrames = 5;
+    static s32 sSlideOutFrames = 5;
+    static s32 sFadeFrames = 10;
+    s32 i;
+    unk_D_82305A74 *ent;
+    s32 done;
+    s16 v;
+    unk_D_82305A74 *ent2;
+    // Writing the counter through a pointer stops uopt from keeping unk_06 in a register
+    // across the store, so the second unk_06 read stays in the same temp, as in retail.
+    s16 *p = &D_82305EB8;
+
+    switch (sTransitionHeader.state) {
+        case 0:
+        case 2:
+            break;
+        case 1:
+            if (sTransitionHeader.unk_06 < 4) {
+                v = *p + 1;
+                *p = v;
+                if (v % 3 == 0) {
+                    sTransitionHeader.unk_06 = sTransitionHeader.unk_06 + 1;
+                }
+            }
+            for (i = 0, ent = (unk_D_82305A74 *)D_82305A74; i < 4; i++, ent++) {
+                if (*(s16 *)&ent->unk_00[0xC] < D_82305EB6) {
+                    if (D_82305E68[0x5A / 2 + i] < sSlideInFrames) {
+                        D_82305E68[0x5A / 2 + i]++;
+                    }
+                    if (D_82305E68[0x5A / 2 + i] == 0) {
+                        if ((&D_82305EBA)[i] < 0) {
+                            func_800226C0(0xA5);
+                        } else {
+                            func_800226C0(0xA6);
+                        }
+                    }
+                    if (D_82305E68[0x5A / 2 + i] < sSlideInFrames) {
+                        D_82305E68[0x52 / 2 + i] = ent->unk_0E - D_82305E68[0x5A / 2 + i] * ent->unk_0E / sSlideInFrames;
+                    } else {
+                        D_82305E68[0x52 / 2 + i] = 0;
+                        if (D_82305E68[0x6A / 2 + i] < sFadeFrames) {
+                            D_82305E68[0x6A / 2 + i]++;
+                        }
+                        if (D_82305E68[0x6A / 2 + i] < sFadeFrames) {
+                            D_82305E68[0x62 / 2 + i] = D_82305E68[0x6A / 2 + i] * 255 / sFadeFrames;
+                        } else {
+                            D_82305E68[0x62 / 2 + i] = 255;
+                        }
+                    }
+                }
+            }
+            done = 1;
+            for (i = 0; i < 4; i++) {
+                if (D_82305E68[0x62 / 2 + i] < 255) {
+                    done = 0;
+                }
+            }
+            if (done) {
+                sTransitionHeader.state = 2;
+            }
+            break;
+        case 3:
+            done = 1;
+            for (i = 0, ent = (unk_D_82305A74 *)D_82305A74, ent2 = (unk_D_82305A74 *)D_82305A98; i < 4; i += 2, ent += 2, ent2 += 2) {
+                if (D_82305E68[0x5A / 2 + i] < sSlideOutFrames) {
+                    D_82305E68[0x5A / 2 + i]++;
+                }
+                if (D_82305E68[0x5A / 2 + i] < sSlideOutFrames) {
+                    done = 0;
+                    D_82305E68[0x52 / 2 + i] = D_82305E68[0x5A / 2 + i] * ent->unk_0E / sSlideOutFrames;
+                } else {
+                    D_82305E68[0x52 / 2 + i] = ent->unk_0E;
+                }
+                if (D_82305E68[0x5A / 2 + i + 1] < sSlideOutFrames) {
+                    D_82305E68[0x5A / 2 + i + 1]++;
+                }
+                if (D_82305E68[0x5A / 2 + i + 1] < sSlideOutFrames) {
+                    done = 0;
+                    D_82305E68[0x52 / 2 + i + 1] = D_82305E68[0x5A / 2 + i + 1] * ent2->unk_0E / sSlideOutFrames;
+                } else {
+                    D_82305E68[0x52 / 2 + i + 1] = ent2->unk_0E;
+                }
+            }
+            if (done) {
+                sTransitionHeader.state = 0;
+            }
+            break;
+    }
+}
+
 
 extern s16 D_82305E68[];
 void func_82300F00(void) { D_82305E68[0x74 / 2] = 0; D_82305E68[0x76 / 2] = 0; (*(f32 *)((u8 *)D_82305E68 + 0x78)) = 0.0f; }
