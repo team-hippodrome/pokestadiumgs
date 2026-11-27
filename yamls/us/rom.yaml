@@ -1440,8 +1440,7 @@
     - [0x299920, textbin, fragments/54/fragment54_header]
     - [0x299940, c,       fragments/54/fragment54_code]
     - [0x29FE40, data,    fragments/54/fragment54_data]  # [0x29FE40, 0x2A0010)
-    - [0x2A0010, .data,   fragments/54/fragment54_code] # D_866066F0, the D_866066F4 table and D_8660670C (16-byte IDO section)
-    - [0x2A0030, data]   # [0x2A0030, 0x2A0800): from D_86606710 on
+    - [0x2A0010, .data,   fragments/54/fragment54_code] # all of [0x2A0010, 0x2A0800), incl. func_866049D4's statics
     - [0x2A0800, .rodata, fragments/54/fragment54_code] # strings, jump tables, float literals
     - [0x2A0AC0, rodata, fragments/54/fragment54_tail] # tables after the code object's rodata
   
@@ -1479,9 +1478,8 @@
     - [0x2BB830, textbin, fragments/57/fragment57_header]
     - [0x2BB850, c,       fragments/57/fragment57_code]
     - [0x2C3F90, data,    fragments/57/fragment57_data]
-    - [0x2C4A20, .data,   fragments/57/fragment57_code] # func_83302290's blink counter (0x833091F4) and the unreferenced word,
-                                                          # D_833091F8 and D_833091FC in the same 16-byte IDO-padded section
-    - [0x2C4A30, data]
+    - [0x2C4A20, .data,   fragments/57/fragment57_code] # func_83302290's blink counter (0x833091F4), D_833091F8/D_833091FC,
+                                                          # D_83309200, func_83303640's statics and D_8330921C (to 0x83309230)
     - [0x2C4A60, .rodata, fragments/57/fragment57_code] # Strings, jump tables, float literals, double literals.
     - [0x2C5A70, rodata]
 

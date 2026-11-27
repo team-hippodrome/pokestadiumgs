@@ -9,6 +9,12 @@ typedef struct Fragment57DialogContext {
     s32 state, phase, frame, limit, counting;
     f32 fraction;
 } Fragment57DialogContext;
+// Loader-cleared runtime words just before sDialog: the message panel result
+// (0x8330ABF8) and the two battle-model work pointers (0x8330AC00, 0x8330AC04).
+// func_83303640's function-scope static D_8330ABFC lands between ABF8 and AC00.
+static s32 D_8330ABF8;
+static u8 *D_8330AC00;
+static u8 *D_8330AC04;
 static Fragment57DialogContext sDialog;
 
 // The rest of the loader-cleared runtime memory after sDialog (0x8330AC38-0x8330ACE0), in address order, so that
@@ -667,8 +673,6 @@ extern s32 func_800428F8(s32);
 extern void *func_80004B4C(s32, s32);
 extern void func_8003F1DC(void *);
 extern void func_8003F114(u8 *, s16, s16, void *);
-extern u8 *D_8330AC00;
-extern u8 *D_8330AC04;
 extern u8 D_8330A4D0;
 extern s32 D_8330ABE0;
 extern void func_83303AB0(s32);
@@ -761,7 +765,6 @@ extern s32 D_833090E0;
 extern s32 D_8330A4C8;
 extern s32 D_8330ABE8[];
 extern s32 D_8330ABF4;
-extern s32 D_8330ABF8;
 extern s32 D_8330A258;
 extern s32 D_8330A270;
 extern s32 D_8330A240;
@@ -1231,7 +1234,7 @@ extern u8 D_80094EC0[];
 extern u8 D_80094F50[];
 s32 D_833091F8 = 0;
 s32 D_833091FC = 15;
-extern s32 D_83309200;
+s32 D_83309200 = 0;
 extern u8 *func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
 extern void func_80045DB4(s32, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
@@ -1321,7 +1324,100 @@ void func_83303564(void) {
     func_80008648();
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_83303640.s")
+extern void *func_87F0328C(void *, s32, f32, f32, f32, f32, s32);
+
+#define RAND01() ((f32)func_8003570C() / 4294967296.0f)
+#define ABSF(x) ((x) < 0 ? -(x) : (x))
+
+// Spawns four randomly offset effect objects (func_87F0328C) while D_8330A2B0's state is 9.
+// K&R definition: the callers pass an argument the retail code never reads.
+// The statics must be function-scope: retail reloads each one's %hi on every access.
+// D_8330ABFC is declared first so IDO places it at 0x8330ABFC in the TU's .bss.
+void func_83303640() {
+    static f32 D_8330ABFC;
+    static f32 D_83309204 = 200.0f;
+    static f32 D_83309208 = 0.0f;
+    static f32 D_8330920C = 0.0f;
+    static f32 D_83309210 = 0.0f;
+    static s32 D_83309214 = 0;
+    static s32 D_83309218 = 1;
+    s32 r;
+    s32 i;
+    s32 n;
+    f32 a;
+    f32 b;
+    s32 mode;
+    u8 *obj;
+    u8 *sub;
+    u8 *col;
+
+    if (D_83309218 == 1) {} // FAKE: second use of 1 keeps it in v0 for the first compare
+    if (A2B0_S(0x14) == 1) {
+        return;
+    }
+    n = 4;
+    i = 0;
+    if (A2B0_S(0) != 9) {
+        return;
+    }
+    D_8330ABFC = A2B0_F(0x88);
+    D_83309204 = A2B0_F(0x5C) + (A2B0_F(0x8C) - 160.0f);
+    mode = D_8330ABD8; // FAKE: one-use copy moves the load into v1
+    if (mode == 0x17 || D_8330ABD8 == 0x5F) {
+        D_8330ABFC = A2B0_F(0x70);
+        D_83309204 = A2B0_F(0x5C) + (A2B0_F(0x74) - 160.0f);
+    }
+    D_83309210 = 4.5f;
+    D_83309208 = 10.0f;
+    D_8330920C = 0;
+    for (; i < n; i++) {
+        r = (s32)guRandom() % 4;
+        if (r <= 0) {
+            b = 2.8f;
+            a = 2.8f;
+        } else if (r < 2) {
+            if (n) {} // FAKE
+            a = -2.8f;
+            b = 2.8f;
+        } else {
+            b = -2.8f;
+            if (r < 3) {
+                a = -2.8f;
+            } else {
+                a = 2.8f;
+            }
+        }
+        obj = func_87F0328C(D_8330AC38, 0, RAND01() * b * (25.0f * D_83309210) + D_8330ABFC,
+                            RAND01() * ABSF(a) * (40.0f * D_83309210) + D_83309204, A2B0_F(0x90) + 100.0f,
+                            (f64)(RAND01() * 0.8f) * D_83309210, func_8003570C() % 9 + D_83309208);
+        if (obj != NULL) {
+            D_83309214++;
+            if (D_83309214 >= 0x7E) {
+                D_83309214 = 0;
+            }
+            sub = *(u8 **)(obj + 0x20);
+            *(f32 *)(obj + 0x10) = RAND01() * b * 0;
+            *(f32 *)(obj + 0x14) = RAND01() * ABSF(a) * (-1.5 * D_8330920C);
+            *(f32 *)(obj + 0x18) = 0.0f;
+            *(f32 *)(sub + 0x18) = 1.0f;
+            col = *(u8 **)(obj + 0x20);
+            col[0x10] = 0xFF;
+            col[0x11] = 0xFF;
+            col[0x12] = 0xFF;
+            col[0x13] = 0xFF;
+            col[0x14] = func_8003570C() % 0xB0 * D_83309218 + 0x50;
+            col[0x17] = 0xFF;
+            col[0x16] = 0;
+            col[0x15] = 0xFF;
+        }
+    }
+}
+
+// Hold-repeat timer used by func_83306D0C's input handler.
+s32 D_8330921C = 0;
+// Unreferenced zero words that end this object's .data at 0x83309230.
+s32 D_83309220[4] = { 0 };
+
 
 extern f32 D_8330A344[3];
 extern f32 D_8330A368[3];
@@ -3036,7 +3132,7 @@ M2C_UNK func_8003F2C4(s32, M2C_UNK *, s32);         /* extern */
 M2C_UNK func_8003F3BC(M2C_UNK *, s32);              /* extern */
 void func_83300020(s32);                     /* extern */
 void func_833003B0(s32 arg0);                     /* extern */
-M2C_UNK func_83303640(M2C_UNK);                     /* extern */
+void func_83303640();
 extern u8 *D_83308E34;
 extern s32 D_8330A4CC;
 extern u8 D_8330A4D0;

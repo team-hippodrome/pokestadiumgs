@@ -1,8 +1,10 @@
 #include "global.h"
 #include "controller.h"
 
-// This file's .data, [0x866066F0, 0x86606710): D_866066F0, the D_866066F4 table
-// (read by func_86600678 and func_86602828) and D_8660670C.
+// This file's .data, [0x866066F0, 0x86606EE0): D_866066F0, the D_866066F4 table
+// (read by func_86600678 and func_86602828) and D_8660670C here, the tables
+// from D_86606710 on just before func_866049D4, then func_866049D4's statics
+// and D_86606ED0.
 s32 D_866066F0 = 0;
 s32 D_866066F4[6] = { 1, 2, 3, 4, 1, 8 };
 s32 D_8660670C = 0;
@@ -662,7 +664,7 @@ extern s32 D_866066F0;
 extern s32 D_86606B60;
 extern s32 D_8660AB00[];
 extern void ModelAnim_SetSpeed(void *, s32);
-extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s16);
 extern void func_8003F3BC(void *, s32);
 extern s32 D_8660678C;
 #ifdef CC_CHECK
@@ -700,8 +702,8 @@ extern s32 D_866066F4[];
 extern s32 D_86606748;
 extern s32 ModelAnim_IsFinished();
 extern s32 func_8003F210(void *, s32);
-extern void ModelAnim_SetFrame(void *, s32);
-extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetFrame(void *, s16);
+extern void ModelAnim_SetEventFrame(void *, s16);
 extern void func_8003F3BC(void *, s32);
 extern void func_80027A28(u16, u8);
 
@@ -922,7 +924,7 @@ extern s32 D_86606B84[];
 extern s32 D_86606BC4[];
 extern f32 D_86606718;
 extern void ModelAnim_SetAnimation(void *, s32);
-extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s16);
 extern void func_8003F3BC(void *, s32);
 extern void func_80027A28(u16, u8);
 extern u8 D_8660A990[];
@@ -1072,8 +1074,8 @@ extern s32 D_8660AAE4;
 extern u8 D_8660AAF0[];
 extern s32 func_8003F210(void *, s32);
 extern void func_8003F3BC(void *, s32);
-extern void ModelAnim_SetEventFrame(void *, s32);
-extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s16);
+extern void ModelAnim_SetFrame(void *, s16);
 extern void ModelAnim_SetSpeed(void *, s32);
 
 
@@ -1236,9 +1238,9 @@ extern u8 D_86607260[];
 extern u8 D_86607298[];
 extern u8 D_866072E8[];
 extern u8 D_87F15B70[];
-extern u8 D_86606C08[];
-extern u8 D_86606D24[];
-extern u8 D_86606754[];
+extern void *D_86606C08[];
+extern void *D_86606D24[];
+extern void *D_86606754[];
 extern u8 D_86606660[];
 extern void *D_866073DC;
 extern void *D_866073E0;
@@ -1688,9 +1690,9 @@ extern u8 D_8660A3E0[];
 extern void func_8003F114(void *, s32, s32, s32);
 extern void func_8003F1DC(void *);
 extern void func_8003EF70(void *);
-extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetFrame(void *, s16);
 extern void func_86600EEC(void);
-extern void ModelAnim_SetEventFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s16);
 extern void ModelAnim_SetSpeed(void *, s32);
 extern void StageContext_SetClearColor(s32);
 extern s32 StageFade_StartFromTransparent(s32);
@@ -1741,7 +1743,7 @@ extern s32 StageContext_GetFadeMode(void);
 extern s32 D_8660672C;
 extern s32 D_8660678C;
 extern u8 D_86606788;
-extern u8 D_866067A0;
+extern s32 D_866067A0;
 extern u8 D_86606884[];
 extern u8 D_866073E8[];
 extern u8 D_86607410[];
@@ -1750,8 +1752,8 @@ extern u8 D_8660A990[];
 extern void func_8003F114(void *, s32, s32, s32);
 extern void func_8003F1DC(void *);
 extern void func_8003F3BC(void *, s32);
-extern void ModelAnim_SetEventFrame(void *, s32);
-extern void ModelAnim_SetFrame(void *, s32);
+extern void ModelAnim_SetEventFrame(void *, s16);
+extern void ModelAnim_SetFrame(void *, s16);
 extern void ModelAnim_SetSpeed(void *, s32);
 extern void func_80027A28(u16, u8);
 extern void func_866016D0(s32);
@@ -1916,7 +1918,270 @@ s32 func_86604954(void) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/54/fragment54_code/func_866049D4.s")
+extern u8 D_86606788;
+extern u8 D_8660A990[];
+extern u8 D_8660A6B0[];
+extern u8 D_8660AAF0[];
+extern u8 D_86608220[];
+extern s32 D_86607408;
+extern void func_800279C4(s32);
+extern void func_86601188(s32, s32);
+extern void func_8003EF60(void *);
+extern u32 func_8003570C(void);
+#define S54(o) (*(s32 *)((u8 *)&D_86606788 + (o)))
+#define R54(rec, o) (*(s32 *)((u8 *)(rec) + (o)))
+#define M54(i) (D_86607410 + (i) * 0x168)
+
+// This file's .data from D_86606710 up to func_866049D4's statics
+// (0x86606710 .. 0x86606EBF).
+extern u8 D_86606520[];
+extern u8 D_80126420[];
+extern u8 D_87F0F620[];
+extern u8 D_87F0F530[];
+extern u8 D_1000000[];
+s32 D_86606710 = 0x0;
+s32 D_86606714 = 0x0;
+f32 D_86606718 = 6.0f;
+s32 D_8660671C = 0x3;
+s32 D_86606720 = 0x50;
+s32 D_86606724 = 0x1E;
+s32 D_86606728 = 0x32;
+s32 D_8660672C = 0x1;
+s32 D_86606730 = 0x0;
+s32 D_86606734 = 0x0;
+s32 D_86606738 = 0x0;
+f32 D_8660673C = 2.0f;
+s32 D_86606740 = 0x4;
+s32 D_86606744 = 0x1;
+s32 D_86606748 = 0x0;
+s32 D_8660674C = -0x64;
+f32 D_86606750 = 0.600000024f;
+void *D_86606754[13] = { (void *)0x17000000, (void *)0x00000000, (void *)0x00000000, (void *)0x00000000, (void *)&D_86606520, (void *)0x05000000, (void *)0x22090000, (void *)0x00000000, (void *)0x08000000, (void *)func_86600160, (void *)0x00000000, (void *)0x06000000, (void *)&D_1000000 };
+u8 D_86606788 = 0;
+s32 D_8660678C = 0x0;
+s32 D_86606790 = 0x1;
+static s32 sPad_86606794[1] = { 0x0 };
+s32 D_86606798 = 0x0;
+s32 D_8660679C = 0x0;
+s32 D_866067A0 = 5;
+f32 D_866067A4[1] = { 0.0f };
+f32 D_866067A8[15] = { 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+s32 D_866067E4[6] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+s32 D_866067FC = 0x0;
+static s32 sPad_86606800[2] = { 0x0, 0x1B };
+s32 D_86606808[1] = { 0x0 };
+s32 D_8660680C[2] = { 0x2, 0x0 };
+s32 D_86606814 = 0x0;
+static s32 sPad_86606818[1] = { 0x0 };
+s32 D_8660681C = 0x0;
+static s32 sPad_86606820[1] = { 0x0 };
+s32 D_86606824[2] = { 0x50, 0x0 };
+s32 D_8660682C = 0x0;
+f32 D_86606830[21] = { 750.0f, 300.0f, 900.0f, 60.0f, 60.0f, 50.0f, 2.0f, 0.0f, 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 2.0f, 0.0f, 50.0f, 2210.0f, 0.0f, 50.0f, 0.0f, 2.0f };
+u8 D_86606884[72] = { 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x45, 0x0A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x3B, 0x80, 0x00, 0x43, 0x96, 0x00, 0x00, 0x44, 0x61, 0x00, 0x00, 0x42, 0x70, 0x00, 0x00, 0x42, 0x70, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x43, 0xFA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+u8 D_866068CC[128] = { 0xC3, 0xA2, 0x80, 0x00, 0x43, 0xE1, 0x00, 0x00, 0xC3, 0xA2, 0x80, 0x00, 0x42, 0x48, 0x00, 0x00, 0xC2, 0x48, 0x00, 0x00, 0x43, 0x7A, 0x00, 0x00, 0xC4, 0x16, 0x00, 0x00, 0x43, 0x7A, 0x00, 0x00, 0x43, 0xA2, 0x80, 0x00, 0x43, 0xE1, 0x00, 0x00, 0x43, 0xA2, 0x80, 0x00, 0x42, 0x48, 0x00, 0x00, 0x44, 0x16, 0x00, 0x00, 0x43, 0x7A, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0x43, 0x7A, 0x00, 0x00, 0xC3, 0xA2, 0x80, 0x00, 0xC2, 0x48, 0x00, 0x00, 0xC3, 0xA2, 0x80, 0x00, 0xC3, 0xE1, 0x00, 0x00, 0xC2, 0x48, 0x00, 0x00, 0xC3, 0x7A, 0x00, 0x00, 0xC4, 0x16, 0x00, 0x00, 0xC3, 0x7A, 0x00, 0x00, 0x43, 0xA2, 0x80, 0x00, 0xC2, 0x48, 0x00, 0x00, 0x43, 0xA2, 0x80, 0x00, 0xC3, 0xE1, 0x00, 0x00, 0x44, 0x16, 0x00, 0x00, 0xC3, 0x7A, 0x00, 0x00, 0x42, 0x48, 0x00, 0x00, 0xC3, 0x7A, 0x00, 0x00 };
+s32 D_8660694C[96] = { 0x1, 0x2, 0x3, 0x4, 0x1, 0x2, 0x4, 0x3, 0x1, 0x3, 0x2, 0x4, 0x1, 0x3, 0x4, 0x2, 0x1, 0x4, 0x2, 0x3, 0x1, 0x4, 0x3, 0x2, 0x2, 0x1, 0x3, 0x4, 0x2, 0x1, 0x4, 0x3, 0x2, 0x3, 0x1, 0x4, 0x2, 0x3, 0x4, 0x1, 0x2, 0x4, 0x1, 0x3, 0x2, 0x4, 0x3, 0x1, 0x3, 0x1, 0x2, 0x4, 0x3, 0x1, 0x4, 0x2, 0x3, 0x2, 0x1, 0x4, 0x3, 0x2, 0x4, 0x1, 0x3, 0x4, 0x1, 0x2, 0x3, 0x4, 0x2, 0x1, 0x4, 0x1, 0x2, 0x3, 0x4, 0x1, 0x3, 0x2, 0x4, 0x2, 0x1, 0x3, 0x4, 0x2, 0x3, 0x1, 0x4, 0x3, 0x1, 0x2, 0x4, 0x3, 0x2, 0x1 };
+s32 D_86606ACC[4] = { 0x0, 0x0, 0x0, 0x0 };
+s32 D_86606ADC = 0x1;
+static s32 sPad_86606AE0[7] = { 0xC, 0xF, 0x14, 0x19, 0x0, 0x0, 0x64 };
+u8 D_86606AFC[32] = { 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0xE7, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x50, 0x00, 0x00, 0x00, 0xAE, 0x00, 0x00, 0x00, 0x9F, 0xFF, 0xFF, 0xFF, 0x83, 0x00, 0x00, 0x00, 0x96 };
+s32 D_86606B1C = 0x5;
+s32 D_86606B20[8] = { 0x0, 0xDC, 0x0, -0x14, 0x82, 0x82, -0x82, 0x82 };
+s32 D_86606B40[4][2] = { { -0x14, 0x14 }, { 0x0, 0x3C }, { 0x5, -0xA }, { 0x19, 0x14 } };
+s32 D_86606B60 = 0x0;
+s32 D_86606B64[7] = { -0x154, 0xCC, 0x195, 0xCC, -0x154, -0x155, 0x195 };
+s32 D_86606B80[4][4] = { { -0x155, -0x118, -0x118, -0x8C }, { -0x1A4, 0x140, 0x140, 0x1C2 }, { 0xAA, -0x118, -0x118, -0x8C }, { -0x1A4, 0x140, 0x140, 0x1C2 } };
+s32 D_86606BC0[4][4] = { { 0xAA, 0x112, 0x86, 0xCC }, { 0xCC, 0x112, 0x86, 0xCC }, { 0xCC, -0xBA, -0x146, -0x100 }, { -0x100, -0xBA, -0x146, -0x100 } };
+static s32 sPad_86606C00[2] = { -0x100, 0x0 };
+void *D_86606C08[71] = { (void *)0x0C00FFFF, (void *)0x05000000, (void *)0x0B00001E, (void *)0x00000000, (void *)0x014000F0, (void *)0x0000000F, (void *)0x00000000, (void *)0x000003E8, (void *)0x08000000, (void *)func_8660265C, (void *)0x00000000, (void *)0x05000000, (void *)0x0D000000, (void *)0x05000000, (void *)0x14000000, (void *)0x002D0019, (void *)0xFFFFFF28, (void *)0x08000000, (void *)func_866026B8, (void *)0x00000000, (void *)0x14000000, (void *)0x002D0019, (void *)0x80808028, (void *)0x08000000, (void *)func_86602720, (void *)0x00000000, (void *)0x16646464, (void *)0x05000000, (void *)0x1F00FFFF, (void *)0x00000000, (void *)0x00000000, (void *)0xFFFF0000, (void *)0x00640064, (void *)0x00640000, (void *)0x06000000, (void *)0x0F000001, (void *)0x05000000, (void *)0x0A000000, (void *)&D_866071A0, (void *)0x06000000, (void *)0x0F000000, (void *)0x05000000, (void *)0x0A000000, (void *)&D_866071B8, (void *)0x06000000, (void *)0x0F000003, (void *)0x05000000, (void *)0x0A000000, (void *)&D_80126420, (void *)0x06000000, (void *)0x0F000000, (void *)0x05000000, (void *)0x0A000000, (void *)&D_866071D0, (void *)0x06000000, (void *)0x0F000000, (void *)0x05000000, (void *)0x03000000, (void *)&D_87F0F620, (void *)0x06000000, (void *)0x0F000001, (void *)0x05000000, (void *)0x0A000000, (void *)&D_866071E8, (void *)0x06000000, (void *)0x06000000, (void *)0x06000000, (void *)0x03000000, (void *)&D_87F0F530, (void *)0x06000000, (void *)&D_1000000 };
+void *D_86606D24[44] = { (void *)0x0C00FFFF, (void *)0x05000000, (void *)0x0B00001E, (void *)0x00000000, (void *)0x014000F0, (void *)0x0000000F, (void *)0x00000000, (void *)0x000003E8, (void *)0x08000000, (void *)func_8660265C, (void *)0x00000000, (void *)0x05000000, (void *)0x0D000000, (void *)0x05000000, (void *)0x14000000, (void *)0x002D0019, (void *)0xFFFFFF28, (void *)0x08000000, (void *)func_866026B8, (void *)0x00000000, (void *)0x14000000, (void *)0x002D0019, (void *)0x80808028, (void *)0x08000000, (void *)func_86602720, (void *)0x00000000, (void *)0x16646464, (void *)0x05000000, (void *)0x1F00FFFF, (void *)0x00000000, (void *)0x00000000, (void *)0xFFFF0000, (void *)0x00640064, (void *)0x00640000, (void *)0x06000000, (void *)0x0F000000, (void *)0x05000000, (void *)0x0A000000, (void *)&D_86607200, (void *)0x06000000, (void *)0x06000000, (void *)0x06000000, (void *)0x06000000, (void *)&D_1000000 };
+s32 D_86606DD4[8] = { -0x159, 0x64, 0x159, 0x64, -0x159, -0x186, 0x159, -0x186 };
+s32 D_86606DF4[8] = { -0x1FE, 0x226, 0x1FE, 0x226, -0x1FE, 0x46, 0x1FE, 0x46 };
+s16 D_86606E14[6] = { 7168, 27648, 7168, 27648, 0, 0 };
+s32 D_86606E20 = 0x0;
+static s32 sPad_86606E24[2] = { 0x0, 0x0 };
+s32 D_86606E2C[4] = { 0x5C, 0xE7, 0x5C, 0xE7 };
+s32 D_86606E3C[4] = { 0x73, 0x73, 0xDA, 0xDA };
+s32 D_86606E4C[8] = { 0x29, 0x27, 0xFF, 0x27, 0x29, 0x8F, 0xFF, 0x8F };
+s32 D_86606E6C[10] = { 0x28, 0x13, 0xD2, 0x13, 0x28, 0x7B, 0xD2, 0x7B, 0x2, 0x28 };
+s32 D_86606E94[8] = { 0x1, 0x1, -0x1, 0x1, 0x1, 0x1, -0x1, 0x1 };
+f32 D_86606EB4[1] = { 0.449999988f };
+f32 D_86606EB8[2] = { 0.5f, 0.0f };
+
+void func_866049D4(void) {
+    s32 i;
+    s32 j;
+    s32 r;
+    u8 *m;
+    u8 *q;
+    u8 *rec;
+    s32 v;
+    s32 x1, x2, x3;
+    static s32 D_86606EC0 = -0x55;
+    static s32 D_86606EC4 = 0x8C;
+    static s16 D_86606EC8 = -0x100;
+    static f32 D_86606ECC = 0.33f;
+
+    i = 0;
+    do {
+        m = M54(i);
+        if ((ModelAnim_IsFinished(m) == 1) && (S54(0x74) < D_86606728)) {
+            ModelAnim_SetEventFrame(m, 0);
+            func_8003F210(m, 0);
+            func_8003F3BC(m, 0);
+            ModelAnim_SetFrame(m, 0);
+        }
+        if ((R54(D_8660A990 + i * 0x58, 0x28) == 6) || (R54(D_8660A990 + i * 0x58, 0x28) == 8)) {
+            if (((D_8660A3E0 + i * 0x168)[0x1D] + 10) < 0xFF) {
+                (D_8660A3E0 + i * 0x168)[0x1D] = (D_8660A3E0 + i * 0x168)[0x1D] + 10;
+            } else {
+                (D_8660A3E0 + i * 0x168)[0x1D] = 0xFF;
+            }
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x2C) = *(f32 *)(M54(i) + 0xB4);
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x24) = *(f32 *)(M54(i) + 0xAC) + (f32)D_86606EC0;
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x28) = *(f32 *)(M54(i) + 0xB0) + (f32)D_86606EC4;
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x30) = D_86606ECC;
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x34) = D_86606ECC;
+            *(f32 *)(D_8660A3E0 + i * 0x168 + 0x38) = D_86606ECC;
+            *(s16 *)(D_8660A3E0 + i * 0x168 + 0x1E) = D_86606EC8;
+            if ((D_8660A3E0 + i * 0x168) >= D_8660A6B0) {
+                *(s16 *)(D_8660A3E0 + i * 0x168 + 0x1E) = D_86606EC8 + 0x200;
+            }
+        }
+        i++;
+    } while (D_8660A990 + i * 0x58 < D_8660AAF0);
+    if (S54(0xA4) == 0) {
+        if (S54(0x74) == D_86606728) {
+            func_800279C4(0x2F0C);
+            func_800279C4(0x2F0D);
+        }
+        x1 = S54(0x74);
+        if (x1 == D_86606728 + 0x14) {
+            func_800279C4(0x2F0E);
+        }
+        x2 = S54(0x74);
+        if (x2 == D_86606728 + 0x28) {
+            func_800279C4(0x2F0F);
+        }
+        x3 = S54(0x74);
+        if (x3 == D_86606728 + 0x3C) {
+            func_800279C4(0x2F10);
+        }
+    }
+    S54(0x74)++;
+    if (S54(0x74) == 10) {
+        i = 0;
+        do {
+            for (j = 0; j != 0x5A0; j += 0x168) {
+                ModelAnim_SetFrame((D_86608220 + i * 0x5A0) + j, 0);
+                ModelAnim_SetSpeed((D_86608220 + i * 0x5A0) + j, 0);
+                *(s16 *)((D_86608220 + i * 0x5A0) + j + 0x5C) = 6;
+                func_8003EF60((D_86608220 + i * 0x5A0) + j);
+            }
+            i++;
+        } while (i != 4);
+    }
+    rec = D_8660A990;
+    for (i = 0; i < 4; i++, rec += 0x58) {
+        v = R54(rec, 0x28);
+        switch (v) {
+        case 5:
+                if (!(S54(0x74) < (1 - S54(0xA4)) * D_86606728 + 0x50)) {
+                    if (R54(rec, 0x2C) != 0) {
+                        m = M54(i);
+                        func_8003F210(m, 5);
+                        ModelAnim_SetEventFrame(m, 0);
+                        func_8003F3BC(m, 5);
+                        ModelAnim_SetEventFrame(m, 0);
+                        if (R54(rec, 0x50) == 0x6B) {
+                            func_80027A28(0x2F11, (u8)i);
+                        }
+                        R54(rec, 0x2C) = 0;
+                    }
+                }
+            break;
+        case 7:
+                func_86601188(i, 1);
+                if (!(S54(0x74) < D_86606728)) {
+                    if (R54(rec, 0x2C) == 0) {
+                        if (!(S54(0x74) > D_86606728 + 0x50)) {
+                            m = M54(i);
+                            if (!(S54(0x74) & 1)) {
+                                ModelAnim_SetFrame(m, 0);
+                                *(s16 *)(m + 0x5C) = -1;
+                            } else {
+                                ModelAnim_SetFrame(m, 1);
+                                *(s16 *)(m + 0x5C) = 0;
+                            }
+                            if (((x1 = S54(0x74)) == D_86606728 + 0x14) || ((x2 = S54(0x74)) == D_86606728 + 0x28) ||
+                                ((x3 = S54(0x74)) == D_86606728 + 0x3C)) {
+                                R54(rec, 0x2C) = 1;
+                            }
+                        } else {
+                            R54(rec, 0x28) = 6;
+                            R54(rec, 0x2C) = 1;
+                        }
+                    } else {
+                        m = M54(i);
+                        q = D_86609E40 + i * 0x168;
+                        if (S54(0x74) < D_86606728 + 0x14) {
+                            if ((i == 0) || (i == 3)) {
+                                func_80027A28(0x2F09, (u8)i);
+                            } else {
+                                func_80027A28(0x2F0A, (u8)i);
+                            }
+                        }
+                        R54(rec, 0x2C) = 0;
+                        ModelAnim_SetSpeed(m, 0);
+                        R54(rec, 0x30)++;
+                        if (R54(rec, 0x30) > 8) {
+                            R54(rec, 0x30) = 6;
+                        }
+                        func_8003F210(m, R54(rec, 0x30));
+                        func_8003F3BC(m, R54(rec, 0x30));
+                        func_8003F114(q, 0, -1, (s32)D_86607404);
+                    }
+                }
+            break;
+        case 6:
+                m = M54(i);
+                if (R54(rec, 0x2C) == 0) {
+                    if ((R54(m, 0x48) >> 16) == 0x2B) {
+                        r = func_8003570C() % 24;
+                        func_8003F210(m, 0xB);
+                        ModelAnim_SetEventFrame(m, (s16)r);
+                        ModelAnim_SetFrame(m, (s16)r);
+                        func_8003F3BC(m, 0xB);
+                        R54(rec, 0x28) = 8;
+                    }
+                } else {
+                    q = D_86609E40 + i * 0x168;
+                    func_8003F210(m, 9);
+                    ModelAnim_SetEventFrame(m, 0);
+                    func_8003F3BC(m, 9);
+                    func_8003F1DC(q);
+                    R54(rec, 0x2C) = 0;
+                    func_8003F114(D_8660A3E0 + i * 0x168, 0, -1, D_86607408);
+                    func_8003F210(D_8660A3E0 + i * 0x168, 0);
+                    (D_8660A3E0 + i * 0x168)[0x1D] = 0;
+                    break;
+                }
+            break;
+        case 8:
+                m = M54(i);
+                if ((R54(m, 0x48) >> 16) == 0x18) {
+                    r = func_8003570C() % 19;
+                    ModelAnim_SetEventFrame(m, (s16)r);
+                    ModelAnim_SetFrame(m, (s16)r);
+                }
+            break;
+        }
+    }
+    S54(0)++;
+}
+
+// .data right after func_866049D4's statics (read by func_86605ABC).
+s32 D_86606ED0[4] = { 1, 0, 0, 0 };
 #endif
 
 #ifdef VERSION_US
@@ -2281,7 +2546,7 @@ s32 func_86605F04(s32 arg0) {
 #ifdef VERSION_US
 /* mkdraft:func_866061E0 begin */
 extern s32 D_8660672C;
-extern u8 D_866067A0;
+extern s32 D_866067A0;
 extern u8 D_86606884[];
 extern u8 D_8660AAF0[];
 extern s32 func_8003F210(void *, s32);
