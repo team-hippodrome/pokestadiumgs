@@ -65,6 +65,12 @@ void func_822006CC(F822006CC_Particle *arg0, s32 arg1, s32 arg2) {
     arg0->unkA = (s16)(s32)(D_80087E50[index] * radius + (f32)arg2);
 }
 
+extern s32 func_8004C990();
+extern s32 func_8004D1FC(u8 *);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern Gfx D_8220D7B0[];
+extern Gfx *D_800D0510;
+
 void func_822007D8(u8 *arg0) {
     s32 i;
     F822006CC_Particle *particle;
@@ -80,7 +86,49 @@ void func_822007D8(u8 *arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("hand_asm/fragments/17/func_82200918_manual.s")
+void func_82200918(void *arg0, u16 arg1) {
+    u8 *cursor;
+    f32 bias;
+    u8 color[3];
+    f32 width;
+    f32 height;
+    f32 scale;
+    s32 draw_width;
+    s32 alpha;
+    s32 i;
+    u16 *texture;
+    F822006CC_Particle *particle;
+    texture = (u16 *)func_8004C990(147, 0);
+    func_82200600(color, arg1);
+    gSPDisplayList(D_800D0510++, D_8220D7B0);
+    func_8004D1FC((u8 *)texture);
+    cursor = arg0;
+    for (i = 0; i < 30; i++) {
+        particle = (F822006CC_Particle *)((u8 *)arg0 + 36) + i;
+        if (particle->unk0 != 0) {
+            alpha = 255 - particle->unk2 * 255 / 10;
+            scale = particle->unk4 * 2.0f;
+            width = (f32)(u32)texture[0] * scale;
+            height = (f32)(u32)texture[1] * scale;
+            bias = width > 0.0f ? 0.5f : -0.5f;
+            draw_width = (s32)(bias + width);
+            bias = height > 0.0f ? 0.5f : -0.5f;
+            gDPPipeSync(D_800D0510++);
+            {
+                Gfx *packet = D_800D0510++;
+
+                packet->words.w0 = _SHIFTL(G_SETPRIMCOLOR, 24, 8);
+                packet->words.w1 = (_SHIFTL(color[1], 16, 8) | _SHIFTL(color[2], 8, 8)) | _SHIFTL(color[0], 24, 8) | (alpha & 0xFF);
+            }
+            if (particle->unk4 > 0.001f) {
+                GfxRect_DrawTextured((s16)(s32)((f32)particle->unk8 - width / 2),
+                    (s16)(s32)((f32)particle->unkA - height / 2),
+                    draw_width, (s32)(bias + height), 0, 0,
+                    (s16)(s32)(1024.0f / scale), (s16)(s32)(1024.0f / scale), 0);
+            }
+        }
+    }
+}
 
 extern void _bzero(void *, s32);
 void func_82200C3C(u8* arg0) {
@@ -808,8 +856,6 @@ s32 func_82202534(s32 arg0, u8 *arg1) {
 
     return 0;
 }
-
-const f32 D_8220E0D0[1] = { 0.001f };
 
 s32 func_82202628(s32 arg0) {
     s32 var_v1;
