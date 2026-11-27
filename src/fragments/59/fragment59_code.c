@@ -823,7 +823,121 @@ void func_869015F0(s32 arg0) {
 #endif
 
 #ifdef VERSION_US
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/59/fragment59_code/func_86901640.s")
+extern void func_8690B984(void);
+extern void func_80027A28(s32, u8);
+extern s32 func_800279C4(s32);
+extern void func_87F0277C(u8 *);
+extern u8 D_86919B80[];
+extern u8 D_800CE060[];
+extern s16 MathUtil_Atan2s(f32 y, f32 x);
+
+#define A2A0(off) (*(s32 *)(D_8691A2A0 + (off)))
+
+// Per-frame update for the four players: advances each model's animation, handles an
+// A-button press (A2A0 holds per-player frame counters at +0 and press counts at +0x10),
+// turns every player toward the centroid of the active D_8691AB78 targets, and while
+// no result is pending decays the facing angles and runs the 60-frame end timer.
+// The loop shapes are what keep IDO's unrolling in line with retail: the centroid
+// count loop reuses i (so the loop before it is not unrolled), and the final decay
+// loop steps i by 2 so it is unrolled only once.
+void func_86901640(void) {
+    u8 *m;
+    s32 i;
+    s32 cnt;
+    s32 v;
+    s32 t;
+    f32 sy;
+    f32 sx;
+    f32 ay;
+    f32 ax;
+
+    func_8690B984();
+    for (i = 0; i < 4; i++) {
+        ModelAnim_SetEventFrame(D_86919D00 + i * 0x168, *(s16 *)(D_8690EBA0 + i * 8 + 2));
+        func_8003EF60(D_86919D00 + i * 0x168);
+        m = &D_869195E0 + i * 0x168;
+        *(f32 *)(m + 0x24) = *(f32 *)(D_86919D00 + i * 0x168 + 0xDC);
+        *(f32 *)(m + 0x28) = *(f32 *)(D_86919D00 + i * 0x168 + 0xE0);
+        *(f32 *)(m + 0x2C) = *(f32 *)(D_86919D00 + i * 0x168 + 0xE4);
+        ((s32 *)D_8691A2A0)[i]++;
+    }
+    for (i = 0; i < 4; i++) {
+        if ((*(u16 *)(D_800CE060 + i * 40 + 8) & 0x8000) && ((s32 *)(D_8691A2A0 + 0x10))[i] < 99) {
+            ModelAnim_SetEventFrame(D_86919D00 + i * 0x168, *(s16 *)(D_8690EBA0 + i * 8 + 6));
+            func_8003EF60(D_86919D00 + i * 0x168);
+            ((s32 *)D_8691A2A0)[i] = 0;
+            ((s32 *)(D_8691A2A0 + 0x10))[i]++;
+            *(f32 *)(&D_869195E0 + i * 0x168 + 0x28) -= 1.5;
+            func_80027A28(0x3F02, i);
+        }
+    }
+    for (i = 0; i < 4; i++) {
+        t = ((s32 *)D_8691A2A0)[i];
+        if (t < 3) {
+            m = &D_869195E0 + i * 0x168;
+            *(f32 *)(m + 0x28) -= 1.5 - 0.5 * t;
+        }
+    }
+    cnt = 0;
+    sy = sx = 0.0f;
+    for (i = 0; i < 40; i++) {
+        if (D_8691AB78[i].active) {
+            cnt++;
+            sx += D_8691AB78[i].x;
+            sy += D_8691AB78[i].y;
+        }
+    }
+    if (cnt != 0) {
+        ax = sx / cnt;
+        ay = sy / cnt;
+        for (i = 0; i < 4; i++) {
+            m = &D_869195E0 + i * 0x168;
+            t = (0x3FFF - MathUtil_Atan2s(ax - *(f32 *)(m + 0x24), ay - *(f32 *)(m + 0x24))) % 0xFFFF;
+            v = *(s16 *)(m + 0x20);
+            if (273.0f < (f32)v - (f32)t) {
+                *(s16 *)(m + 0x20) = v - 0x111;
+            } else if ((f32)v - (f32)t < -273.0f) {
+                *(s16 *)(m + 0x20) = v + 0x111;
+            } else {
+                *(s16 *)(m + 0x20) = (f32)t;
+            }
+        }
+    }
+    func_87F0277C(&D_86911298);
+    A2A0(0x88) = 0;
+    func_87F0277C(D_86911448);
+    A2A0(0x84) = (D_8691A448.unk_324 == A2A0(0x88)) ? 1 : 0;
+    A2A0(0x24)++;
+    if (D_8691A448.unk_324 == 0) {
+        if (A2A0(0x4C) == 50) {
+            func_800279C4(0x3F08);
+        }
+        for (i = 0; i < 4; i += 2) {
+            m = &D_869195E0 + i * 0x168;
+            v = *(s16 *)(m + 0x20);
+            if (v > 0x444) {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x20) = v - 0x444;
+            } else if (v < -0x444) {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x20) = v + 0x444;
+            } else {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x20) = 0;
+            }
+            t = *(s16 *)(m + 0x188);
+            if (t > 0x444) {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x188) = t - 0x444;
+            } else if (t < -0x444) {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x188) = t + 0x444;
+            } else {
+                *(s16 *)(&D_869195E0 + i * 0x168 + 0x188) = 0;
+            }
+        }
+        if (A2A0(0x4C)++ >= 60) {
+            A2A0(0x4C) = 0;
+            *(s32 *)D_8691AD58 = 7;
+        }
+    }
+}
+
 #endif
 
 #ifdef VERSION_US
