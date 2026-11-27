@@ -159,7 +159,7 @@ if [ ! -f /work/Makefile ] || ! cmp -s /src/Makefile /work/Makefile; then
     makefile_changed=1
 fi
 if [ "${makefile_changed}" -eq 1 ]; then
-    cp -p /src/Makefile /work/Makefile
+    cp --preserve=mode,timestamps /src/Makefile /work/Makefile
 fi
 
 # The baked venv must match the checked-in requirements. Rebuilding it would
