@@ -303,8 +303,8 @@ extern u8 D_8850D2F8[];
 extern u8 D_8850D2FC[];
 extern s32 func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
-extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
-extern void func_800459AC(u8 *, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
+extern void func_800459AC(u8 *, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
 void func_88508F78(s16 x, s16 y, f32 scale, s16 idx) {
     u8 *entry = &D_8850D2EC[idx];
     u16 *img = (u16 *)func_8004C990(0x145, *entry);
@@ -1044,7 +1044,7 @@ void func_8850AEA8(void) {
 }
 
 /* mkdraft:func_8850AFDC begin */
-extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 extern s32 func_8004D1FC(u8 *arg0);
 
 
@@ -1083,36 +1083,144 @@ void func_8850AFDC(u8 *arg0, s16 arg1, s16 arg2, f32 arg3, s16 arg4, s16 arg5, s
 }
 /* mkdraft:func_8850AFDC end */
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/34/fragment34_1C5AA0/func_8850B2DC.s")
+extern s32 func_88001234(s32, u16, s32);
+extern void func_80045DB4(u8 *, s32, s32, s32, s32, u32, u32, s32, s32, s32, s32, s32, s32, s32, s32);
+void func_8850B2DC(u8 *tex0, u8 *tex1, s16 x, s16 y, f32 scale, s16 arg5, s16 arg6, s16 arg7, u16 arg8, s16 arg9) {
+    u8 *img[2];
+    u32 i;
+    s16 width;
+    s16 chunkStep;
+    s32 step;
+    s32 nstep;
+    s16 offA;
+    s16 offB;
+    s16 offC;
+    u16 chunk;
+    u16 count;
+    u16 last;
+    u8 fp;
+    u16 rows;
+    f32 negBias;
+    f32 chunkF;
+    img[0] = func_8004CA60(tex0);
+    if (tex1 != 0)
+    {
+      img[1] = func_8004CA60(tex1);
+    }
+    switch (tex0[5])
+    {
+      case 0:
+        fp = 8;
+        break;
+
+      case 1:
+        fp = 4;
+        break;
+
+      case 2:
+        fp = 2;
+        break;
+
+      case 3:
+        fp = 1;
+        break;
+
+    }
+
+    chunkF = arg5 * scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    offA = negBias + chunkF;
+    chunkF = arg6 * scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    offB = negBias + chunkF;
+    chunkF = arg7 * scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    offC = negBias + chunkF;
+    chunkF = arg8 * scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    width = negBias + chunkF;
+    chunkF = 1024.0f / scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    step = negBias + chunkF;
+    chunkF = (-1024.0f) / scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    nstep = negBias + chunkF;
+    i = func_88001234(tex0[5], *((u16 *) tex0), 1);
+    rows = i & 0xFFFE;
+    if (tex1)
+    {
+      rows = ((u32) rows) >> 1;
+    }
+    chunk = rows;
+    count = (*((u16 *) (tex0 + 2))) / rows;
+    last = (*((u16 *) (tex0 + 2))) % rows;
+    chunkF = chunk * scale;
+    negBias = (chunkF > 0.0f) ? (0.5f) : (-0.5f);
+    if (last != 0)
+    {
+      count++;
+    }
+    else
+    {
+      last = chunk;
+    }
+    for (i = 0; i != count; i++)
+    {
+      if (i == (count - 1))
+      {
+        rows = last + *tex1 * 0; // FAKE
+        negBias = ((last * scale) > 0.0f) ? (0.5f) : (-0.5f);
+        chunk = rows;
+        i += (chunk + (s16)(x + offA) + (s16)step + arg9 + (u8)chunk + (u32)tex1 + (u32)tex1) * 0; // FAKE
+        chunkF = scale * ((u32)chunk >> 0); // FAKE
+      }
+      chunkStep = negBias + chunkF;
+      func_800459AC(img[0], tex0[4], tex0[5], *((u16 *) tex0), chunk, 1, 0, 2, 2, 0, 0, 0, 0);
+      if (tex1 != 0)
+      {
+        func_80045DB4(img[1], 0x100, 1, tex1[4], tex1[5], *((u16 *) tex1), chunk, 1, 0, 2, 2, 0, 0, 0, 0);
+      }
+      GfxRect_DrawTextured(x + offA, y + offC, width, chunkStep, arg9, arg9, step, step, 0);
+      GfxRect_DrawTextured(x + offB, y + offC, width, chunkStep, ((arg8 - 1) << 5) + arg9, arg9, nstep, step, 0);
+      img[0] += (((*((u16 *) tex0)) * rows) / fp) * 4;
+      if (tex1 != 0)
+      {
+        img[1] += (((*((u16 *) tex1)) * rows) / fp) * 4 + fp * 0; // FAKE
+      }
+      y += chunkStep;
+    }
+
+}
+
 
 s32 func_8004C990(s32, s32);
-extern void func_8850B2DC(s32, s32, s16, s16, f32, s32, s32, s32, s32, s32);
+extern void func_8850B2DC(u8 *, u8 *, s16, s16, f32, s16, s16, s16, u16, s16);
 
 void func_8850B914(s16 arg0, s16 arg1, f32 arg2) {
-    func_8850B2DC(func_8004C990(0x147, 0), 0, arg0, arg1, arg2, 0, 0xE4, 0, 0xE4, -0x10);
+    func_8850B2DC((u8 *)func_8004C990(0x147, 0), 0, arg0, arg1, arg2, 0, 0xE4, 0, 0xE4, -0x10);
 }
 
 s32 func_8004C990(s32, s32);
 
 void func_8850B980(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5) {
-    func_8850B2DC(func_8004C990(0x148, 1), 0, arg0, arg1, arg2, (s32) arg3, (s32) arg4, (s32) arg5, 0x64, 0);
+    func_8850B2DC((u8 *)func_8004C990(0x148, 1), 0, arg0, arg1, arg2, (s32) arg3, (s32) arg4, (s32) arg5, 0x64, 0);
 }
 
 extern Gfx *D_800D0510;
 extern u8 D_8850D300[];
 extern s32 func_8004C990(s32, s32);
-extern void func_8850B2DC(s32, s32, s16, s16, f32, s32, s32, s32, s32, s32);
+extern void func_8850B2DC(u8 *, u8 *, s16, s16, f32, s16, s16, s16, u16, s16);
 void func_8850B9F4(s16 arg0, s16 arg1, f32 arg2, s16 arg3, s16 arg4, s16 arg5, s16 arg6) {
     s32 local[4];
     gSPDisplayList(D_800D0510++, D_8850D300);
     gDPSetPrimColor(D_800D0510++, 0, 0, 0x64, 0x64, 0xFF, arg6);
     local[0] = func_8004C990(0x148, 0);
-    func_8850B2DC(local[0], func_8004C990(0x148, 1), arg0, arg1, arg2, arg3, arg4, arg5, 0x64, 0);
+    func_8850B2DC((u8 *)local[0], (u8 *)func_8004C990(0x148, 1), arg0, arg1, arg2, arg3, arg4, arg5, 0x64, 0);
 }
 
 extern s32 func_8004C990(s32, s32);
 extern s32 func_8004D1FC(u8 *);
-extern void GfxRect_DrawTextured(s16, s16, s16, s16, s32, s32, s32, s32, s32);
+extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 
 // Draws the 0x14A image twice at arg0/arg1 scaled by arg2: the whole texture at arg3 and
 // its horizontal mirror at arg4, both offset by arg5 vertically. The image header's first
