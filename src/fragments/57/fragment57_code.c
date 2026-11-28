@@ -207,7 +207,79 @@ void func_833003B0(s32 arg0) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/57/fragment57_code/func_833005F0.s")
+typedef struct Arg833005F0 {
+    /* 0x00 */ u8 unk_00[8];
+    /* 0x08 */ s32 unk_08;
+    /* 0x0C */ s32 unk_0C;
+    /* 0x10 */ s32 unk_10;
+    /* 0x14 */ s32 unk_14;
+    /* 0x18 */ u8 unk_18[4];
+    /* 0x1C */ s32 unk_1C;
+    /* 0x20 */ u8 unk_20[0x2C - 0x20];
+    /* 0x2C */ f32 unk_2C;
+} Arg833005F0;
+extern void *D_800D0510;
+extern u8 D_80094E38[];
+extern u8 D_80094F50[];
+extern u8 *func_8004C990(s32, s32);
+extern void func_8004D19C(s32, s32, u8 *, s32, s32);
+#define gDL (*(Gfx **)&D_800D0510)
+extern s32 D_833090CC;
+extern s32 D_833090D0;
+extern s16 D_833090D4;
+extern s16 D_833090D8;
+#define A2B0_I(o) (*(s32 *)((u8 *)&D_8330A2B0 + (o)))
+
+void func_833005F0(Arg833005F0 *arg0) {
+    s32 x;
+    s32 y;
+    s32 w;
+    s32 h;
+    s32 scale;
+    s32 alpha;
+    u8 *tex;
+
+    w = arg0->unk_10 * arg0->unk_2C;
+    h = arg0->unk_14 * arg0->unk_2C;
+    y = arg0->unk_0C;
+    x = arg0->unk_08;
+    if ((((s32 *)&D_833090D8)[-2] = ((s32 *)&D_833090D4)[-1] + 1) >= 30) {
+        D_833090D0 = 0;
+    }
+    gSPDisplayList(gDL++, D_80094E38);
+    gDPPipeSync(gDL++);
+    scale = 1;
+    if (A2B0_I(0x54) < 0) {
+        scale = 10;
+    }
+    alpha = D_833090CC;
+    alpha += A2B0_I(0x54) * 10 * scale;
+    if (arg0) {} // FAKE
+    if (arg0) {} // FAKE
+    if (arg0) {} // FAKE
+    if (alpha >= 255) {
+        alpha = 255;
+        A2B0_I(0x54) = 2;
+    }
+    if (alpha < 0) {
+        alpha = 0;
+        A2B0_I(0x54) = 1;
+    }
+    gDPSetPrimColor(gDL++, 0, 0, 255, 255, 255, alpha);
+    gDPSetRenderMode(gDL++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
+    gDPSetCombine(gDL++, 0xFFB3FF, 0xFF64FE7F);
+    D_833090CC = alpha;
+    if (D_83308E38[A2B0_I(0x08)] >= 16) {
+        tex = func_8004C990(0x164, D_833090D0 / 10);
+        if (arg0->unk_1C == 1 && A2B0_I(0x54) != 0) {
+    if (y) {} // FAKE
+    if (x) {} // FAKE
+    if (x) {} // FAKE
+            func_8004D19C(x + w - 0x1B, y + h - 0x1E, tex, 1, 0);
+        }
+    }
+    gSPDisplayList(gDL++, D_80094F50);
+}
 
 typedef struct unk_8330084C {
     /* 0x00 */ u8 unk_00[8];
@@ -226,7 +298,7 @@ extern void Gfx_FillRectRgba(s16, s16, s16, s16, u8, u8, u8, u8);
 extern void GfxRect_DrawTextured(s16, s16, s16, s16, s16, s16, s16, s16, s32);
 extern u8 *func_8004C990(s32, s32);
 extern u8 *func_8004CA60(u8 *);
-extern void func_833005F0(void *);
+void func_833005F0(Arg833005F0 *);
 
 #define gDL (*(Gfx **)&D_800D0510)
 
@@ -1332,11 +1404,11 @@ extern void *func_87F0328C(void *, s32, f32, f32, f32, f32, s32);
 // Spawns four randomly offset effect objects (func_87F0328C) while D_8330A2B0's state is 9.
 // K&R definition: the callers pass an argument the retail code never reads.
 // The statics must be function-scope: retail reloads each one's %hi on every access.
-// D_8330ABFC is declared first so IDO places it at 0x8330ABFC in the TU's .bss.
+// D_8330ABFC is declared third so IDO places it at 0x8330ABFC in the TU's .bss.
 void func_83303640() {
-    static f32 D_8330ABFC;
     static f32 D_83309204 = 200.0f;
     static f32 D_83309208 = 0.0f;
+    static f32 D_8330ABFC;
     static f32 D_8330920C = 0.0f;
     static f32 D_83309210 = 0.0f;
     static s32 D_83309214 = 0;
