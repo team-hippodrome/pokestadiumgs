@@ -3,14 +3,14 @@
 # Undocumented code
 
 <!-- AUTO_UNDOCUMENTED:START -->
-- Functions defined in `src/` with a `/* ... */` comment: **72 / 10,516 (0.7%)**
+- Functions defined in `src/` with a `/* ... */` comment: **72 / 10,518 (0.7%)**
 - Functions with a real name: **1,937 / 10,904 (17.8%)** (8,967 still `func_XXXXXXXX`)
-- Variables with a real name: **248 / 9,197 (2.7%)** (8,949 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
+- Variables with a real name: **248 / 9,200 (2.7%)** (8,952 still `D_XXXXXXXX` / `jtbl_XXXXXXXX`)
 - Functions still using m2c `temp_*` / `var_*` locals: **1,181**
-- Functions with generic `arg0`, `arg1`, ... parameters: **6,288 / 10,516 (59.8%)**
+- Functions with generic `arg0`, `arg1`, ... parameters: **6,289 / 10,518 (59.8%)**
 - Structs with generic fields (`unk_XX`, `pad`, `field_XX`): **1,491 / 2,675**
 - Struct fields with a real name: **7,296 / 12,109 (60.3%)**
-- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **19,055**
+- Raw `*(T *)(base + 0xNN)` offset accesses that bypass a struct field: **19,058**
 <!-- AUTO_UNDOCUMENTED:END -->
 
 A function counts as commented when a `/* ... */` block ends on the line directly above its definition.
@@ -49,12 +49,12 @@ Generic fields are named unk/pad/field/filler with an optional hex suffix; neste
 | `src/fragments/13/fragment13_EEC50.c` | 79 | 78 | 93 | 57 | 6 | 69 | 196 |
 | `src/fragments/12/fragment12_E7C00.c` | 73 | 73 | 115 | 28 | 11 | 64 | 203 |
 | `src/fragments/53/fragment53_28E360.c` | 30 | 29 | 118 | 204 | 5 | 11 | 112 |
+| `src/fragments/50/fragment50_266A60.c` | 55 | 55 | 140 | 31 | 6 | 17 | 220 |
 | `src/fragments/45/fragment45_2251A0.c` | 79 | 78 | 144 | 125 | 9 | 30 | 81 |
-| `src/fragments/50/fragment50_266A60.c` | 54 | 54 | 139 | 31 | 6 | 17 | 217 |
 | `src/fragments/9/fragment9_code.c` | 34 | 34 | 86 | 60 | 9 | 28 | 230 |
 | `src/fragments/44/fragment44_1F1850.c` | 46 | 46 | 100 | 101 | 3 | 36 | 158 |
+| `src/fragments/17/fragment17_10FFC0.c` | 55 | 54 | 96 | 63 | 13 | 38 | 172 |
 | `src/517E0.c` | 113 | 113 | 123 | 6 | 30 | 98 | 64 |
-| `src/fragments/17/fragment17_10FFC0.c` | 54 | 53 | 96 | 60 | 13 | 37 | 172 |
 | `src/fragments/47/fragment47_24AE60.c` | 42 | 42 | 129 | 45 | 3 | 33 | 162 |
 | `src/fragments/63/fragment63_312AE0.c` | 58 | 58 | 90 | 45 | 9 | 44 | 152 |
 | `src/290C0.c` | 48 | 47 | 47 | 275 | 0 | 27 | 0 |
