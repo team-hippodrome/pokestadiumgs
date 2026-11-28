@@ -252,7 +252,79 @@ void func_84108358(void) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/79/fragment79_377570/func_841083B0.s")
+extern u8 *D_84190198;
+
+void func_841083B0(void) {
+    s32 index;
+
+    switch (D_8416A214) {
+        case 10:
+        case 15:
+        case 22:
+        case 154:
+        case 163:
+        case 206:
+        case 210:
+        case 211:
+        case 231:
+        case 232:
+            D_8416A210 = 0;
+            switch (*(s16 *)(D_84190194 + 0x1A)) {
+                case 35:
+                case 52:
+                case 66:
+                case 71:
+                case 105:
+                case 123:
+                case 134:
+                case 176:
+                case 181:
+                case 190:
+                case 205:
+                case 209:
+                case 212:
+                case 217:
+                case 248:
+                case 250:
+                    D_8416A210 = 1;
+                    break;
+            }
+            break;
+        case 217:
+            D_8416A210 = (D_84193DD0[9] & 0x40) ? 1 : 0;
+            break;
+        case 168:
+            D_8416A210 = (D_84193DD0[9] & 0x20) ? 1 : 0;
+            break;
+        case 173:
+            index = func_8411E1F8((s32)D_84190198);
+            if ((*(u16 *)((u8 *)(u32)D_84193DD0 + (index << 4) + 0x10) & 7) == 0) {
+                D_8416A210 = 0;
+            } else if ((D_84193DD0[9] & 7) == 1) {
+                D_8416A210 = 1;
+            } else {
+                D_8416A210 = 2;
+            }
+            break;
+        case 274:
+        case 290:
+        case 292:
+        case 298:
+        case 299:
+            func_84108358();
+            break;
+    }
+    D_84190170 += 4;
+}
+
+// FAKE: IDO schedules the range tests before the two jump-table index calculations.
+// Move the index calculations into the retail delay slots and update the branch offsets.
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 24, 0x284100AE, 0x244FFF32)
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 28, 0x14200014, 0x284100AE)
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 32, 0x284100E9, 0x14200013)
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 36, 0x1420000A, 0x244EFEEE)
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 40, 0x244FFF32, 0x284100E9)
+#pragma REWRITE_FUNCTION_WORD(func_841083B0, 44, 0x244EFEEE, 0x14200008)
 
 void func_84108630(void) {
     D_84190178 = 1;
