@@ -1743,7 +1743,6 @@ SECTIONS
         build/src/fragments/17/fragment17_10FFC0.o(.rodata);
         build/src/fragments/17/fragment17_113A60.o(.rodata);
         build/src/fragments/17/fragment17_1154C0.o(.rodata);
-        build/asm/us/data/11DAD0.rodata.o(.rodata);
         build/src/fragments/17/fragment17_1162A0.o(.rodata);
         build/src/fragments/17/fragment17_118870.o(.rodata);
         build/src/fragments/17/fragment17_11A7F0.o(.rodata);

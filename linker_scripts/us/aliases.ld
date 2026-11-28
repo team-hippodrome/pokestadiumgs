@@ -1601,3 +1601,6 @@ D_800CE0D8 = D_800CE060 + 0x78;
 /* Fragment 54: row-offset views inside the C-defined D_86606B80/D_86606BC0 tables. */
 D_86606B84 = D_86606B80 + 4;
 D_86606BC4 = D_86606BC0 + 4;
+
+/* Fragment 17 fade counter. Separate name preserves IDO's retail load/store sequence. */
+D_8220D84C_Read = D_8220D84C;
