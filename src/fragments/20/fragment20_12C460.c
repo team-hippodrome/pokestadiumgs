@@ -4219,8 +4219,72 @@ void func_8260E684(void *arg0, s32 arg1) {
     }
     func_800499EC();
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260EA60.s")
+void func_8260EA60(void *arg0, s32 arg1) {
+    s32 frame_pad[3]; // FAKE: keeps half_width in the retail frame slot.
+    s32 half_width;
+    register Gfx *packet;
+    s32 coord_pad[2]; // FAKE: retains the unused words before width.
+    s32 width;
+    volatile s32 offset; // FAKE: retains separate loads of the horizontal offset.
+    s16 coords[4];
+    char *text;
+    u8 *state;
+    char buffer[128];
+    u16 *asset;
 
+    state = *(u8 **)D_8261A5A0;
+    half_width = *(s16 *)((u8 *)arg0 + 0x24) / 2;
+    offset = 0;
+    asset = (u16 *)func_8004C990(284, 0);
+    coords[2] = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    coords[3] = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    if (*(s8 *)(state + 15)) {
+        offset = (asset[0] + 4) / 2;
+    }
+    func_82614F40((u16 *)&coords[1], (u16 *)&coords[0], *(u16 *)(state + 8), *(s16 *)(state + 10));
+    text = (char *)func_8004C874(coords[1], coords[0]);
+    if (text && *(s8 *)(state + 15)) {
+        width = func_80049148(8, 0, text);
+        // FAKE: post-increment the local packet pointer to retain the retail register allocation and frame size.
+        packet = D_800D0510;
+        D_800D0510 = packet + 1;
+        gSPDisplayList(packet++, D_80094E38);
+        packet = D_800D0510;
+        D_800D0510 = packet + 1;
+        gDPSetRenderMode(packet++, 0x0F0A7008, 0);
+        func_8004D19C(coords[2] + half_width + offset - width / 2 - asset[0] - 4,
+                      coords[3] + 18, (s32)asset, 0, 0);
+    }
+    {
+        s32 draw_pad; // FAKE: places the draw coordinates in the retail frame slots.
+        volatile s32 center; // FAKE: preserves separate coordinate loads across draw calls.
+        register s32 text_coord;
+        register s32 shadow_coord;
+
+        center = coords[2] + half_width;
+        func_800498C4();
+        func_800496A4(8, 0);
+        if (text) {
+            // FAKE: keeping the assignments together preserves the retail delay-slot store.
+            text_coord = center + offset; shadow_coord = coords[3] + 20;
+            func_8004972C(128, 128, 128, 128);
+            func_800495F8(center + offset + 2, shadow_coord + 2, 1, (s32)text);
+            func_8004972C(255, 255, 255, 255);
+            func_800495F8(text_coord, shadow_coord, 1, (s32)text);
+        }
+        shadow_coord = center + 2;
+        _bzero(buffer, 128);
+        func_826150A4((s8 *)buffer, 128, *(u16 *)(state + 8), *(s16 *)(state + 10),
+                      *(s16 *)(state + 136), *(s16 *)(D_8261A5A0 + 20));
+        arg0 = buffer; // FAKE: reuses a variable for the buffer pointer to preserve the frame size.
+        func_8004972C(128, 128, 128, 128);
+        text_coord = coords[3] + 48;
+        func_800495F8(shadow_coord, text_coord + 2, 1, (s32)arg0);
+        func_8004972C(255, 255, 255, 255);
+        func_800495F8(center, text_coord, 1, (s32)arg0);
+        func_800499EC();
+    }
+}
 /* mkdraft:func_8260ED40 begin */
 extern s32 func_8006CEE8(u16);
 extern s32 func_8006CF70(s16);
