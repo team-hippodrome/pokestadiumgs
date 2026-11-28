@@ -1677,20 +1677,72 @@ extern void StageFade_StartFromTransparent();
 extern void func_80035424();
 void func_82203E40(void) { func_822014D8(); StageFade_StartFromTransparent(5); func_80035424(15); }
 
-/* func_82203E70 is still GLOBAL_ASM, but its .s is hand-maintained (not the
- * splat-generated asm/us/nonmatchings/.../func_82203E70.s) so that it can
- * also carry jtbl_8220E10C's first entry (4 bytes) in a .late_rodata block
- * ahead of its .text. That word has to land immediately after
- * func_8220268C's own compiler-generated jump table (jtbl_8220E0F0) to
- * satisfy this fragment's SUBALIGN(16); a plain C global here would instead
- * be emitted by IDO BEFORE func_8220268C's switch table (IDO always emits
- * named/array rodata ahead of switch-table "late" rodata within one
- * compilation), landing at the wrong address. Placing it in a GLOBAL_ASM
- * .late_rodata block instead makes asm-processor position it correctly:
- * after all first-pass rodata and after func_8220268C's own late-rodata
- * jump table, matching retail. jtbl_8220E10C's remaining entries keep
- * coming from the unmodified data blob at their real retail addresses. */
-#pragma GLOBAL_ASM("hand_asm/fragments/17/func_82203E70_manual.s")
+extern s32 D_8220D84C;
+extern s32 D_8220D84C_Read;
+extern s32 D_8220D850;
+extern s32 D_8220D854;
+extern s32 D_8220D858;
+extern s32 D_8220D85C;
+
+s32 func_82203E70(s32 arg0) {
+    s32 result;
+    s32 state = arg0;
+
+    switch (arg0) {
+        case 0:
+            if (StageContext_GetFadeMode() == 0) {
+                D_8220D84C = D_8220D84C_Read + 1;
+            }
+            if (D_8220D84C >= 2) {
+                state = 1;
+                func_82203A84();
+                D_8220D84C = 0;
+            }
+            break;
+
+        case 1:
+            func_822014FC(D_8220D850, D_8220D858,
+                          -D_8220D850 - D_8220D854 + 640,
+                          -D_8220D858 - D_8220D85C + 480);
+            if (func_82203A98()) {
+                state = 2;
+                D_8220E4C0 |= 4;
+            }
+            break;
+
+        case 2:
+            result = func_82203B3C();
+            if (result == -1) {
+                state = 4;
+                func_82203E40();
+            } else if (result == 1) {
+                state = 3;
+                *(s32 *)D_8220E360 = 0;
+                func_822014D8();
+                func_82203B98();
+                D_8220E4C0 &= ~1;
+                D_8220E4C0 &= ~2;
+                D_8220E4C0 &= ~8;
+            }
+            if (result != 0) {
+                D_8220E4C0 &= ~4;
+            }
+            break;
+
+        case 3:
+            if (func_82203BD8()) {
+                state = 5;
+            }
+            break;
+
+        case 4:
+            if (StageContext_GetFadeMode() == 1) {
+                state = 5;
+            }
+            break;
+    }
+    return state;
+}
 
 extern void StageFade_StartFromOpaque(s32);
 extern void func_800086A4(s32);
