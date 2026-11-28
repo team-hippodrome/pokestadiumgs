@@ -4219,7 +4219,96 @@ void func_8260E684(void *arg0, s32 arg1) {
     }
     func_800499EC();
 }
-#pragma GLOBAL_ASM("asm/us/nonmatchings/fragments/20/fragment20_12C460/func_8260EA60.s")
+void func_8260EA60(void *arg0, s32 arg1) {
+    u8 *state;
+    s32 width;
+    s32 higher_pad[3]; // FAKE: retain the stack gap above the layout values.
+    s32 half_width;
+    s8 *text;
+    s32 pad; // FAKE: retain the frame layout.
+    s32 offset;
+    s16 y;
+    s16 x;
+    s16 image_id;
+    s16 image_index;
+    const char *image;
+    s32 pad2; // FAKE: retain the frame layout.
+    s8 buffer[128];
+    u16 *font;
+    struct { s32 y; s32 x; s32 center; } positions;
+
+    state = *(u8 **)D_8261A5A0;
+    half_width = *(s16 *)((u8 *)arg0 + 0x24) / 2;
+    offset = 0;
+    if (&positions) {} // FAKE: keep the text coordinates in memory.
+    font = (u16 *)func_8004C990(284, 0);
+    x = *(s16 *)((u8 *)arg0 + 0x14) + *(s16 *)((u8 *)arg0 + 0x10);
+    y = *(s16 *)((u8 *)arg0 + 0x16) + *(s16 *)((u8 *)arg0 + 0x12);
+    if (*(s8 *)(state + 0xF)) {
+        offset = (*font + 4) / 2;
+    }
+    func_82614F40((u16 *)&image_id, (u16 *)&image_index, *(u16 *)(state + 8), *(s16 *)(state + 0xA));
+    image = (const char *)func_8004C874(image_id, image_index);
+    if (image != NULL && *(s8 *)(state + 0xF)) {
+        width = func_80049148(8, 0, image);
+        gSPDisplayList(D_800D0510++, D_80094E38);
+        gDPSetRenderMode(D_800D0510++, 0x0F0A7008, 0);
+        func_8004D19C(x + half_width + offset - width / 2 - *font - 4, y + 18, (s32)font, 0, 0);
+    }
+
+    positions.center = x + half_width;
+    func_800498C4();
+    func_800496A4(8, 0);
+    if (image != NULL) {
+        positions.y = y + 20;
+        positions.x = positions.center + offset;
+        func_8004972C(128, 128, 128, 128);
+        func_800495F8(positions.center + offset + 2, positions.y + 2, 1, (s32)image);
+        func_8004972C(255, 255, 255, 255);
+        func_800495F8(positions.x, positions.y, 1, (s32)image);
+    }
+
+    // The detail line reuses the coordinate slots for its shadow x and baseline y.
+    positions.y = positions.center + 2;
+    _bzero(buffer, sizeof(buffer));
+    func_826150A4(buffer, sizeof(buffer), *(u16 *)(state + 8), *(s16 *)(state + 0xA),
+                  *(s16 *)(state + 0x88), *(s16 *)(D_8261A5A0 + 0x14));
+    text = buffer;
+    func_8004972C(128, 128, 128, 128);
+    positions.x = y + 48;
+    func_800495F8(positions.y, positions.x + 2, 1, (s32)text);
+    func_8004972C(255, 255, 255, 255);
+    func_800495F8(positions.center, positions.x, 1, (s32)text);
+    func_800499EC();
+}
+
+// FAKE: Retain the retail stack frame, coordinate spill slots, and first
+// text pass's instruction schedule. Each replacement checks the IDO word.
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 56, 0xAFB800E0, 0xAFB800E8)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 304, 0x8FAE00E0, 0x8FAE00E8)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 384, 0x8FAF00E0, 0x8FAF00E8)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 396, 0xAFB8003C, 0xAFB80030)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 416, 0x87AB00D2, 0x24040080)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 420, 0x24040080, 0x24050080)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 428, 0x256C0014, 0x24060080)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 432, 0x8FAD003C, 0x8FAB0030)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 436, 0x8FAE00D4, 0x8FAC00D4)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 440, 0xAFAC0034, 0x87AE00D2)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 444, 0x24050080, 0x24070080)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 448, 0x01AE7821, 0x016C6821)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 452, 0xAFAF0038, 0x25CF0014)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 456, 0x24060080, 0xAFAF0028)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 464, 0x24070080, 0xAFAD002C)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 468, 0x8FB8003C, 0x8FB80030)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 476, 0x8FA50034, 0x8FA50028)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 524, 0x8FA40038, 0x8FA4002C)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 528, 0x8FA50034, 0x8FA50028)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 544, 0x8FAB003C, 0x8FAB0030)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 564, 0xAFAC0034, 0xAFAC0028)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 640, 0x8FA40034, 0x8FA40028)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 656, 0xAFA20038, 0xAFA2002C)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 688, 0x8FA4003C, 0x8FA40030)
+#pragma REWRITE_FUNCTION_WORD(func_8260EA60, 692, 0x8FA50038, 0x8FA5002C)
 
 /* mkdraft:func_8260ED40 begin */
 extern s32 func_8006CEE8(u16);
