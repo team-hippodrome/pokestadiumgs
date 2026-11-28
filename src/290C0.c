@@ -95,7 +95,253 @@ u8 Audio_LookupScaledRatio(u16 numerator, u16 denominator) {
     return D_8009210C[index * 2 + 1];
 }
 
-#pragma GLOBAL_ASM("asm/us/nonmatchings/290C0/func_80028540.s")
+u32 func_80028540(u8 arg0, u32 arg1) {
+    extern u8 func_80062D20(u8);
+    extern u8 func_80062D5C(u8);
+    extern u8 func_80062D98(u8);
+    extern u8 func_80063454(u8, u8, u8, s32);
+
+    u8 effect;
+    u8 base_power;
+    u8 type;
+    f32 damage;
+    u32 defense;
+    f32 effectiveness;
+    f32 multiplier = 1.0f;
+    u32 attack;
+    s32 special = 0;
+    u8 *attacker;
+    u8 *defender;
+    unk_D_800D1B88 *own;
+    unk_D_800D1B88 *other;
+
+    if (arg0 >= 2) {
+        return 0;
+    }
+    if (arg1 == 0 || arg1 >= 252) {
+        return 0;
+    }
+    attacker = D_800D1B80[arg0];
+    defender = D_800D1B80[arg0 ^ 1];
+    own = D_800D1B88[arg0];
+    other = D_800D1B88[arg0 ^ 1];
+    arg1 = (u8)arg1;
+    effect = func_80062D20(arg1);
+    base_power = func_80062D5C(arg1);
+    type = func_80062D98(arg1);
+    if (type >= 20) {
+        special = 1;
+    }
+
+    switch (effect) {
+    case 29:
+        multiplier = 3.0f;
+        break;
+    case 104:
+        multiplier = 3.0f;
+        break;
+    case 44:
+    case 77:
+        multiplier = 2.0f;
+        break;
+    case 99:
+        base_power = Audio_LookupScaledRatio(own->unk26, own->unk28);
+        break;
+    case 40:
+        return (s32)other->unk26 / 2;
+    case 41:
+        return base_power;
+    case 87:
+        return own->unk00[29];
+    case 88:
+        return own->unk00[29];
+    case 126:
+        base_power = 64;
+        break;
+    case 121:
+        base_power = 51;
+        break;
+    case 123:
+        base_power = 51;
+        break;
+    case 89:
+    case 144:
+        return -2;
+    case 38:
+        return -1;
+    case 7:
+        return -3;
+    case 154:
+        return -6;
+    case 135:
+        return -7;
+    case 26:
+        return -8;
+    case 122:
+        return -9;
+    case 91:
+        return -10;
+    case 127:
+        return -11;
+    case 9:
+    case 10:
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+    case 16:
+    case 30:
+    case 32:
+    case 35:
+    case 46:
+    case 47:
+    case 50:
+    case 51:
+    case 52:
+    case 53:
+    case 54:
+    case 55:
+    case 56:
+    case 57:
+    case 65:
+    case 79:
+    case 82:
+    case 83:
+    case 85:
+    case 93:
+    case 95:
+    case 97:
+    case 102:
+    case 111:
+    case 115:
+    case 116:
+    case 124:
+    case 132:
+    case 133:
+    case 134:
+    case 136:
+    case 137:
+    case 142:
+    case 143:
+    case 153:
+    case 156:
+        return -5;
+    case 1:
+    case 18:
+    case 19:
+    case 20:
+    case 21:
+    case 22:
+    case 23:
+    case 24:
+    case 28:
+    case 33:
+    case 49:
+    case 58:
+    case 59:
+    case 60:
+    case 61:
+    case 62:
+    case 63:
+    case 64:
+    case 66:
+    case 67:
+    case 84:
+    case 86:
+    case 90:
+    case 94:
+    case 98:
+    case 100:
+    case 106:
+    case 107:
+    case 109:
+    case 112:
+    case 113:
+    case 114:
+    case 118:
+    case 120:
+        return -4;
+    case 0:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 8:
+    case 17:
+    case 27:
+    case 31:
+    case 34:
+    case 36:
+    case 39:
+    case 42:
+    case 45:
+    case 48:
+    case 68:
+    case 69:
+    case 70:
+    case 71:
+    case 72:
+    case 73:
+    case 74:
+    case 75:
+    case 76:
+    case 80:
+    case 81:
+    case 92:
+    case 101:
+    case 103:
+    case 105:
+    case 108:
+    case 117:
+    case 119:
+    case 125:
+    case 128:
+    case 129:
+    case 138:
+    case 139:
+    case 140:
+    case 145:
+    case 146:
+    case 147:
+    case 148:
+    case 149:
+    case 150:
+    case 151:
+    case 152:
+    case 155:
+        break;
+    default:
+        return 0;
+    }
+
+    if (special == 0) {
+        attack = *(u16 *)(attacker + 50);
+        defense = *(u16 *)(defender + 52);
+    } else {
+        attack = *(u16 *)(attacker + 56);
+        defense = *(u16 *)(defender + 58);
+    }
+    damage = (f32)(u32)(((own->unk00[29] * 2 / 5 + 2) * base_power * attack) / defense / 50);
+    effectiveness = (f32)(u32)func_80063454(type, defender[1], defender[2], 0) / 10.0f;
+    damage *= effectiveness;
+    if (type == attacker[1] || type == attacker[2]) {
+        damage *= 1.5;
+    }
+    damage *= multiplier;
+    defense = (u32)damage;
+    if (defense >= 999) {
+        defense = 998;
+    }
+
+    // FAKE: IDO retains the unreferenced 0.18f word after the jump table.
+    if (damage < 0.18f) {
+        if (damage < 0.18f) {
+        }
+    }
+    return defense;
+}
 
 void Audio_SwapSoundCandidates(u8 *arg0, u8 *arg1) { if (*arg0 != *arg1) { u8 temp = *arg0; *arg0 = *arg1; *arg1 = temp; } }
 
